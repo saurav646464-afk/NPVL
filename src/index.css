@@ -7,15 +7,19 @@
     font-family: 'Inter', sans-serif;
   }
 
-  h1, h2, h3, h4, .font-bebas {
-    font-family: 'Bebas Neue', sans-serif;
-    letter-spacing: 0.05em;
+  h1, h2, h3, h4, .font-bebas, .font-montserrat {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    letter-spacing: 0.01em;
   }
 }
 
-/* Custom Bebas Neue font utility */
+/* Custom Montserrat & Bebas Neue font utilities */
+.font-montserrat {
+  font-family: 'Montserrat', sans-serif;
+}
 .font-bebas {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 /* Custom Sports Scrollbar */
@@ -95,4 +99,20 @@
 
 .animate-pulse-glow {
   animation: pulseGlow 3s infinite ease-in-out;
+}
+
+/* Infinite Marquee Ticker */
+@keyframes marqueeScroll {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 22s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
 }

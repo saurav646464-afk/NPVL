@@ -198,13 +198,6 @@ export default function IntroAnimation({ onComplete }) {
           />
         )}
 
-        {/* Skip Intro Button */}
-        <button
-          onClick={handleSkip}
-          className="absolute bottom-6 right-6 text-xs text-gray-500 hover:text-gray-900 uppercase tracking-widest font-bold border border-gray-300 hover:border-[#E50914] px-4 py-2 rounded-full bg-white shadow-sm"
-        >
-          SKIP INTRO ➔
-        </button>
       </motion.div>
     </AnimatePresence>
   );

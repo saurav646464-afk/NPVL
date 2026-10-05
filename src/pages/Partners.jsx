@@ -1,6 +1,6 @@
 import React from 'react';
 import StadiumBrandingShowcase from '../components/StadiumBrandingShowcase';
-import { Award, ShieldCheck, HeartHandshake, Building2, Megaphone, School, Landmark } from 'lucide-react';
+import { Award, ShieldCheck, HeartHandshake, Building2, Megaphone, School, Landmark, Share2, Radio } from 'lucide-react';
 
 export default function Partners({ onOpenContact }) {
   const categories = [
@@ -13,18 +13,25 @@ export default function Partners({ onOpenContact }) {
     { title: 'GOVERNMENT ORGANISATIONS', desc: 'Youth sports promotion, rural talent development initiatives, and regional sports infrastructure alignment.', icon: Landmark },
   ];
 
+  const prCategories = [
+    { title: 'PRESS & LAUNCH', desc: 'Press conferences and launch events' },
+    { title: 'MEDIA COVERAGE', desc: 'National and regional outlets' },
+    { title: 'CREATORS', desc: 'Influencer and creator collaborations' },
+    { title: 'COMMUNITY', desc: 'School, college and community outreach' },
+  ];
+
   return (
     <div className="min-h-screen bg-white text-gray-900 pt-28 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto space-y-16">
         <div className="text-center max-w-4xl mx-auto space-y-4">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#E50914] bg-[#E50914]/10 px-3 py-1 rounded-full border border-[#E50914]/30">
+          <span className="text-xs font-montserrat font-bold uppercase tracking-widest text-[#E50914] bg-[#E50914]/10 px-3 py-1 rounded-full border border-[#E50914]/30">
             PARTNERSHIP OPPORTUNITIES
           </span>
-          <h1 className="font-bebas text-6xl sm:text-8xl text-gray-900 tracking-wider uppercase leading-none">
+          <h1 className="font-montserrat font-black text-5xl sm:text-7xl md:text-8xl text-gray-900 tracking-wider uppercase leading-none">
             BUILD THE FUTURE OF <br />
             <span className="text-[#E50914]">VOLLEYBALL WITH US</span>
           </h1>
-          <p className="text-sm md:text-base text-gray-700 font-medium leading-relaxed">
+          <p className="text-sm md:text-base text-gray-700 font-medium leading-relaxed font-sans">
             Brands can become part of the sporting narrative rather than simply appear around it. NPVL offers shared-value partnerships designed for high visibility and authentic youth connection.
           </p>
         </div>
@@ -38,8 +45,8 @@ export default function Partners({ onOpenContact }) {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent flex items-center p-8 md:p-12">
             <div>
-              <p className="font-bebas text-2xl md:text-4xl text-white tracking-wider">BECOME PART OF</p>
-              <p className="font-bebas text-3xl md:text-5xl text-[#E50914] tracking-wider leading-none">NORTH INDIA'S SPORT</p>
+              <p className="font-montserrat font-extrabold text-2xl md:text-4xl text-white tracking-wider">BECOME PART OF</p>
+              <p className="font-montserrat font-black text-3xl md:text-5xl text-[#E50914] tracking-wider leading-none">NORTH INDIA'S SPORT</p>
             </div>
           </div>
         </div>
@@ -54,14 +61,14 @@ export default function Partners({ onOpenContact }) {
                   <div className="w-12 h-12 bg-[#E50914]/10 rounded-lg flex items-center justify-center text-[#E50914] border border-[#E50914]/30 mb-4 group-hover:scale-105 transition-transform">
                     <Icon className="w-6 h-6" />
                   </div>
-                  <h3 className="font-bebas text-2xl text-gray-900 tracking-wider group-hover:text-[#E50914] transition-colors">
+                  <h3 className="font-montserrat font-bold text-xl md:text-2xl text-gray-900 tracking-wider group-hover:text-[#E50914] transition-colors">
                     {cat.title}
                   </h3>
                   <p className="text-xs text-gray-700 font-medium leading-relaxed font-sans mt-2">
                     {cat.desc}
                   </p>
                 </div>
-                <div className="pt-4 border-t border-gray-200 flex items-center justify-between text-[10px] text-[#E50914] font-bold uppercase tracking-widest">
+                <div className="pt-4 border-t border-gray-200 flex items-center justify-between text-[10px] text-[#E50914] font-montserrat font-bold uppercase tracking-widest">
                   <span>TIER 0{idx + 1}</span>
                   <span>COMMERCIAL OPPORTUNITY</span>
                 </div>
@@ -69,6 +76,37 @@ export default function Partners({ onOpenContact }) {
             );
           })}
         </div>
+
+        {/* PR & Outreach Partners Section */}
+        <section className="bg-gray-50 border-2 border-[#E50914]/40 p-8 md:p-12 rounded-2xl space-y-6 shadow-sm">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-gray-200 pb-4">
+            <div>
+              <span className="text-xs font-montserrat font-bold uppercase tracking-widest text-[#E50914] block mb-1">
+                OUTREACH & MEDIA RELATIONS — TENTATIVE
+              </span>
+              <h2 className="font-montserrat font-black text-3xl md:text-4xl text-gray-900 tracking-wider uppercase">
+                PR & OUTREACH PARTNERS
+              </h2>
+            </div>
+            <span className="bg-[#E50914] text-white text-xs font-montserrat font-bold px-3 py-1 rounded-full uppercase shrink-0">
+              TENTATIVE
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {prCategories.map((pr, idx) => (
+              <div key={idx} className="bg-white border border-gray-200 p-5 rounded-xl space-y-2 shadow-2xs">
+                <span className="font-montserrat font-bold text-sm text-[#E50914] tracking-wider block">
+                  {pr.title}
+                </span>
+                <p className="text-xs text-gray-700 font-sans font-medium">{pr.desc}</p>
+              </div>
+            ))}
+          </div>
+          <div className="text-[11px] text-gray-500 font-sans italic text-center pt-2">
+            * Specific agency partners and outreach networks subject to confirmation upon Season 1 launch.
+          </div>
+        </section>
 
         <StadiumBrandingShowcase onOpenContact={onOpenContact} />
       </div>

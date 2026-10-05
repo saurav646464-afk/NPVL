@@ -9,24 +9,28 @@ export default function About({ onOpenContact }) {
       role: 'CHIEF PATRON, NPVL',
       sub: 'Rajya Sabha MP',
       desc: 'Distinguished parliamentary leader providing strategic patronage and vision for empowering youth through sports across North India.',
+      image: '/Smt. Seema Dwivdi Ji.jpeg',
     },
     {
       name: 'Mr. Parveen Mishra',
       role: 'CO-FOUNDER, NPVL',
       sub: 'Co Founder & Advisory',
       desc: 'Pioneering sports visionary committed to establishing professional league infrastructure and grassroots athletic pathways.',
+      image: '/Mr. Parveen Mishra.jpeg',
     },
     {
       name: 'Smt. Shivani Chaudhary',
       role: 'FOUNDER & DIRECTOR, NPVL',
       sub: 'Founder & Governance',
       desc: 'Leading league operations and governance to build an inclusive, high-impact volleyball ecosystem for North India.',
+      image: '/Smt. Shivani Chaudhary.png',
     },
     {
       name: 'Mr. Kulvir Singh Rana',
       role: 'CEO, NPVL',
       sub: 'Chief Executive Officer',
       desc: 'Driving commercial execution, franchise relations, and professional league management from day one.',
+      image: '/Mr. Kulvir Singh Rana.jpeg',
     },
   ];
 
@@ -171,16 +175,28 @@ export default function About({ onOpenContact }) {
             {leadership.map((person, idx) => (
               <div
                 key={idx}
-                className="bg-gray-50 border-2 border-gray-200 hover:border-[#E50914] p-6 rounded-2xl transition-all duration-300 flex flex-col justify-between shadow-2xs hover:shadow-md group"
+                className="bg-gray-50 border-2 border-gray-200 hover:border-[#E50914] rounded-2xl transition-all duration-300 flex flex-col shadow-2xs hover:shadow-md group overflow-hidden"
               >
-                <div>
-                  <div className="w-14 h-14 rounded-xl bg-white border-2 border-[#E50914] flex items-center justify-center text-[#E50914] font-bebas text-3xl mb-4 group-hover:scale-105 transition-transform shadow-xs">
+                {/* Photo — full width, tall */}
+                {person.image ? (
+                  <div className="w-full h-64 overflow-hidden bg-gray-100">
+                    <img
+                      src={person.image}
+                      alt={person.name}
+                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                ) : (
+                  <div className="w-full h-64 bg-[#E50914]/10 flex items-center justify-center text-[#E50914] font-bebas text-7xl">
                     {person.name.split(' ')[1]?.[0] || 'N'}
                   </div>
-                  <h3 className="font-bebas text-2xl text-gray-900 tracking-wider group-hover:text-[#E50914] transition-colors">
+                )}
+                {/* Text content */}
+                <div className="p-5 border-t-2 border-[#E50914]/20">
+                  <h3 className="font-bebas text-2xl text-gray-900 tracking-wider group-hover:text-[#E50914] transition-colors leading-tight">
                     {person.name}
                   </h3>
-                  <div className="text-xs font-bold text-[#E50914] uppercase tracking-wider mb-1">
+                  <div className="text-xs font-bold text-[#E50914] uppercase tracking-wider mt-1 mb-0.5">
                     {person.role}
                   </div>
                   <div className="text-[11px] text-gray-500 font-bold mb-3">{person.sub}</div>

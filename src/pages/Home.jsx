@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { ChevronDown, Trophy, Sparkles, ShieldCheck, ArrowRight, Zap, Target, Users, Flame, Globe } from 'lucide-react';
 import StadiumBrandingShowcase from '../components/StadiumBrandingShowcase';
 
+import BroadcastMarquee from '../components/BroadcastMarquee';
+
 export default function Home({ setCurrentPage, onOpenContact }) {
   const stats = [
     { label: 'TEAMS', number: '07', sub: 'Regional Squads' },
@@ -83,7 +85,7 @@ export default function Home({ setCurrentPage, onOpenContact }) {
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8 }}
-            className="font-bebas text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-gray-900 uppercase tracking-wider leading-[0.88] drop-shadow-sm"
+            className="font-bebas text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-gray-900 uppercase tracking-wider leading-[0.92] drop-shadow-sm"
           >
             THE NEXT BIG STAGE <br />
             FOR NORTH INDIA'S <br />
@@ -116,11 +118,6 @@ export default function Home({ setCurrentPage, onOpenContact }) {
           </div>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center opacity-70 hover:opacity-100 transition-opacity">
-          <span className="text-[10px] uppercase font-bold tracking-widest text-gray-600 mb-1">SCROLL TO DISCOVER</span>
-          <ChevronDown className="w-5 h-5 text-[#E50914] animate-bounce" />
-        </div>
       </section>
 
       {/* 2. HERO STATISTICS SECTION */}
@@ -318,6 +315,9 @@ export default function Home({ setCurrentPage, onOpenContact }) {
           </div>
         </div>
       </section>
+
+      {/* INFINITE BROADCAST MARQUEE TICKER */}
+      <BroadcastMarquee />
 
       {/* 6. STADIUM BRANDING & MEDIA HIGHLIGHT SHOWCASE */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50 border-t border-gray-200">

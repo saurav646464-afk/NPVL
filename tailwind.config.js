@@ -21,7 +21,8 @@ export default {
         }
       },
       fontFamily: {
-        bebas: ['"Bebas Neue"', 'sans-serif'],
+        montserrat: ['Montserrat', 'sans-serif'],
+        bebas: ['Montserrat', '"Bebas Neue"', 'sans-serif'],
         sans: ['Inter', 'sans-serif'],
       },
       animation: {
