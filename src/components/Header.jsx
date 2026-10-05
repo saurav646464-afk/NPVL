@@ -91,63 +91,63 @@ export default function Header({ currentPage, setCurrentPage, onOpenContact }) {
 
       {/* Clean Interactive All Pages MENU Directory Modal */}
       {menuDropdownOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-start justify-center pt-20 p-4 animate-fadeIn">
-          <div className="bg-white border-2 border-[#E50914] rounded-2xl w-full max-w-3xl p-6 md:p-8 shadow-2xl relative">
-            <div className="flex items-center justify-between border-b border-gray-200 pb-4 mb-6">
-              <div className="flex items-center gap-3">
-                <img src="/logo.png" alt="NPVL" className="h-10 w-auto" />
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-start justify-center pt-16 sm:pt-20 px-3 sm:px-4 animate-fadeIn">
+          <div className="bg-white border-2 border-[#E50914] rounded-2xl w-full max-w-lg sm:max-w-3xl p-4 sm:p-6 md:p-8 shadow-2xl relative max-h-[85vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-gray-200 pb-3 mb-4">
+              <div className="flex items-center gap-2">
+                <img src="/logo.png" alt="NPVL" className="h-8 w-auto" />
                 <div>
-                  <h3 className="font-bebas text-2xl text-gray-900 tracking-wider leading-none">
-                    NPVL LEAGUE DIRECTORY
+                  <h3 className="font-bebas text-lg sm:text-2xl text-gray-900 tracking-wider leading-none">
+                    NPVL DIRECTORY
                   </h3>
-                  <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">
+                  <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
                     INSPIRE. EMPOWER. UNITE.
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setMenuDropdownOpen(false)}
-                className="p-2 text-gray-500 hover:text-gray-900 rounded-full hover:bg-gray-100"
+                className="p-1.5 text-gray-500 hover:text-gray-900 rounded-full hover:bg-gray-100"
               >
-                <X className="w-6 h-6 text-[#E50914]" />
+                <X className="w-5 h-5 text-[#E50914]" />
               </button>
             </div>
 
-            {/* Grid of All 10 Pages */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {/* Grid of All Pages */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
               {navItems.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => handleNavClick(item.id)}
-                  className={`flex items-center justify-between p-3.5 rounded-xl border-2 text-left font-bebas text-xl md:text-2xl tracking-wider transition-all ${
+                  className={`flex items-center justify-between p-2.5 sm:p-3.5 rounded-xl border-2 text-left font-bebas text-base sm:text-lg md:text-xl tracking-wider transition-all ${
                     currentPage === item.id
-                      ? 'bg-[#E50914] text-white border-[#E50914] shadow-md scale-[1.02]'
+                      ? 'bg-[#E50914] text-white border-[#E50914] shadow-md'
                       : 'bg-gray-50 hover:bg-red-50 text-gray-900 border-gray-200 hover:border-[#E50914]'
                   }`}
                 >
-                  <span className="flex items-center gap-2">
+                  <span className="flex items-center gap-1.5 truncate">
                     {item.label}
                     {item.badge && (
-                      <span className="text-[10px] bg-[#E50914] text-white px-1.5 py-0.5 rounded font-sans font-bold">
+                      <span className="text-[9px] bg-[#E50914] text-white px-1 py-0.5 rounded font-sans font-bold shrink-0">
                         {item.badge}
                       </span>
                     )}
                   </span>
-                  <ChevronRight className={`w-5 h-5 ${currentPage === item.id ? 'text-white' : 'text-[#E50914]'}`} />
+                  <ChevronRight className={`w-4 h-4 shrink-0 ${currentPage === item.id ? 'text-white' : 'text-[#E50914]'}`} />
                 </button>
               ))}
             </div>
 
-            <div className="mt-6 pt-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3">
-              <span className="text-xs text-gray-500 font-bold uppercase">
-                NORTH PREMIER VOLLEYBALL LEAGUE — SEASON 1
+            <div className="mt-4 pt-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <span className="text-[10px] text-gray-500 font-bold uppercase text-center sm:text-left">
+                NORTH PREMIER VOLLEYBALL LEAGUE
               </span>
               <button
                 onClick={() => {
                   setMenuDropdownOpen(false);
                   onOpenContact();
                 }}
-                className="w-full sm:w-auto bg-[#E50914] hover:bg-[#B20710] text-white font-bold text-xs uppercase tracking-wider px-6 py-2.5 rounded-lg shadow-md"
+                className="w-full sm:w-auto bg-[#E50914] hover:bg-[#B20710] text-white font-bold text-xs uppercase tracking-wider px-5 py-2.5 rounded-lg shadow-md"
               >
                 JOIN THE JOURNEY
               </button>
@@ -155,6 +155,7 @@ export default function Header({ currentPage, setCurrentPage, onOpenContact }) {
           </div>
         </div>
       )}
+
     </>
   );
 }

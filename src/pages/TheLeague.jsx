@@ -36,7 +36,7 @@ export default function TheLeague({ onOpenContact }) {
           <span className="text-xs font-bold uppercase tracking-widest text-[#E50914] bg-[#E50914]/10 px-3 py-1 rounded-full border border-[#E50914]/30">
             THE NPVL BLUEPRINT
           </span>
-          <h1 className="font-bebas text-6xl sm:text-8xl text-gray-900 tracking-wider uppercase leading-none">
+          <h1 className="font-bebas text-4xl sm:text-6xl md:text-8xl text-gray-900 tracking-wider uppercase leading-none">
             THE LEAGUE ARCHITECTURE & <br />
             <span className="text-[#E50914]">VOLLEYBALL ECOSYSTEM</span>
           </h1>

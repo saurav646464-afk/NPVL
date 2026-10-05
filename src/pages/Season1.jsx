@@ -31,7 +31,7 @@ export default function Season1({ onOpenContact }) {
             <Zap className="w-3.5 h-3.5 animate-pulse" />
             <span>COMING SOON — SEASON 1</span>
           </div>
-          <h1 className="font-bebas text-6xl sm:text-8xl text-gray-900 tracking-wider uppercase leading-none">
+          <h1 className="font-bebas text-4xl sm:text-6xl md:text-8xl text-gray-900 tracking-wider uppercase leading-none">
             SEASON 1 <br />
             <span className="text-[#E50914]">THE JOURNEY BEGINS</span>
           </h1>
@@ -146,3 +146,4 @@ export default function Season1({ onOpenContact }) {
     </div>
   );
 }
+

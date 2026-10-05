@@ -2,8 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ChevronDown, Trophy, Sparkles, ShieldCheck, ArrowRight, Zap, Target, Users, Flame, Globe } from 'lucide-react';
 import StadiumBrandingShowcase from '../components/StadiumBrandingShowcase';
-
 import BroadcastMarquee from '../components/BroadcastMarquee';
+import MobileCarousel from '../components/MobileCarousel';
 
 export default function Home({ setCurrentPage, onOpenContact }) {
   const stats = [
@@ -123,15 +123,11 @@ export default function Home({ setCurrentPage, onOpenContact }) {
       {/* 2. HERO STATISTICS SECTION */}
       <section className="relative z-30 bg-gray-50 border-y-2 border-[#E50914]/20 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+          <MobileCarousel desktopClass="grid-cols-2 lg:grid-cols-4">
             {stats.map((st, idx) => (
-              <motion.div
+              <div
                 key={idx}
-                initial={{ scale: 0.95, opacity: 0 }}
-                whileInView={{ scale: 1, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className="bg-white border-2 border-gray-200 p-6 rounded-xl hover:border-[#E50914] transition-colors shadow-sm hover:shadow-md group"
+                className="bg-white border-2 border-gray-200 p-6 rounded-xl hover:border-[#E50914] transition-colors shadow-sm hover:shadow-md group text-center h-full"
               >
                 <div className="font-bebas text-6xl md:text-8xl text-gray-900 tracking-wider leading-none group-hover:text-[#E50914] transition-colors">
                   {st.number}
@@ -140,9 +136,9 @@ export default function Home({ setCurrentPage, onOpenContact }) {
                   {st.label}
                 </div>
                 <div className="text-xs text-gray-600 mt-1 font-bold">{st.sub}</div>
-              </motion.div>
+              </div>
             ))}
-          </div>
+          </MobileCarousel>
 
           <p className="text-center text-xs text-gray-500 mt-6 font-bold italic">
             *Proposed Season 1 structure. Dates, venues and final details are subject to confirmation.
@@ -154,9 +150,6 @@ export default function Home({ setCurrentPage, onOpenContact }) {
       <section className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 bg-white relative">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-7 space-y-6">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#E50914] bg-[#E50914]/10 px-3 py-1 rounded-full border border-[#E50914]/30">
-              LEAGUE OVERVIEW
-            </span>
 
             <h2 className="font-bebas text-4xl sm:text-6xl md:text-7xl text-gray-900 tracking-wider uppercase leading-none">
               MORE THAN A LEAGUE. <br />
@@ -167,24 +160,24 @@ export default function Home({ setCurrentPage, onOpenContact }) {
               North Premier Volleyball League is being built as a professionally structured volleyball platform focused on creating competitive opportunities for athletes and building a stronger volleyball ecosystem across North India.
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 text-sm text-gray-800">
-              <div className="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-2xs">
+            <MobileCarousel desktopClass="grid-cols-2">
+              <div className="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-2xs h-full">
                 <Target className="w-5 h-5 text-[#E50914] shrink-0 mt-0.5" />
-                <span className="font-medium">Create a professional platform for volleyball across North India.</span>
+                <span className="font-medium text-sm text-gray-800">Create a professional platform for volleyball across North India.</span>
               </div>
-              <div className="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-2xs">
+              <div className="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-2xs h-full">
                 <Users className="w-5 h-5 text-[#E50914] shrink-0 mt-0.5" />
-                <span className="font-medium">Provide athletes with structured competitive opportunities.</span>
+                <span className="font-medium text-sm text-gray-800">Provide athletes with structured competitive opportunities.</span>
               </div>
-              <div className="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-2xs">
+              <div className="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-2xs h-full">
                 <Flame className="w-5 h-5 text-[#E50914] shrink-0 mt-0.5" />
-                <span className="font-medium">Connect grassroots talent with higher-level national competition.</span>
+                <span className="font-medium text-sm text-gray-800">Connect grassroots talent with higher-level national competition.</span>
               </div>
-              <div className="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-2xs">
+              <div className="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-2xs h-full">
                 <Globe className="w-5 h-5 text-[#E50914] shrink-0 mt-0.5" />
-                <span className="font-medium">Build strong regional teams, city pride and team identities.</span>
+                <span className="font-medium text-sm text-gray-800">Build strong regional teams, city pride and team identities.</span>
               </div>
-            </div>
+            </MobileCarousel>
           </div>
 
           {/* Right Visual Frame — Volleyball Image */}
@@ -224,7 +217,7 @@ export default function Home({ setCurrentPage, onOpenContact }) {
             OUR PHILOSOPHY
           </span>
 
-          <h2 className="font-bebas text-6xl sm:text-8xl md:text-9xl text-gray-900 tracking-wider uppercase leading-none mb-16">
+          <h2 className="font-bebas text-4xl sm:text-7xl md:text-9xl text-gray-900 tracking-wider uppercase leading-none mb-16">
             <motion.span
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -253,28 +246,28 @@ export default function Home({ setCurrentPage, onOpenContact }) {
             </motion.span>
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-            <div className="bg-white border-2 border-gray-200 p-8 rounded-xl hover:border-[#E50914] transition-colors shadow-sm group">
-              <span className="font-bebas text-4xl text-[#E50914] block mb-2">01 / INSPIRE</span>
+          <MobileCarousel desktopClass="grid-cols-3">
+            <div className="bg-white border-2 border-gray-200 p-8 rounded-xl hover:border-[#E50914] transition-colors shadow-sm group h-full">
+              <span className="font-bebas text-4xl text-[#E50914] block mb-2">INSPIRE</span>
               <p className="text-sm text-gray-700 leading-relaxed font-medium">
                 Empowering young athletes to dream bigger, work harder and believe that their potential has no limits.
               </p>
             </div>
 
-            <div className="bg-white border-2 border-gray-200 p-8 rounded-xl hover:border-[#E50914] transition-colors shadow-sm group">
-              <span className="font-bebas text-4xl text-[#E50914] block mb-2">02 / EMPOWER</span>
+            <div className="bg-white border-2 border-gray-200 p-8 rounded-xl hover:border-[#E50914] transition-colors shadow-sm group h-full">
+              <span className="font-bebas text-4xl text-[#E50914] block mb-2">EMPOWER</span>
               <p className="text-sm text-gray-700 leading-relaxed font-medium">
                 A professional platform where talent from every corner of North India gets opportunity, exposure and recognition.
               </p>
             </div>
 
-            <div className="bg-white border-2 border-gray-200 p-8 rounded-xl hover:border-[#E50914] transition-colors shadow-sm group">
-              <span className="font-bebas text-4xl text-[#E50914] block mb-2">03 / UNITE</span>
+            <div className="bg-white border-2 border-gray-200 p-8 rounded-xl hover:border-[#E50914] transition-colors shadow-sm group h-full">
+              <span className="font-bebas text-4xl text-[#E50914] block mb-2">UNITE</span>
               <p className="text-sm text-gray-700 leading-relaxed font-medium">
                 Bringing players, fans, communities and cities together through the energy, passion and spirit of the game.
               </p>
             </div>
-          </div>
+          </MobileCarousel>
         </div>
       </section>
 
@@ -290,11 +283,11 @@ export default function Home({ setCurrentPage, onOpenContact }) {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+          <MobileCarousel desktopClass="grid-cols-3 lg:grid-cols-5">
             {whyCards.map((card, idx) => (
               <div
                 key={idx}
-                className="group relative bg-gray-50 border-2 border-gray-200 hover:border-[#E50914] p-6 rounded-xl transition-all duration-300 flex flex-col justify-between shadow-2xs hover:shadow-md"
+                className="group relative bg-gray-50 border-2 border-gray-200 hover:border-[#E50914] p-6 rounded-xl transition-all duration-300 flex flex-col justify-between shadow-2xs hover:shadow-md h-full"
               >
                 <div>
                   <span className="text-[10px] font-bold text-[#E50914] tracking-widest uppercase bg-[#E50914]/10 px-2 py-0.5 rounded border border-[#E50914]/20">
@@ -312,7 +305,7 @@ export default function Home({ setCurrentPage, onOpenContact }) {
                 </div>
               </div>
             ))}
-          </div>
+          </MobileCarousel>
         </div>
       </section>
 
@@ -328,3 +321,5 @@ export default function Home({ setCurrentPage, onOpenContact }) {
     </div>
   );
 }
+
+

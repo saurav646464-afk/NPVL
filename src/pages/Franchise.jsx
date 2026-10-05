@@ -29,7 +29,7 @@ export default function Franchise({ onOpenContact }) {
           <span className="text-xs font-bold uppercase tracking-widest text-[#E50914] bg-[#E50914]/10 px-3 py-1 rounded-full border border-[#E50914]/30">
             FRANCHISE OPPORTUNITY
           </span>
-          <h1 className="font-bebas text-6xl sm:text-8xl text-gray-900 tracking-wider uppercase leading-none">
+          <h1 className="font-bebas text-4xl sm:text-6xl md:text-8xl text-gray-900 tracking-wider uppercase leading-none">
             OWN A TEAM. <br />
             <span className="text-[#E50914]">BUILD A LEGACY.</span>
           </h1>
@@ -147,3 +147,4 @@ export default function Franchise({ onOpenContact }) {
     </div>
   );
 }
+

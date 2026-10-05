@@ -67,7 +67,7 @@ export default function About({ onOpenContact }) {
           <span className="text-xs font-bold uppercase tracking-widest text-[#E50914] bg-[#E50914]/10 px-3 py-1 rounded-full border border-[#E50914]/30">
             ABOUT NPVL
           </span>
-          <h1 className="font-bebas text-6xl sm:text-8xl text-gray-900 tracking-wider uppercase leading-none">
+          <h1 className="font-bebas text-4xl sm:text-6xl md:text-8xl text-gray-900 tracking-wider uppercase leading-none">
             BUILDING THE FUTURE OF <br />
             <span className="text-[#E50914]">NORTH INDIAN VOLLEYBALL</span>
           </h1>
@@ -109,7 +109,7 @@ export default function About({ onOpenContact }) {
             initial={{ scale: 0.95, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
             viewport={{ once: true }}
-            className="font-bebas text-5xl sm:text-7xl md:text-8xl text-white tracking-wider uppercase leading-none my-4"
+            className="font-bebas text-4xl sm:text-6xl md:text-8xl text-white tracking-wider uppercase leading-none my-4"
           >
             "TALENT DESERVES A <span className="text-[#E50914]">STAGE."</span>
           </motion.h2>

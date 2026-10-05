@@ -17,7 +17,7 @@ export default function Fans({ onOpenContact }) {
           <span className="text-xs font-bold uppercase tracking-widest text-[#E50914] bg-[#E50914]/10 px-3 py-1 rounded-full border border-[#E50914]/30">
             FANS & COMMUNITY
           </span>
-          <h1 className="font-bebas text-6xl sm:text-8xl text-gray-900 tracking-wider uppercase leading-none">
+          <h1 className="font-bebas text-4xl sm:text-6xl md:text-8xl text-gray-900 tracking-wider uppercase leading-none">
             THE GAME BELONGS TO <br />
             <span className="text-[#E50914]">EVERYONE.</span>
           </h1>
@@ -37,7 +37,7 @@ export default function Fans({ onOpenContact }) {
           <div className="absolute inset-0 bg-gray-900/75" />
           <div className="relative z-10 p-8 md:p-14">
           <span className="text-xs font-bold uppercase tracking-widest text-[#E50914]">BRINGING FANS CLOSER</span>
-          <h2 className="font-bebas text-5xl md:text-7xl text-white tracking-wider uppercase mt-2 mb-4">
+          <h2 className="font-bebas text-3xl sm:text-5xl md:text-7xl text-white tracking-wider uppercase mt-2 mb-4">
             PACKED ARENAS. ELECTRIC ATMOSPHERE.
           </h2>
           <p className="max-w-2xl mx-auto text-xs md:text-sm text-gray-200 font-medium leading-relaxed">
