@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    background-color: #FFFFFF;
+    color: #111827;
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4, .font-bebas {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.05em;
+  }
+}
+
+/* Custom Bebas Neue font utility */
+.font-bebas {
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+/* Custom Sports Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F8F9FA;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #E50914;
+}
+
+/* Red Light Sweep FX */
+.red-sweep-btn {
+  position: relative;
+  overflow: hidden;
+}
+.red-sweep-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transform: skewX(-20deg);
+  transition: none;
+}
+.red-sweep-btn:hover::after {
+  animation: sweepAnim 0.75s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes sweepAnim {
+  0% { left: -150%; }
+  100% { left: 150%; }
+}
+
+/* Glassmorphism Header & Light Cards */
+.glass-panel-light {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(229, 9, 20, 0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.glass-header-light {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 2px solid #E50914;
+  box-shadow: 0 4px 20px rgba(229, 9, 20, 0.1);
+}
+
+/* Sports Glow Text (Light Mode) */
+.glow-text-red {
+  text-shadow: 0 0 15px rgba(229, 9, 20, 0.3);
+}
+
+/* Interactive SVG Map Highlights (Light Mode) */
+.state-path {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.state-path:hover, .state-path.active {
+  fill: #E50914 !important;
+  filter: drop-shadow(0 0 12px rgba(229, 9, 20, 0.5));
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.5; filter: drop-shadow(0 0 15px rgba(229, 9, 20, 0.25)); }
+  50% { opacity: 0.9; filter: drop-shadow(0 0 30px rgba(229, 9, 20, 0.5)); }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3s infinite ease-in-out;
+}
