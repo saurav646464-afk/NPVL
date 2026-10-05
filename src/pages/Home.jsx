@@ -191,8 +191,8 @@ export default function Home({ setCurrentPage, onOpenContact }) {
           <div className="lg:col-span-5 relative">
             <div className="relative rounded-2xl overflow-hidden border-2 border-[#E50914]/40 shadow-xl aspect-[4/3]">
               <img
-                src="https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=800&q=80&auto=format&fit=crop"
-                alt="Volleyball action"
+                src="/volleyball-arena.jpg"
+                alt="Volleyball arena match"
                 className="absolute inset-0 w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
