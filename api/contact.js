@@ -15,7 +15,7 @@ export default async function handler(req, res) {
 
   try {
     const data = await resend.emails.send({
-      from: 'NPVL Website <onboarding@resend.dev>',
+      from: 'NPVL Official <contact@npvlofficial.com>',
       to: 'hello@npvlofficial.com',
       replyTo: email,
       subject: `[NPVL Website Enquiry] ${interest || 'General Enquiry'} - ${name}`,
