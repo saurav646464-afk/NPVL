@@ -1,5 +1,4 @@
 import React from 'react';
-import { Tv } from 'lucide-react';
 
 export default function BroadcastMarquee() {
   const items = [
@@ -18,12 +17,6 @@ export default function BroadcastMarquee() {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(229,9,20,0.12),transparent)] pointer-events-none" />
 
       <div className="flex items-center">
-        {/* Fixed left label */}
-        <div className="bg-[#E50914] text-white font-montserrat font-bold text-[10px] sm:text-xs uppercase tracking-widest px-3 sm:px-4 py-1.5 shrink-0 z-10 flex items-center gap-1.5 shadow-md rounded-r-md whitespace-nowrap">
-          <Tv className="w-3.5 h-3.5" />
-          <span>BROADCAST PARTNERS</span>
-        </div>
-
         {/* Marquee track */}
         <div className="overflow-hidden w-full flex-1">
           <div className="animate-marquee flex items-center gap-10 whitespace-nowrap">
