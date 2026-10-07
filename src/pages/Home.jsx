@@ -9,7 +9,7 @@ export default function Home({ setCurrentPage, onOpenContact }) {
   const stats = [
     { label: 'TEAMS', number: '07', sub: 'Regional Squads' },
     { label: 'DAYS OF ACTION', number: '15', sub: 'High-Octane Event' },
-    { label: 'MATCHES PROPOSED', number: '24*', sub: '21 League + 2 Semis + 1 Final' },
+    { label: 'MATCHES PROPOSED', number: '25*', sub: '21 League + 3 Qualification + 1 Final' },
     { label: 'HOST CITIES', number: '03', sub: 'UP & Punjab Arenas' },
   ];
 

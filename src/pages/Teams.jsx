@@ -3,14 +3,13 @@ import { Shield, Lock, Sparkles, Zap } from 'lucide-react';
 
 export default function Teams({ onOpenContact }) {
   const teams = [
-    { id: '01', label: 'CHANDIGARH HEROES', region: 'CHANDIGARH', logo: '/IMG_2944.PNG' },
-    { id: '02', label: 'DELHI WARRIORS', region: 'DELHI NCR', logo: '/IMG_2948.PNG' },
-    { id: '03', label: 'HARYANA HAWKS', region: 'HARYANA', logo: '/IMG_2953.PNG' },
-    { id: '04', label: 'HIMACHAL HUNTERS', region: 'HIMACHAL PRADESH', logo: '/IMG_2945.PNG' },
-    { id: '05', label: 'PUNJAB PIRATES', region: 'PUNJAB', logo: '/IMG_2951.PNG' },
-    { id: '06', label: 'RAJASTHAN BULLS', region: 'RAJASTHAN', logo: '/IMG_2947.PNG' },
-    { id: '07', label: 'UP DOMINATORS', region: 'UTTAR PRADESH', logo: '/IMG_2952.PNG' },
-    { id: '08', label: 'UTTARAKHAND UNITED', region: 'UTTARAKHAND', logo: '/IMG_2950.PNG' },
+    { id: '01', label: 'CHANDIGARH HEROES',  region: 'CHANDIGARH',     logo: '/Chandigarh Heroes Spartan Volleyball Crest.png' },
+    { id: '02', label: 'DELHI WARRIORS',     region: 'DELHI NCR',      logo: '/Delhi Warriors Golden Helmet Emblem.png' },
+    { id: '03', label: 'HARYANA HAWKS',      region: 'HARYANA',        logo: '/Haryana Hawks Volleyball Emblem.png' },
+    { id: '04', label: 'PUNJAB PIRATES',     region: 'PUNJAB',         logo: '/Punjab Pirates Volleyball Club Crest.png' },
+    { id: '05', label: 'RAJASTHAN BULLS',    region: 'RAJASTHAN',      logo: '/Rajasthan Bulls Charging Crest.png' },
+    { id: '06', label: 'UP DOMINATORS',      region: 'UTTAR PRADESH',  logo: '/UP Dominator Volleyball Team Emblem.png' },
+    { id: '07', label: 'UTTARAKHAND UNITED', region: 'UTTARAKHAND',    logo: '/Uttarakhand United Tiger Crest.png' },
   ];
 
   return (
@@ -22,15 +21,15 @@ export default function Teams({ onOpenContact }) {
             <span>OFFICIAL SEASON 1 FRANCHISES</span>
           </div>
           <h1 className="font-montserrat font-bold text-4xl sm:text-6xl md:text-7xl text-gray-900 tracking-wider uppercase leading-none">
-            EIGHT FRANCHISES. <br />
+            SEVEN FRANCHISES. <br />
             <span className="text-[#E50914]">ONE NORTH.</span>
           </h1>
           <p className="text-sm md:text-base text-gray-700 font-medium leading-relaxed font-sans">
-            Representing the spirit, pride, and athletic power of North India across 8 key regional territories.
+            Representing the spirit, pride, and athletic power of North India across 7 key regional territories — 25 matches, 21 league + 3 qualification + 1 final.
           </p>
         </div>
 
-        {/* 8 Teams Grid */}
+        {/* 7 Teams Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {teams.map((team) => (
             <div
