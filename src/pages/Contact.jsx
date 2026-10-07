@@ -15,22 +15,26 @@ export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
-    setTimeout(() => {
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      if (res.ok) {
+        setSubmitted(true);
+        try { confetti({ particleCount: 90, spread: 80, origin: { y: 0.6 }, colors: ['#E50914', '#FFFFFF', '#111827'] }); } catch (_) {}
+      } else {
+        alert('Submission failed. Please email us directly at hello@npvlofficial.com');
+      }
+    } catch {
+      alert('Network error. Please email us directly at hello@npvlofficial.com');
+    } finally {
       setLoading(false);
-      setSubmitted(true);
-      try {
-        confetti({
-          particleCount: 90,
-          spread: 80,
-          origin: { y: 0.6 },
-          colors: ['#E50914', '#FFFFFF', '#111827']
-        });
-      } catch (err) {}
-    }, 800);
+    }
   };
 
   const handleChange = (e) => {
@@ -51,6 +55,13 @@ export default function Contact() {
           <p className="text-sm md:text-base text-gray-700 font-medium leading-relaxed">
             Reach out to the NPVL League Office for partnership opportunities, franchise ownership enquiries, media accreditation, athlete registrations, or general questions.
           </p>
+          {/* Direct email */}
+          <a
+            href="mailto:hello@npvlofficial.com"
+            className="inline-flex items-center gap-2 text-sm font-bold text-[#E50914] hover:underline"
+          >
+            ✉ hello@npvlofficial.com
+          </a>
         </div>
 
         <div className="bg-gray-50 border-2 border-[#E50914]/40 rounded-2xl p-8 md:p-12 shadow-xl">

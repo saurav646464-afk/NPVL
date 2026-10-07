@@ -60,6 +60,13 @@ export default function Footer({ setCurrentPage, onOpenContact }) {
                 {s}
               </a>
             ))}
+            <span className="text-gray-300">|</span>
+            <a
+              href="mailto:hello@npvlofficial.com"
+              className="text-xs font-bold text-[#E50914] hover:underline"
+            >
+              ✉ hello@npvlofficial.com
+            </a>
           </div>
           <button
             onClick={onOpenContact}
