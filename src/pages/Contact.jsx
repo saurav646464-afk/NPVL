@@ -48,11 +48,11 @@ export default function Contact() {
           <span className="text-xs font-bold uppercase tracking-widest text-[#E50914] bg-[#E50914]/10 px-3 py-1 rounded-full border border-[#E50914]/30">
             CONNECT WITH NPVL
           </span>
-          <h1 className="font-bebas text-4xl sm:text-6xl md:text-8xl text-gray-900 tracking-wider uppercase leading-none">
+          <h1 className="font-bebas text-3xl sm:text-6xl md:text-8xl text-gray-900 tracking-wider uppercase leading-none break-words">
             LET'S BUILD THE FUTURE <br />
             <span className="text-[#E50914]">OF VOLLEYBALL.</span>
           </h1>
-          <p className="text-sm md:text-base text-gray-700 font-medium leading-relaxed">
+          <p className="text-xs sm:text-base text-gray-700 font-medium leading-relaxed">
             Reach out to the NPVL League Office for partnership opportunities, franchise ownership enquiries, media accreditation, athlete registrations, or general questions.
           </p>
           {/* Direct email */}

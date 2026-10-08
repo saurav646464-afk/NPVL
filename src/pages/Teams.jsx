@@ -1,6 +1,7 @@
 import React from 'react';
 import { Shield, Sparkles, Zap, ArrowRight } from 'lucide-react';
 import NorthIndiaMap from '../components/NorthIndiaMap';
+import MobileCarousel from '../components/MobileCarousel';
 import { teamsData } from '../data/teamsData';
 
 export default function Teams({ setCurrentPage, onSelectTeam, onOpenContact }) {
@@ -19,11 +20,11 @@ export default function Teams({ setCurrentPage, onSelectTeam, onOpenContact }) {
             <Sparkles className="w-3.5 h-3.5" />
             <span>OFFICIAL SEASON 1 FRANCHISES</span>
           </div>
-          <h1 className="font-montserrat font-bold text-4xl sm:text-6xl md:text-7xl text-gray-900 tracking-wider uppercase leading-none">
+          <h1 className="font-montserrat font-bold text-3xl sm:text-6xl md:text-7xl text-gray-900 tracking-wider uppercase leading-none break-words">
             SEVEN FRANCHISES. <br />
             <span className="text-[#E50914]">ONE NORTH.</span>
           </h1>
-          <p className="text-sm md:text-base text-gray-700 font-medium leading-relaxed font-sans">
+          <p className="text-xs sm:text-base text-gray-700 font-medium leading-relaxed font-sans">
             Representing the spirit, pride, and athletic power of North India across 7 key regional territories — 25 matches, 21 league + 3 qualification + 1 final.
           </p>
         </div>
@@ -34,7 +35,7 @@ export default function Teams({ setCurrentPage, onSelectTeam, onOpenContact }) {
         {/* 7 Teams Grid — Clickable to open individual team page */}
         <div>
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-8 border-b border-gray-200 pb-4">
-            <h2 className="font-montserrat font-black text-2xl sm:text-3xl text-gray-900 uppercase">
+            <h2 className="font-montserrat font-black text-xl sm:text-3xl text-gray-900 uppercase">
               OFFICIAL SEASON 1 TEAM ROSTER
             </h2>
             <span className="text-xs font-montserrat font-bold text-[#E50914] bg-red-50 px-3 py-1 rounded-full border border-[#E50914]/30">
@@ -42,12 +43,12 @@ export default function Teams({ setCurrentPage, onSelectTeam, onOpenContact }) {
             </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <MobileCarousel desktopClass="sm:grid-cols-2 lg:grid-cols-4">
             {teamsData.map((team) => (
               <div
                 key={team.id}
                 onClick={() => handleTeamClick(team.id)}
-                className="group relative bg-white border-2 border-gray-200 hover:border-[#E50914] rounded-3xl p-6 text-center transition-all duration-300 shadow-sm hover:shadow-2xl flex flex-col items-center justify-between overflow-hidden cursor-pointer"
+                className="group relative bg-white border-2 border-gray-200 hover:border-[#E50914] rounded-3xl p-6 text-center transition-all duration-300 shadow-sm hover:shadow-2xl flex flex-col items-center justify-between overflow-hidden cursor-pointer h-full"
               >
                 {/* Subtle background glow */}
                 <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-white to-red-50/20 opacity-60 group-hover:opacity-100 transition-opacity duration-300" />
@@ -86,7 +87,7 @@ export default function Teams({ setCurrentPage, onSelectTeam, onOpenContact }) {
                 </div>
               </div>
             ))}
-          </div>
+          </MobileCarousel>
         </div>
 
         {/* Own a Franchise Banner */}

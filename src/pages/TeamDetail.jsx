@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Shield, MapPin, Trophy, Users, Calendar, ArrowLeft, ArrowRight, Zap, CheckCircle2, Award, Star, Mail } from 'lucide-react';
 import { teamsData, getTeamById } from '../data/teamsData';
+import MobileCarousel from '../components/MobileCarousel';
 
 export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam, onOpenContact }) {
   const team = getTeamById(teamId) || teamsData[0];
@@ -77,11 +78,11 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
                 </span>
               </div>
 
-              <h1 className="font-montserrat font-black text-4xl sm:text-6xl md:text-7xl text-white tracking-wider uppercase leading-none">
+              <h1 className="font-montserrat font-black text-3xl sm:text-6xl md:text-7xl text-white tracking-wider uppercase leading-none break-words">
                 {team.name}
               </h1>
 
-              <p className="text-base sm:text-lg text-gray-300 font-sans italic max-w-2xl">
+              <p className="text-sm sm:text-lg text-gray-300 font-sans italic max-w-2xl">
                 "{team.tagline}"
               </p>
 
@@ -107,8 +108,8 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
         </div>
 
         {/* Key Quick Stats Strip */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
-          <div className="bg-gray-50 border-2 border-gray-200 p-6 rounded-2xl shadow-sm hover:border-[#E50914] transition-colors">
+        <MobileCarousel desktopClass="sm:grid-cols-3">
+          <div className="bg-gray-50 border-2 border-gray-200 p-6 rounded-2xl shadow-sm hover:border-[#E50914] transition-colors text-center h-full">
             <span className="text-xs font-montserrat font-bold text-gray-500 uppercase tracking-widest block mb-1">
               ESTABLISHED STATUS
             </span>
@@ -118,7 +119,7 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
             <p className="text-xs text-gray-600 font-medium mt-1">Official Season 1 Founding Franchise</p>
           </div>
 
-          <div className="bg-gray-50 border-2 border-gray-200 p-6 rounded-2xl shadow-sm hover:border-[#E50914] transition-colors">
+          <div className="bg-gray-50 border-2 border-gray-200 p-6 rounded-2xl shadow-sm hover:border-[#E50914] transition-colors text-center h-full">
             <span className="text-xs font-montserrat font-bold text-gray-500 uppercase tracking-widest block mb-1">
               REGIONAL REACH
             </span>
@@ -128,7 +129,7 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
             <p className="text-xs text-gray-600 font-medium mt-1">Across {team.region} territory</p>
           </div>
 
-          <div className="bg-gray-50 border-2 border-gray-200 p-6 rounded-2xl shadow-sm hover:border-[#E50914] transition-colors">
+          <div className="bg-gray-50 border-2 border-gray-200 p-6 rounded-2xl shadow-sm hover:border-[#E50914] transition-colors text-center h-full">
             <span className="text-xs font-montserrat font-bold text-gray-500 uppercase tracking-widest block mb-1">
               HOME ARENA CAPACITY
             </span>
@@ -137,7 +138,7 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
             </div>
             <p className="text-xs text-gray-600 font-medium mt-1">Proposed Match Infrastructure</p>
           </div>
-        </div>
+        </MobileCarousel>
 
         {/* Franchise Overview & Key Strengths */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -229,7 +230,7 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
             </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <MobileCarousel desktopClass="sm:grid-cols-2 lg:grid-cols-4">
             {[
               { role: 'HEAD COACH', status: 'To be revealed at Season 1 Launch Event', icon: Award },
               { role: 'TEAM CAPTAIN', status: 'Announced post Player Auction', icon: Star },
@@ -238,7 +239,7 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
             ].map((card, idx) => {
               const Icon = card.icon;
               return (
-                <div key={idx} className="bg-gray-50 border-2 border-gray-200 p-6 rounded-2xl flex flex-col justify-between space-y-4 hover:border-[#E50914] transition-all group">
+                <div key={idx} className="bg-gray-50 border-2 border-gray-200 p-6 rounded-2xl flex flex-col justify-between space-y-4 hover:border-[#E50914] transition-all group h-full">
                   <div>
                     <div className="w-10 h-10 rounded-xl bg-[#E50914]/10 text-[#E50914] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                       <Icon className="w-5 h-5" />
@@ -256,7 +257,7 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
                 </div>
               );
             })}
-          </div>
+          </MobileCarousel>
 
           <div className="bg-gradient-to-r from-gray-900 to-black text-white p-6 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="text-center sm:text-left">

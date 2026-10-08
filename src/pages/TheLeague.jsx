@@ -1,5 +1,6 @@
 import React from 'react';
 import NorthIndiaMap from '../components/NorthIndiaMap';
+import MobileCarousel from '../components/MobileCarousel';
 import { ArrowRight } from 'lucide-react';
 
 export default function TheLeague({ onOpenContact }) {
@@ -30,61 +31,61 @@ export default function TheLeague({ onOpenContact }) {
 
   return (
     <div className="min-h-screen bg-white text-gray-900 pt-28 pb-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto space-y-20">
+      <div className="max-w-7xl mx-auto space-y-16 sm:space-y-20">
         {/* Header */}
         <div className="text-center max-w-4xl mx-auto space-y-4">
           <span className="text-xs font-bold uppercase tracking-widest text-[#E50914] bg-[#E50914]/10 px-3 py-1 rounded-full border border-[#E50914]/30">
             THE NPVL BLUEPRINT
           </span>
-          <h1 className="font-bebas text-4xl sm:text-6xl md:text-8xl text-gray-900 tracking-wider uppercase leading-none">
+          <h1 className="font-bebas text-3xl sm:text-5xl md:text-7xl lg:text-8xl text-gray-900 tracking-wider uppercase leading-none break-words">
             THE LEAGUE ARCHITECTURE & <br />
             <span className="text-[#E50914]">VOLLEYBALL ECOSYSTEM</span>
           </h1>
-          <p className="text-sm md:text-base text-gray-700 font-medium leading-relaxed">
+          <p className="text-xs sm:text-sm md:text-base text-gray-700 font-medium leading-relaxed max-w-3xl mx-auto">
             NPVL builds the sport through one connected approach — uniting regional pride, grassroots talent, professional match management, and modern sports entertainment.
           </p>
         </div>
 
         {/* Volleyball Banner Image */}
-        <div className="relative rounded-2xl overflow-hidden h-52 md:h-64 shadow-xl">
+        <div className="relative rounded-2xl overflow-hidden h-44 sm:h-56 md:h-64 shadow-xl">
           <img
             src="https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=1600&q=80&auto=format&fit=crop"
             alt="Volleyball match action"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#E50914]/80 via-black/40 to-transparent flex items-center p-8 md:p-12">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#E50914]/85 via-black/50 to-transparent flex items-center p-6 sm:p-8 md:p-12">
             <div>
-              <p className="font-bebas text-2xl md:text-4xl text-white tracking-wider">NORTH INDIA'S BIGGEST</p>
-              <p className="font-bebas text-3xl md:text-6xl text-white tracking-wider leading-none">VOLLEYBALL PLATFORM</p>
+              <p className="font-bebas text-xl sm:text-3xl md:text-4xl text-white tracking-wider">NORTH INDIA'S BIGGEST</p>
+              <p className="font-bebas text-2xl sm:text-4xl md:text-6xl text-white tracking-wider leading-none">VOLLEYBALL PLATFORM</p>
             </div>
           </div>
         </div>
 
-
+        {/* Regional Footprint Map Section */}
         <section className="space-y-6">
           <div className="text-center">
             <span className="text-xs font-bold uppercase tracking-widest text-[#E50914]">REGIONAL FOOTPRINT</span>
-            <h2 className="font-bebas text-4xl md:text-6xl text-gray-900 tracking-wider uppercase mt-1">
+            <h2 className="font-bebas text-3xl sm:text-4xl md:text-6xl text-gray-900 tracking-wider uppercase mt-1">
               THE NORTH ZONE DOMAIN
             </h2>
           </div>
           <NorthIndiaMap />
         </section>
 
-        {/* Approach */}
-        <section className="bg-gray-50 border-2 border-gray-200 p-8 md:p-12 rounded-2xl space-y-8 shadow-sm">
+        {/* Approach Carousel */}
+        <section className="bg-gray-50 border-2 border-gray-200 p-5 sm:p-8 md:p-12 rounded-3xl space-y-6 sm:space-y-8 shadow-sm">
           <div className="text-center">
             <span className="text-xs font-bold uppercase tracking-widest text-[#E50914]">METHODOLOGY</span>
-            <h3 className="font-bebas text-4xl md:text-6xl text-gray-900 tracking-wider uppercase mt-1">
+            <h3 className="font-bebas text-3xl sm:text-4xl md:text-6xl text-gray-900 tracking-wider uppercase mt-1">
               THE NPVL APPROACH
             </h3>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <MobileCarousel desktopClass="md:grid-cols-5">
             {approachSteps.map((step, idx) => (
               <div
                 key={idx}
-                className="bg-white border-2 border-gray-200 hover:border-[#E50914] p-6 rounded-xl transition-all duration-300 flex flex-col justify-between group shadow-2xs hover:shadow-md"
+                className="bg-white border-2 border-gray-200 hover:border-[#E50914] p-6 rounded-2xl transition-all duration-300 flex flex-col justify-between group shadow-2xs hover:shadow-md h-full"
               >
                 <div>
                   <span className="font-bebas text-3xl text-[#E50914] block mb-2">0{idx + 1}</span>
@@ -97,88 +98,88 @@ export default function TheLeague({ onOpenContact }) {
                 </div>
               </div>
             ))}
-          </div>
+          </MobileCarousel>
         </section>
 
         {/* Player Journey */}
-        <section className="space-y-12">
+        <section className="space-y-8 sm:space-y-12">
           <div className="text-center">
             <span className="text-xs font-bold uppercase tracking-widest text-[#E50914] bg-[#E50914]/10 px-3 py-1 rounded-full border border-[#E50914]/30">
               ATHLETE DEVELOPMENT
             </span>
-            <h2 className="font-bebas text-5xl md:text-7xl text-gray-900 tracking-wider uppercase mt-3">
+            <h2 className="font-bebas text-3xl sm:text-5xl md:text-7xl text-gray-900 tracking-wider uppercase mt-3 break-words">
               THE PLAYER JOURNEY & PATHWAY
             </h2>
           </div>
 
-          <div className="bg-white border-2 border-gray-200 p-8 rounded-2xl space-y-6 shadow-sm">
-            <h3 className="font-bebas text-3xl text-gray-900 tracking-wider text-center">
+          <div className="bg-white border-2 border-gray-200 p-5 sm:p-8 rounded-2xl space-y-6 shadow-sm">
+            <h3 className="font-bebas text-2xl sm:text-3xl text-gray-900 tracking-wider text-center">
               GRASSROOTS TO PROFESSIONAL PATHWAY
             </h3>
-            <div className="grid grid-cols-2 md:grid-cols-6 gap-3 text-center">
+            <div className="grid grid-cols-2 md:grid-cols-6 gap-2.5 sm:gap-3 text-center">
               {['GRASSROOTS', 'SCHOOLS & COLLEGES', 'ACADEMIES & CLUBS', 'COMPETITIVE PLATFORMS', 'NPVL LEAGUE', 'HIGHER OPPORTUNITIES'].map((stage, idx) => (
-                <div key={idx} className="bg-gray-50 border-2 border-[#E50914]/30 p-4 rounded-xl flex flex-col items-center justify-center">
-                  <span className="font-bebas text-xl text-[#E50914]">{idx + 1}</span>
-                  <span className="text-xs font-bold text-gray-900 uppercase tracking-wider mt-1">{stage}</span>
+                <div key={idx} className="bg-gray-50 border-2 border-[#E50914]/30 p-3 sm:p-4 rounded-xl flex flex-col items-center justify-center">
+                  <span className="font-bebas text-lg sm:text-xl text-[#E50914]">{idx + 1}</span>
+                  <span className="text-[11px] sm:text-xs font-bold text-gray-900 uppercase tracking-wider mt-1">{stage}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="bg-gray-50 border-2 border-gray-200 p-8 rounded-2xl space-y-6 shadow-sm">
-            <h3 className="font-bebas text-3xl text-gray-900 tracking-wider text-center">
+          <div className="bg-gray-50 border-2 border-gray-200 p-5 sm:p-8 rounded-2xl space-y-6 shadow-sm">
+            <h3 className="font-bebas text-2xl sm:text-3xl text-gray-900 tracking-wider text-center">
               BEYOND THE GAME: ATHLETE EVOLUTION
             </h3>
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4">
               {['PARTICIPATE', 'COMPETE', 'PERFORM', 'GAIN EXPOSURE', 'PROGRESS'].map((step, idx) => (
                 <React.Fragment key={idx}>
-                  <div className="w-full md:w-auto flex-1 bg-white hover:bg-[#E50914] text-gray-900 hover:text-white p-4 rounded-xl border-2 border-gray-200 hover:border-[#E50914] transition-all text-center group shadow-2xs">
-                    <span className="font-bebas text-2xl tracking-wider block">{step}</span>
+                  <div className="w-full md:w-auto flex-1 bg-white hover:bg-[#E50914] text-gray-900 hover:text-white p-3.5 sm:p-4 rounded-xl border-2 border-gray-200 hover:border-[#E50914] transition-all text-center group shadow-2xs">
+                    <span className="font-bebas text-xl sm:text-2xl tracking-wider block">{step}</span>
                   </div>
-                  {idx < 4 && <ArrowRight className="hidden md:block w-5 h-5 text-[#E50914]" />}
+                  {idx < 4 && <ArrowRight className="hidden md:block w-5 h-5 text-[#E50914] shrink-0" />}
                 </React.Fragment>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Stakeholders */}
-        <section className="bg-white border-2 border-gray-200 p-8 md:p-12 rounded-2xl space-y-8 shadow-sm">
-          <div className="text-center">
+        {/* Stakeholders Carousel */}
+        <section className="bg-white border-2 border-gray-200 p-5 sm:p-8 md:p-12 rounded-3xl space-y-6 sm:space-y-8 shadow-sm">
+          <div className="text-center max-w-3xl mx-auto">
             <span className="text-xs font-bold uppercase tracking-widest text-[#E50914]">STAKEHOLDER INTEGRATION</span>
-            <h3 className="font-bebas text-4xl md:text-6xl text-gray-900 tracking-wider uppercase mt-1">
+            <h3 className="font-bebas text-2xl sm:text-4xl md:text-6xl text-gray-900 tracking-wider uppercase mt-1 break-words">
               THE VOLLEYBALL ECOSYSTEM
             </h3>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <MobileCarousel desktopClass="md:grid-cols-2 lg:grid-cols-3">
             {ecosystemStakeholders.map((sh, idx) => (
-              <div key={idx} className="bg-gray-50 border border-gray-300 hover:border-[#E50914] p-6 rounded-xl space-y-2">
+              <div key={idx} className="bg-gray-50 border-2 border-gray-200 hover:border-[#E50914] p-6 rounded-2xl space-y-2 h-full shadow-2xs hover:shadow-md transition-all">
                 <span className="text-xs font-bold text-[#E50914] uppercase tracking-wider">STAKEHOLDER 0{idx + 1}</span>
-                <h4 className="font-bebas text-3xl text-gray-900 tracking-wider">{sh.title}</h4>
+                <h4 className="font-bebas text-2xl sm:text-3xl text-gray-900 tracking-wider">{sh.title}</h4>
                 <p className="text-xs text-gray-700 font-medium leading-relaxed font-sans">{sh.desc}</p>
               </div>
             ))}
-          </div>
+          </MobileCarousel>
         </section>
 
-        {/* Impact */}
-        <section className="bg-gray-50 border-2 border-[#E50914]/40 p-8 md:p-12 rounded-2xl space-y-8 shadow-sm">
-          <div className="text-center">
+        {/* Impact Areas Carousel */}
+        <section className="bg-gray-50 border-2 border-[#E50914]/40 p-5 sm:p-8 md:p-12 rounded-3xl space-y-6 sm:space-y-8 shadow-sm">
+          <div className="text-center max-w-3xl mx-auto">
             <span className="text-xs font-bold uppercase tracking-widest text-[#E50914]">WHAT WE CREATE</span>
-            <h3 className="font-bebas text-4xl md:text-6xl text-gray-900 tracking-wider uppercase mt-1">
+            <h3 className="font-bebas text-2xl sm:text-4xl md:text-6xl text-gray-900 tracking-wider uppercase mt-1 break-words">
               THE NPVL IMPACT
             </h3>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          <MobileCarousel desktopClass="md:grid-cols-3 lg:grid-cols-5">
             {impactAreas.map((imp, idx) => (
-              <div key={idx} className="bg-white p-6 rounded-xl border border-gray-300 shadow-2xs">
+              <div key={idx} className="bg-white p-6 rounded-2xl border-2 border-gray-200 hover:border-[#E50914] shadow-2xs h-full transition-all">
                 <h4 className="font-bebas text-xl text-[#E50914] mb-2">{imp.title}</h4>
                 <p className="text-xs text-gray-700 font-medium leading-relaxed font-sans">{imp.desc}</p>
               </div>
             ))}
-          </div>
+          </MobileCarousel>
         </section>
       </div>
     </div>

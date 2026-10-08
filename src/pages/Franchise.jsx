@@ -1,5 +1,6 @@
 import React from 'react';
 import { Shield, Trophy, DollarSign, Users, Award, Heart, CheckCircle2, AlertCircle } from 'lucide-react';
+import MobileCarousel from '../components/MobileCarousel';
 
 export default function Franchise({ onOpenContact }) {
   const benefits = [
@@ -29,11 +30,11 @@ export default function Franchise({ onOpenContact }) {
           <span className="text-xs font-bold uppercase tracking-widest text-[#E50914] bg-[#E50914]/10 px-3 py-1 rounded-full border border-[#E50914]/30">
             FRANCHISE OPPORTUNITY
           </span>
-          <h1 className="font-bebas text-4xl sm:text-6xl md:text-8xl text-gray-900 tracking-wider uppercase leading-none">
+          <h1 className="font-bebas text-3xl sm:text-6xl md:text-8xl text-gray-900 tracking-wider uppercase leading-none break-words">
             OWN A TEAM. <br />
             <span className="text-[#E50914]">BUILD A LEGACY.</span>
           </h1>
-          <p className="text-sm md:text-base text-gray-700 font-medium leading-relaxed">
+          <p className="text-xs sm:text-base text-gray-700 font-medium leading-relaxed">
             Acquire a founding franchise in the North Premier Volleyball League. Become part of a professionally structured sports ecosystem bringing North Indian sports talent to the national spotlight.
           </p>
           <div className="pt-2">
@@ -47,13 +48,13 @@ export default function Franchise({ onOpenContact }) {
         </div>
 
         {/* Franchise Banner Image */}
-        <div className="relative rounded-2xl overflow-hidden h-52 md:h-64 shadow-xl">
+        <div className="relative rounded-2xl overflow-hidden h-44 sm:h-52 md:h-64 shadow-xl">
           <img
             src="https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=1600&q=80&auto=format&fit=crop"
             alt="Volleyball arena"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 via-gray-900/50 to-transparent flex items-center p-8 md:p-12">
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 via-gray-900/50 to-transparent flex items-center p-6 md:p-12">
             <div>
               <p className="font-bebas text-2xl md:text-4xl text-white tracking-wider">OWN A TEAM.</p>
               <p className="font-bebas text-3xl md:text-6xl text-[#E50914] tracking-wider leading-none">BUILD A LEGACY.</p>
@@ -66,16 +67,16 @@ export default function Franchise({ onOpenContact }) {
         <section className="space-y-8">
           <div className="text-center">
             <span className="text-xs font-bold uppercase tracking-widest text-[#E50914]">WHY OWN AN NPVL TEAM?</span>
-            <h2 className="font-bebas text-4xl md:text-6xl text-gray-900 tracking-wider uppercase mt-1">
+            <h2 className="font-bebas text-3xl sm:text-5xl md:text-6xl text-gray-900 tracking-wider uppercase mt-1 break-words">
               FRANCHISE OWNERSHIP BENEFITS
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <MobileCarousel desktopClass="md:grid-cols-2 lg:grid-cols-3">
             {benefits.map((ben, idx) => {
               const Icon = ben.icon;
               return (
-                <div key={idx} className="bg-gray-50 border-2 border-gray-200 hover:border-[#E50914] p-8 rounded-2xl transition-all space-y-3 group shadow-2xs hover:shadow-md">
+                <div key={idx} className="bg-gray-50 border-2 border-gray-200 hover:border-[#E50914] p-6 sm:p-8 rounded-2xl transition-all space-y-3 group shadow-2xs hover:shadow-md">
                   <div className="w-12 h-12 bg-[#E50914]/10 rounded-lg flex items-center justify-center text-[#E50914] border border-[#E50914]/30 group-hover:scale-105 transition-transform">
                     <Icon className="w-6 h-6" />
                   </div>
@@ -88,36 +89,35 @@ export default function Franchise({ onOpenContact }) {
                 </div>
               );
             })}
-          </div>
+          </MobileCarousel>
         </section>
 
         {/* Inclusions */}
-        <section className="bg-gray-50 border-2 border-gray-200 p-8 md:p-12 rounded-2xl space-y-8 shadow-sm">
+        <section className="bg-gray-50 border-2 border-gray-200 p-6 md:p-12 rounded-2xl space-y-8 shadow-sm">
           <div className="text-center">
             <span className="text-xs font-bold uppercase tracking-widest text-[#E50914]">WHAT THE FRANCHISE FEE COVERS</span>
-            <h2 className="font-bebas text-4xl md:text-6xl text-gray-900 tracking-wider uppercase mt-1">
+            <h2 className="font-bebas text-3xl sm:text-5xl md:text-6xl text-gray-900 tracking-wider uppercase mt-1 break-words">
               FRANCHISE INCLUSIONS
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <MobileCarousel desktopClass="sm:grid-cols-2 lg:grid-cols-4">
             {inclusions.map((inc, idx) => (
               <div key={idx} className="bg-white border border-gray-300 p-6 rounded-xl space-y-2 shadow-2xs">
                 <div className="flex items-center gap-2 text-[#E50914]">
-                  <CheckCircle2 className="w-4 h-4" />
-                  <h4 className="font-bebas text-xl text-gray-900 tracking-wider">{inc.title}</h4>
+                  <CheckCircle2 className="w-4 h-4 shrink-0" />
+                  <h4 className="font-bebas text-lg sm:text-xl text-gray-900 tracking-wider">{inc.title}</h4>
                 </div>
                 <p className="text-xs text-gray-700 font-medium leading-relaxed">{inc.desc}</p>
               </div>
             ))}
-          </div>
+          </MobileCarousel>
 
           <div className="p-4 bg-white rounded-xl border border-gray-300 flex items-center gap-3 text-xs text-gray-600 font-bold">
             <AlertCircle className="w-5 h-5 text-[#E50914] shrink-0" />
             <span>Indicative franchise inclusions. Final commercial terms, franchise agreements, and inclusions are subject to final mutual contract execution.</span>
           </div>
         </section>
-
 
         {/* Bottom CTA */}
         <div className="relative border-2 border-[#E50914] rounded-2xl text-center overflow-hidden shadow-xl">
@@ -128,8 +128,8 @@ export default function Franchise({ onOpenContact }) {
             className="absolute inset-0 w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gray-900/85" />
-          <div className="relative z-10 p-8 md:p-12 space-y-4">
-          <h3 className="font-bebas text-4xl md:text-5xl text-white tracking-wider uppercase">
+          <div className="relative z-10 p-6 md:p-12 space-y-4">
+          <h3 className="font-bebas text-2xl sm:text-4xl md:text-5xl text-white tracking-wider uppercase break-words">
             BECOME A FOUNDING FRANCHISE OWNER IN SEASON 1
           </h3>
           <p className="text-xs md:text-sm text-gray-300 max-w-2xl mx-auto font-medium">

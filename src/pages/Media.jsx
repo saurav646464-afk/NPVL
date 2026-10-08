@@ -1,6 +1,7 @@
 import React from 'react';
 import { Tv, Radio, Share2, Play, Video, Smartphone, TrendingUp, Users, Globe, Flame, ShieldAlert } from 'lucide-react';
 import BroadcastMarquee from '../components/BroadcastMarquee';
+import MobileCarousel from '../components/MobileCarousel';
 
 export default function Media() {
   const broadcastPartners = [
@@ -159,27 +160,27 @@ export default function Media() {
         <BroadcastMarquee />
 
         {/* 1. TENTATIVE BROADCAST & STREAMING PARTNERS */}
-        <section className="bg-gray-50 border-2 border-[#E50914]/40 p-8 md:p-12 rounded-2xl space-y-8 shadow-sm">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-gray-200 pb-6">
+        <section className="bg-gray-50 border-2 border-[#E50914]/40 p-5 sm:p-8 md:p-12 rounded-3xl space-y-6 sm:space-y-8 shadow-sm">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-gray-200 pb-5">
             <div>
               <span className="text-xs font-montserrat font-semibold text-[#E50914] uppercase tracking-widest block mb-1">
                 TENTATIVE BROADCAST & STREAMING PARTNERS
               </span>
-              <h2 className="font-montserrat font-bold text-2xl md:text-4xl text-gray-900 tracking-wider uppercase">
+              <h2 className="font-montserrat font-bold text-xl sm:text-2xl md:text-4xl text-gray-900 tracking-wider uppercase break-words">
                 BROADCAST & STREAMING PARTNERS — TENTATIVE
               </h2>
             </div>
-            <span className="bg-[#E50914] text-white text-xs font-montserrat font-semibold px-3 py-1.5 rounded-full uppercase tracking-wider shrink-0 shadow-xs">
+            <span className="bg-[#E50914] text-white text-xs font-montserrat font-semibold px-3 py-1.5 rounded-full uppercase tracking-wider shrink-0 shadow-xs self-start sm:self-auto">
               PARTNERS TENTATIVE
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <MobileCarousel desktopClass="md:grid-cols-2">
             {broadcastPartners.map((partner, idx) => (
-              <div key={idx} className="bg-white border-2 border-gray-200 hover:border-[#E50914] p-6 rounded-xl space-y-3 shadow-2xs hover:shadow-md transition-all">
-                <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-                  <h3 className="font-montserrat font-bold text-2xl text-gray-900 tracking-wider">{partner.name}</h3>
-                  <span className="text-[10px] font-montserrat font-semibold bg-red-50 text-[#E50914] border border-[#E50914]/30 px-2 py-0.5 rounded">
+              <div key={idx} className="bg-white border-2 border-gray-200 hover:border-[#E50914] p-5 sm:p-6 rounded-2xl space-y-3 shadow-2xs hover:shadow-md transition-all h-full">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 pb-3">
+                  <h3 className="font-montserrat font-bold text-xl sm:text-2xl text-gray-900 tracking-wider">{partner.name}</h3>
+                  <span className="text-[10px] font-montserrat font-semibold bg-red-50 text-[#E50914] border border-[#E50914]/30 px-2 py-0.5 rounded whitespace-nowrap">
                     {partner.status}
                   </span>
                 </div>
@@ -189,12 +190,12 @@ export default function Media() {
                 <p className="text-xs text-gray-700 font-sans leading-relaxed">
                   {partner.desc}
                 </p>
-                <div className="p-2.5 bg-gray-50 rounded border border-gray-200 text-[11px] text-gray-500 font-sans font-medium">
+                <div className="p-2.5 bg-gray-50 rounded-xl border border-gray-200 text-[11px] text-gray-500 font-sans font-medium">
                   {partner.source}. Platform figures, not NPVL projections. Partners tentative.
                 </div>
               </div>
             ))}
-          </div>
+          </MobileCarousel>
         </section>
 
         {/* 2. NEW BROADCAST REACH SECTION */}
