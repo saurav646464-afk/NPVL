@@ -204,19 +204,19 @@ export default function Media() {
             <span className="text-xs font-montserrat font-semibold uppercase tracking-widest text-[#E50914]">
               MASSIVE AUDIENCE FOOTPRINT
             </span>
-            <h2 className="font-montserrat font-bold text-4xl md:text-6xl text-gray-900 tracking-wider uppercase">
+            <h2 className="font-montserrat font-bold text-3xl sm:text-4xl md:text-6xl text-gray-900 tracking-wider uppercase break-words">
               BROADCAST REACH
             </h2>
-            <p className="text-base text-[#E50914] font-montserrat font-semibold italic">
+            <p className="text-sm sm:text-base text-[#E50914] font-montserrat font-semibold italic">
               "Taking NPVL to a Massive National & Global Audience"
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <MobileCarousel desktopClass="sm:grid-cols-2 lg:grid-cols-4">
             {broadcastReachMetrics.map((item, idx) => (
               <div
                 key={idx}
-                className="group bg-white border-2 border-gray-200 hover:border-[#E50914] p-6 rounded-2xl transition-all shadow-2xs hover:shadow-lg flex flex-col justify-between"
+                className="group bg-white border-2 border-gray-200 hover:border-[#E50914] p-6 rounded-2xl transition-all shadow-2xs hover:shadow-lg flex flex-col justify-between h-full"
               >
                 <div>
                   <div className="flex items-center justify-between text-[11px] font-montserrat font-bold text-gray-500 mb-3 border-b border-gray-100 pb-2">
@@ -238,10 +238,10 @@ export default function Media() {
                 </div>
               </div>
             ))}
-          </div>
+          </MobileCarousel>
 
           {/* Broadcast Reach Disclaimer & Source Footer */}
-          <div className="bg-gray-50 border border-gray-300 p-6 rounded-xl space-y-2 text-center text-xs text-gray-600 font-sans shadow-2xs">
+          <div className="bg-gray-50 border border-gray-300 p-5 sm:p-6 rounded-xl space-y-2 text-center text-xs text-gray-600 font-sans shadow-2xs">
             <p className="font-montserrat font-bold text-gray-900 uppercase tracking-wider">
               IMPORTANT DISCLAIMER: Platform figures, not NPVL projections. Partners tentative.
             </p>
@@ -257,7 +257,7 @@ export default function Media() {
         {/* 3. NEW RADIO PARTNER SECTION & 4. PR & OUTREACH PARTNERS SECTION */}
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Radio Partner Section */}
-          <div className="bg-gray-50 border-2 border-gray-200 hover:border-[#E50914] p-8 rounded-2xl space-y-6 shadow-sm transition-colors">
+          <div className="bg-gray-50 border-2 border-gray-200 hover:border-[#E50914] p-6 sm:p-8 rounded-2xl space-y-6 shadow-sm transition-colors">
             <div className="space-y-1 border-b border-gray-200 pb-4">
               <div className="flex items-center gap-2 text-[#E50914]">
                 <Radio className="w-6 h-6" />
@@ -265,14 +265,14 @@ export default function Media() {
                   RADIO PARTNER / RADIO ACTIVATION (TENTATIVE)
                 </span>
               </div>
-              <h3 className="font-montserrat font-black text-3xl md:text-4xl text-gray-900 tracking-wider uppercase">
+              <h3 className="font-montserrat font-black text-2xl sm:text-3xl md:text-4xl text-gray-900 tracking-wider uppercase break-words">
                 TAKING NPVL TO EVERY STREET
               </h3>
             </div>
 
-            <div className="space-y-3">
+            <MobileCarousel desktopClass="grid-cols-1 !gap-3">
               {radioPoints.map((point, idx) => (
-                <div key={idx} className="bg-white border border-gray-200 p-4 rounded-xl flex items-start gap-3 shadow-2xs">
+                <div key={idx} className="bg-white border border-gray-200 p-4 rounded-xl flex items-start gap-3 shadow-2xs h-full">
                   <div className="w-2 h-2 rounded-full bg-[#E50914] mt-2 shrink-0" />
                   <div>
                     <h4 className="font-montserrat font-bold text-sm text-gray-900 tracking-wider uppercase">
@@ -282,11 +282,11 @@ export default function Media() {
                   </div>
                 </div>
               ))}
-            </div>
+            </MobileCarousel>
           </div>
 
           {/* PR & Outreach Partners Section */}
-          <div className="bg-gray-50 border-2 border-gray-200 hover:border-[#E50914] p-8 rounded-2xl space-y-6 shadow-sm transition-colors">
+          <div className="bg-gray-50 border-2 border-gray-200 hover:border-[#E50914] p-6 sm:p-8 rounded-2xl space-y-6 shadow-sm transition-colors">
             <div className="space-y-1 border-b border-gray-200 pb-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-[#E50914]">
@@ -299,14 +299,14 @@ export default function Media() {
                   TENTATIVE
                 </span>
               </div>
-              <h3 className="font-montserrat font-black text-3xl md:text-4xl text-gray-900 tracking-wider uppercase">
+              <h3 className="font-montserrat font-black text-2xl sm:text-3xl md:text-4xl text-gray-900 tracking-wider uppercase break-words">
                 PR & OUTREACH PARTNERS
               </h3>
             </div>
 
-            <div className="space-y-3">
+            <MobileCarousel desktopClass="grid-cols-1 !gap-3">
               {prCategories.map((pr, idx) => (
-                <div key={idx} className="bg-white border border-gray-200 p-4 rounded-xl flex items-start gap-3 shadow-2xs">
+                <div key={idx} className="bg-white border border-gray-200 p-4 rounded-xl flex items-start gap-3 shadow-2xs h-full">
                   <div className="w-2 h-2 rounded-full bg-[#E50914] mt-2 shrink-0" />
                   <div>
                     <h4 className="font-montserrat font-bold text-sm text-gray-900 tracking-wider uppercase">
@@ -316,7 +316,7 @@ export default function Media() {
                   </div>
                 </div>
               ))}
-            </div>
+            </MobileCarousel>
           </div>
         </section>
 
@@ -324,16 +324,16 @@ export default function Media() {
         <section className="space-y-8">
           <div className="text-center">
             <span className="text-xs font-montserrat font-bold uppercase tracking-widest text-[#E50914]">ALWAYS-ON CONTENT</span>
-            <h2 className="font-montserrat font-black text-4xl md:text-6xl text-gray-900 tracking-wider uppercase mt-1">
+            <h2 className="font-montserrat font-black text-3xl sm:text-4xl md:text-6xl text-gray-900 tracking-wider uppercase mt-1 break-words">
               MEDIA & CONTENT PILLARS
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <MobileCarousel desktopClass="md:grid-cols-2 lg:grid-cols-3">
             {contentPillars.map((pillar, idx) => {
               const Icon = pillar.icon;
               return (
-                <div key={idx} className="bg-gray-50 border-2 border-gray-200 hover:border-[#E50914] p-6 rounded-xl space-y-3 transition-colors shadow-2xs">
+                <div key={idx} className="bg-gray-50 border-2 border-gray-200 hover:border-[#E50914] p-6 rounded-xl space-y-3 transition-colors shadow-2xs h-full">
                   <div className="w-10 h-10 bg-[#E50914]/10 rounded-lg flex items-center justify-center text-[#E50914] border border-[#E50914]/30">
                     <Icon className="w-5 h-5" />
                   </div>
@@ -342,22 +342,22 @@ export default function Media() {
                 </div>
               );
             })}
-          </div>
+          </MobileCarousel>
         </section>
 
         {/* Social Platforms */}
-        <section className="bg-gray-50 border-2 border-gray-200 p-8 rounded-2xl space-y-6 shadow-sm">
-          <h3 className="font-montserrat font-black text-2xl md:text-3xl text-gray-900 tracking-wider text-center uppercase">
+        <section className="bg-gray-50 border-2 border-gray-200 p-6 sm:p-8 rounded-2xl space-y-6 shadow-sm">
+          <h3 className="font-montserrat font-black text-xl sm:text-2xl md:text-3xl text-gray-900 tracking-wider text-center uppercase break-words">
             ALWAYS-ON DIGITAL STORYTELLING PLATFORMS
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <MobileCarousel desktopClass="sm:grid-cols-2 lg:grid-cols-5">
             {socialPlatforms.map((soc, idx) => (
-              <div key={idx} className="bg-white border border-gray-300 p-4 rounded-xl space-y-2 shadow-2xs">
+              <div key={idx} className="bg-white border border-gray-300 p-4 sm:p-5 rounded-xl space-y-2 shadow-2xs h-full">
                 <span className="font-montserrat font-black text-lg text-[#E50914]">{soc.platform}</span>
                 <p className="text-xs text-gray-700 font-medium font-sans">{soc.role}</p>
               </div>
             ))}
-          </div>
+          </MobileCarousel>
         </section>
 
       </div>
