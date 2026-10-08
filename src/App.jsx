@@ -17,16 +17,24 @@ import Franchise from './pages/Franchise';
 import Ecosystem from './pages/Ecosystem';
 import Fans from './pages/Fans';
 import Contact from './pages/Contact';
+import TeamDetail from './pages/TeamDetail';
 
 export default function App() {
   const [showIntro, setShowIntro] = useState(true);
   const [currentPage, setCurrentPage] = useState('home');
+  const [selectedTeamId, setSelectedTeamId] = useState('up');
   const [contactModalOpen, setContactModalOpen] = useState(false);
   const [modalInterest, setModalInterest] = useState('General Enquiry');
 
   const openContactWithInterest = (interest = 'General Enquiry') => {
     setModalInterest(interest);
     setContactModalOpen(true);
+  };
+
+  const handleSelectTeam = (teamId) => {
+    setSelectedTeamId(teamId);
+    setCurrentPage('team-detail');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleReplayIntro = () => {
@@ -37,7 +45,13 @@ export default function App() {
   const renderPage = () => {
     switch (currentPage) {
       case 'home':
-        return <Home setCurrentPage={setCurrentPage} onOpenContact={() => openContactWithInterest('General Enquiry')} />;
+        return (
+          <Home
+            setCurrentPage={setCurrentPage}
+            onSelectTeam={handleSelectTeam}
+            onOpenContact={() => openContactWithInterest('General Enquiry')}
+          />
+        );
       case 'about':
         return <About onOpenContact={() => openContactWithInterest('General Enquiry')} />;
       case 'league':
@@ -45,7 +59,22 @@ export default function App() {
       case 'season1':
         return <Season1 onOpenContact={() => openContactWithInterest('General Enquiry')} />;
       case 'teams':
-        return <Teams onOpenContact={() => openContactWithInterest('Franchise')} />;
+        return (
+          <Teams
+            setCurrentPage={setCurrentPage}
+            onSelectTeam={handleSelectTeam}
+            onOpenContact={() => openContactWithInterest('Franchise')}
+          />
+        );
+      case 'team-detail':
+        return (
+          <TeamDetail
+            teamId={selectedTeamId}
+            setCurrentPage={setCurrentPage}
+            onSelectTeam={handleSelectTeam}
+            onOpenContact={() => openContactWithInterest('Franchise')}
+          />
+        );
       case 'media':
         return <Media />;
       case 'partners':
@@ -59,7 +88,13 @@ export default function App() {
       case 'contact':
         return <Contact />;
       default:
-        return <Home setCurrentPage={setCurrentPage} onOpenContact={() => openContactWithInterest('General Enquiry')} />;
+        return (
+          <Home
+            setCurrentPage={setCurrentPage}
+            onSelectTeam={handleSelectTeam}
+            onOpenContact={() => openContactWithInterest('General Enquiry')}
+          />
+        );
     }
   };
 

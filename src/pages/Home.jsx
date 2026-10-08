@@ -4,8 +4,9 @@ import { ChevronDown, Trophy, Sparkles, ShieldCheck, ArrowRight, Zap, Target, Us
 import StadiumBrandingShowcase from '../components/StadiumBrandingShowcase';
 import BroadcastMarquee from '../components/BroadcastMarquee';
 import MobileCarousel from '../components/MobileCarousel';
+import NorthIndiaMap from '../components/NorthIndiaMap';
 
-export default function Home({ setCurrentPage, onOpenContact }) {
+export default function Home({ setCurrentPage, onSelectTeam, onOpenContact }) {
   const stats = [
     { label: 'TEAMS', number: '07', sub: 'Regional Squads' },
     { label: 'DAYS OF ACTION', number: '15', sub: 'High-Octane Event' },
@@ -200,6 +201,13 @@ export default function Home({ setCurrentPage, onOpenContact }) {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* 3B. NORTH INDIA INTERACTIVE FRANCHISE MAP */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 border-t border-gray-200">
+        <div className="max-w-7xl mx-auto">
+          <NorthIndiaMap onSelectTeam={onSelectTeam} onOpenContact={onOpenContact} />
         </div>
       </section>
 

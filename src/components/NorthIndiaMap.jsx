@@ -1,203 +1,296 @@
 import React, { useState } from 'react';
-import { MapPin, Sparkles, CheckCircle2 } from 'lucide-react';
+import { MapPin, Sparkles, ChevronRight, ArrowRight, Shield } from 'lucide-react';
+import { teamsData } from '../data/teamsData';
+import MobileCarousel from './MobileCarousel';
 
-export default function NorthIndiaMap() {
-  const [activeState, setActiveState] = useState(null);
+export default function NorthIndiaMap({ onSelectTeam, onOpenContact }) {
+  const [activeTeamId, setActiveTeamId] = useState(null);
+  const [hoveredStateId, setHoveredStateId] = useState(null);
 
-  const states = [
+  // Map state configurations matched with exact locations on the attached map image
+  const mapHotspots = [
     {
       id: 'up',
-      name: 'Uttar Pradesh',
       code: 'UP',
-      tagline: 'Heartland of Indian Volleyball & Key Host Region',
-      cities: ['Gautam Budh Nagar (Host)', 'Varanasi (Host)', 'Lucknow', 'Kanpur'],
-      color: '#E50914',
-      path: "M 320,180 L 450,150 L 580,240 L 520,340 L 380,310 L 320,240 Z"
-    },
-    {
-      id: 'punjab',
-      name: 'Punjab',
-      code: 'PB',
-      tagline: 'Home of Athletic Powerhouse & Ludhiana Host City',
-      cities: ['Ludhiana (Host)', 'Jalandhar', 'Amritsar', 'Patiala'],
-      color: '#E50914',
-      path: "M 180,100 L 250,90 L 260,160 L 190,170 L 170,120 Z"
-    },
-    {
-      id: 'haryana',
-      name: 'Haryana',
-      code: 'HR',
-      tagline: 'Cradle of Champions & High-Energy Sports Culture',
-      cities: ['Gurugram', 'Faridabad', 'Rohtak', 'Hisar'],
-      color: '#E50914',
-      path: "M 250,160 L 310,150 L 320,220 L 260,230 L 240,180 Z"
+      stateName: 'Uttar Pradesh',
+      teamName: 'UP DOMINATORS',
+      logo: '/UP Dominator Volleyball Team Emblem.png',
+      color: '#1E5EFF', // Royal Blue
+      accentClass: 'bg-blue-600',
+      textAccent: 'text-blue-600',
+      tagline: 'Heartland of Indian Volleyball & Host Arenas',
+      cities: 'Gautam Budh Nagar · Varanasi · Lucknow',
+      top: '36%',
+      left: '45%',
+      badgeTop: '33%',
+      badgeLeft: '48%',
     },
     {
       id: 'rajasthan',
-      name: 'Rajasthan',
       code: 'RJ',
-      tagline: 'Massive Grassroots Reach & Youth Passion',
-      cities: ['Jaipur', 'Jodhpur', 'Udaipur', 'Kota'],
-      color: '#E50914',
-      path: "M 120,170 L 240,180 L 280,300 L 150,330 L 100,240 Z"
+      stateName: 'Rajasthan',
+      teamName: 'RAJASTHAN BULLS',
+      logo: '/Rajasthan Bulls Charging Crest.png',
+      color: '#FF7A00', // Orange
+      accentClass: 'bg-orange-500',
+      textAccent: 'text-orange-500',
+      tagline: 'Charging Spirit of the Royal Desert Warriors',
+      cities: 'Jaipur · Jodhpur · Udaipur · Kota',
+      top: '35%',
+      left: '20%',
+      badgeTop: '32%',
+      badgeLeft: '17%',
+    },
+    {
+      id: 'punjab',
+      code: 'PB',
+      stateName: 'Punjab',
+      teamName: 'PUNJAB PIRATES',
+      logo: '/Punjab Pirates Volleyball Club Crest.png',
+      color: '#15B825', // Green
+      accentClass: 'bg-emerald-500',
+      textAccent: 'text-emerald-500',
+      tagline: 'Ludhiana Official Host City Arena & High Power',
+      cities: 'Ludhiana (Host Arena) · Jalandhar',
+      top: '24%',
+      left: '25%',
+      badgeTop: '21%',
+      badgeLeft: '22%',
+    },
+    {
+      id: 'haryana',
+      code: 'HR',
+      stateName: 'Haryana',
+      teamName: 'HARYANA HAWKS',
+      logo: '/Haryana Hawks Volleyball Emblem.png',
+      color: '#FF1E27', // Bright Red
+      accentClass: 'bg-red-600',
+      textAccent: 'text-red-600',
+      tagline: 'Cradle of Champions & Grassroots Powerhouses',
+      cities: 'Gurugram · Rohtak · Faridabad',
+      top: '28.5%',
+      left: '29%',
+      badgeTop: '26%',
+      badgeLeft: '26%',
     },
     {
       id: 'delhi',
-      name: 'Delhi NCR',
       code: 'DL',
-      tagline: 'Capital Sporting Hub & Media Center',
-      cities: ['New Delhi', 'NCR Hubs'],
-      color: '#E50914',
-      path: "M 295,190 L 315,190 L 315,210 L 295,210 Z"
+      stateName: 'Delhi NCR',
+      teamName: 'DELHI WARRIORS',
+      logo: '/Delhi Warriors Golden Helmet Emblem.png',
+      color: '#FFDC00', // Yellow
+      accentClass: 'bg-amber-400',
+      textAccent: 'text-amber-500',
+      tagline: 'Capital Territory, Prime Media & Urban Power',
+      cities: 'New Delhi · NCR Metropolitan Arenas',
+      top: '31.5%',
+      left: '33.5%',
+      badgeTop: '29%',
+      badgeLeft: '35%',
     },
     {
       id: 'chandigarh',
-      name: 'Chandigarh',
       code: 'CH',
-      tagline: 'Union Territory Sports Apex',
-      cities: ['Chandigarh Sector 42 Sports Complex'],
-      color: '#E50914',
-      path: "M 255,140 L 270,140 L 270,155 L 255,155 Z"
-    },
-    {
-      id: 'hp',
-      name: 'Himachal Pradesh',
-      code: 'HP',
-      tagline: 'High-Altitude Athletic Training & Talent',
-      cities: ['Shimla', 'Dharamshala', 'Mandi'],
-      color: '#E50914',
-      path: "M 240,50 L 310,40 L 300,100 L 250,90 Z"
+      stateName: 'Chandigarh',
+      teamName: 'CHANDIGARH HEROES',
+      logo: '/Chandigarh Heroes Spartan Volleyball Crest.png',
+      color: '#A800D6', // Purple
+      accentClass: 'bg-purple-600',
+      textAccent: 'text-purple-600',
+      tagline: 'Spartan Discipline & Sector 42 Arena',
+      cities: 'Sector 42 Sports Complex',
+      top: '24%',
+      left: '31%',
+      badgeTop: '21%',
+      badgeLeft: '33%',
     },
     {
       id: 'uk',
-      name: 'Uttarakhand',
       code: 'UK',
-      tagline: 'Mountain Sporting Resilience & Academy Hubs',
-      cities: ['Dehradun', 'Haridwar', 'Halwani'],
-      color: '#E50914',
-      path: "M 310,90 L 390,80 L 380,150 L 310,140 Z"
+      stateName: 'Uttarakhand',
+      teamName: 'UTTARAKHAND UNITED',
+      logo: '/Uttarakhand United Tiger Crest.png',
+      color: '#00C4D6', // Cyan
+      accentClass: 'bg-cyan-500',
+      textAccent: 'text-cyan-600',
+      tagline: 'Mountain Stamina & Relentless Fighting Spirit',
+      cities: 'Dehradun · Haridwar · Haldwani',
+      top: '27%',
+      left: '42%',
+      badgeTop: '24%',
+      badgeLeft: '44%',
     },
   ];
 
+  // Currently active team details from teamsData
+  const activeTeam = teamsData.find(t => t.id === activeTeamId) || teamsData[0];
+  const activeSpot = mapHotspots.find(s => s.id === activeTeamId) || mapHotspots[0];
+
+  const handleTeamClick = (teamId) => {
+    if (onSelectTeam) {
+      onSelectTeam(teamId);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
-    <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 md:p-10 shadow-xl relative overflow-hidden">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-        {/* Left Column */}
-        <div className="lg:col-span-5 space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E50914]/10 border border-[#E50914]/30 text-[#E50914] text-xs font-bold uppercase tracking-widest">
+    <div className="bg-white border-2 border-gray-200 rounded-3xl p-5 sm:p-8 md:p-10 shadow-xl relative overflow-hidden">
+      {/* Background ambient lighting */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-[#E50914]/5 rounded-full blur-3xl pointer-events-none" />
+
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-gray-200 mb-8">
+        <div>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E50914]/10 border border-[#E50914]/30 text-[#E50914] text-xs font-bold uppercase tracking-widest font-montserrat mb-2">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>OFFICIALLY APPROVED NORTH ZONE</span>
+            <span>OFFICIAL INTERACTIVE FRANCHISE MAP</span>
           </div>
+          <h2 className="font-montserrat font-bold text-3xl sm:text-5xl text-gray-900 tracking-wider uppercase leading-none">
+            INDIA MAP — <span className="text-[#E50914]">7 NPVL TEAMS</span>
+          </h2>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="flex items-center gap-1.5 text-xs font-montserrat font-bold text-[#E50914] bg-red-50 border border-[#E50914]/30 px-3 py-1.5 rounded-lg">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#E50914] animate-pulse" />
+            CLICK ANY STATE TO OPEN OFFICIAL TEAM PAGE
+          </span>
+        </div>
+      </div>
 
-          <h3 className="font-bebas text-4xl md:text-5xl text-gray-900 uppercase tracking-wider leading-none">
-            NORTH INDIA <br />
-            <span className="text-[#E50914]">VOLLEYBALL DOMAIN</span>
-          </h3>
-
-          <p className="text-sm text-gray-700 leading-relaxed font-sans">
-            North India is the foundation of NPVL's regional focus. The league connects athletes, teams, communities and commercial partners across 8 core states and territories.
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        {/* Left Column — 7 Team Selectors & Active Profile Preview */}
+        <div className="lg:col-span-6 space-y-6">
+          <p className="text-sm text-gray-700 font-medium leading-relaxed">
+            Explore NPVL's 7 official franchise states highlighted on the national map. Click on any state pin directly or select a franchise below to open their full team profile page.
           </p>
 
-          <div className="grid grid-cols-2 gap-2 pt-2">
-            {states.map((st) => {
-              const isSelected = activeState?.id === st.id;
+          {/* 7 Teams Quick Selector Carousel on Mobile / Grid on Desktop */}
+          <MobileCarousel desktopClass="grid-cols-2">
+            {mapHotspots.map((spot) => {
+              const isSelected = activeTeamId === spot.id;
               return (
                 <button
-                  key={st.id}
-                  onMouseEnter={() => setActiveState(st)}
-                  onClick={() => setActiveState(st)}
-                  className={`flex items-center gap-2 p-2.5 rounded-lg border text-left transition-all duration-200 ${
+                  key={spot.id}
+                  onClick={() => {
+                    setActiveTeamId(spot.id);
+                    handleTeamClick(spot.id);
+                  }}
+                  onMouseEnter={() => {
+                    setActiveTeamId(spot.id);
+                    setHoveredStateId(spot.id);
+                  }}
+                  onMouseLeave={() => setHoveredStateId(null)}
+                  className={`w-full flex items-center justify-between p-3.5 rounded-2xl border text-left transition-all duration-200 group ${
                     isSelected
-                      ? 'bg-[#E50914] border-[#E50914] text-white shadow-md scale-[1.02]'
-                      : 'bg-gray-50 border-gray-200 text-gray-800 hover:border-[#E50914] hover:bg-red-50'
+                      ? 'bg-gray-900 border-[#E50914] text-white shadow-lg'
+                      : 'bg-gray-50 hover:bg-red-50/50 border-gray-200 text-gray-900 hover:border-[#E50914]'
                   }`}
                 >
-                  <MapPin className={`w-4 h-4 ${isSelected ? 'text-white' : 'text-[#E50914]'}`} />
-                  <span className="text-xs font-bold uppercase tracking-wider">{st.name}</span>
+                  <div className="flex items-center gap-3 truncate">
+                    {/* Color dot indicator matching exact map color */}
+                    <span
+                      className="w-3.5 h-3.5 rounded-full shrink-0 shadow-xs ring-2 ring-white"
+                      style={{ backgroundColor: spot.color }}
+                    />
+                    <img
+                      src={spot.logo}
+                      alt={spot.teamName}
+                      className="w-9 h-9 object-contain shrink-0 filter drop-shadow-xs"
+                    />
+                    <div className="truncate">
+                      <span className="font-montserrat font-bold text-xs sm:text-sm block leading-tight truncate">
+                        {spot.teamName}
+                      </span>
+                      <span className={`text-[10px] font-semibold uppercase tracking-wider ${isSelected ? 'text-gray-300' : 'text-gray-500'}`}>
+                        {spot.stateName}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <span className="text-[10px] font-montserrat font-bold uppercase tracking-wider text-[#E50914] hidden sm:inline group-hover:underline">
+                      VIEW
+                    </span>
+                    <ChevronRight className={`w-4 h-4 transition-transform group-hover:translate-x-0.5 ${isSelected ? 'text-[#E50914]' : 'text-gray-400 group-hover:text-[#E50914]'}`} />
+                  </div>
                 </button>
               );
             })}
-          </div>
-
-          {activeState && (
-            <div className="p-4 rounded-xl bg-gray-50 border-2 border-[#E50914] animate-fadeIn shadow-sm">
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-bebas text-2xl text-gray-900 tracking-wider">{activeState.name}</span>
-                <span className="text-xs font-bold text-[#E50914] bg-[#E50914]/10 px-2.5 py-0.5 rounded border border-[#E50914]/30">
-                  {activeState.code}
-                </span>
-              </div>
-              <p className="text-xs text-gray-700 font-bold mb-3">{activeState.tagline}</p>
-              <div className="flex flex-wrap gap-1.5">
-                {activeState.cities.map((city, idx) => (
-                  <span key={idx} className="text-[11px] bg-white text-gray-900 px-2 py-1 rounded border border-gray-300 flex items-center gap-1 font-medium shadow-2xs">
-                    <CheckCircle2 className="w-3 h-3 text-[#E50914]" />
-                    {city}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
+          </MobileCarousel>
         </div>
 
-        {/* Right Column SVG Map */}
-        <div className="lg:col-span-7 flex flex-col items-center justify-center relative">
-          <div className="relative w-full max-w-lg aspect-[4/3] bg-gray-50 border border-gray-300 rounded-2xl p-4 flex items-center justify-center shadow-inner">
-            <svg viewBox="0 0 600 400" className="w-full h-full filter drop-shadow-md">
-              <pattern id="gridLight" width="30" height="30" patternUnits="userSpaceOnUse">
-                <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(0,0,0,0.05)" strokeWidth="1" />
-              </pattern>
-              <rect width="100%" height="100%" fill="url(#gridLight)" />
+        {/* Right Column — Exact Map Image with Interactive Clickable Hotspots & Pins */}
+        <div className="lg:col-span-6 flex flex-col items-center justify-center relative">
+          <div className="relative w-full max-w-[480px] bg-gradient-to-b from-slate-50 via-white to-slate-50 border-2 border-gray-200 rounded-3xl p-3 sm:p-4 shadow-xl overflow-hidden group">
+            
+            {/* Exact India Map Image */}
+            <div className="relative w-full overflow-hidden rounded-2xl select-none">
+              <img
+                src="/india-npvl-map.png"
+                alt="NPVL India Map"
+                className="w-full h-auto object-contain block mx-auto filter drop-shadow-sm"
+              />
 
-              {states.map((st) => {
-                const isHovered = activeState?.id === st.id;
+              {/* Interactive State Pins / Hotspots overlay */}
+              {mapHotspots.map((spot) => {
+                const isSelected = activeTeamId === spot.id;
+                const isHovered = hoveredStateId === spot.id;
+                const active = isSelected || isHovered;
+
                 return (
-                  <g key={st.id} onMouseEnter={() => setActiveState(st)} onClick={() => setActiveState(st)}>
-                    <path
-                      d={st.path}
-                      className="state-path"
-                      fill={isHovered ? '#E50914' : '#E2E8F0'}
-                      stroke={isHovered ? '#FFFFFF' : '#E50914'}
-                      strokeWidth={isHovered ? '3' : '1.5'}
-                    />
-                    <text
-                      x={getCenter(st.id).x}
-                      y={getCenter(st.id).y}
-                      fill={isHovered ? '#FFFFFF' : '#1E293B'}
-                      fontSize="12"
-                      fontWeight="bold"
-                      fontFamily="Bebas Neue"
-                      letterSpacing="1"
-                      textAnchor="middle"
-                      className="pointer-events-none select-none"
+                  <div
+                    key={spot.id}
+                    style={{ top: spot.top, left: spot.left }}
+                    onClick={() => handleTeamClick(spot.id)}
+                    onMouseEnter={() => {
+                      setActiveTeamId(spot.id);
+                      setHoveredStateId(spot.id);
+                    }}
+                    onMouseLeave={() => setHoveredStateId(null)}
+                    className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer z-20 group/pin"
+                  >
+                    {/* Subtle radar effect on active/hovered state */}
+                    {active && (
+                      <span
+                        className="absolute -inset-1.5 rounded-full animate-ping opacity-60 pointer-events-none"
+                        style={{ backgroundColor: spot.color }}
+                      />
+                    )}
+
+                    {/* Sleek Interactive Marker Pin */}
+                    <div
+                      className={`relative flex items-center justify-center transition-all duration-200 rounded-full border shadow-sm ${
+                        active
+                          ? 'w-6 h-6 sm:w-7 sm:h-7 scale-110 shadow-lg ring-2 ring-white'
+                          : 'w-5 h-5 sm:w-6 sm:h-6 hover:scale-110'
+                      }`}
+                      style={{
+                        backgroundColor: spot.color,
+                        borderColor: '#FFFFFF',
+                      }}
                     >
-                      {st.code}
-                    </text>
-                  </g>
+                      <span className="font-montserrat font-black text-[8px] sm:text-[9px] text-white tracking-tighter select-none leading-none">
+                        {spot.code}
+                      </span>
+                    </div>
+                  </div>
                 );
               })}
-            </svg>
+            </div>
 
-            <div className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-md border border-gray-300 px-4 py-2 rounded-lg text-center text-xs text-gray-700 font-medium shadow-sm">
-              Hover over or click any region to illuminate North Zone coverage in red.
+            {/* Bottom floating instruction overlay */}
+            <div className="mt-3 bg-white/95 border border-gray-200 py-2 px-3 rounded-xl flex items-center justify-between text-[11px] text-gray-700 shadow-2xs">
+              <span className="font-montserrat font-bold flex items-center gap-1 text-[#E50914]">
+                <MapPin className="w-3.5 h-3.5" />
+                TAP ANY PIN OR STATE TO OPEN TEAM PAGE
+              </span>
+              <span className="text-[10px] text-gray-500 font-semibold hidden sm:inline">
+                OFFICIAL NPVL MAP
+              </span>
             </div>
           </div>
         </div>
       </div>
     </div>
   );
-}
-
-function getCenter(id) {
-  switch (id) {
-    case 'hp': return { x: 275, y: 70 };
-    case 'uk': return { x: 345, y: 115 };
-    case 'punjab': return { x: 215, y: 130 };
-    case 'chandigarh': return { x: 262, y: 147 };
-    case 'haryana': return { x: 275, y: 190 };
-    case 'delhi': return { x: 305, y: 200 };
-    case 'up': return { x: 420, y: 240 };
-    case 'rajasthan': return { x: 190, y: 240 };
-    default: return { x: 300, y: 200 };
-  }
 }

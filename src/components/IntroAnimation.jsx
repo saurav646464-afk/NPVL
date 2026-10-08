@@ -15,10 +15,10 @@ export default function IntroAnimation({ onComplete }) {
     const t1 = setTimeout(() => setStage(2), 300);
     const t2 = setTimeout(() => setStage(3), 900);
     const t3 = setTimeout(() => setStage(4), 1600);
-    const t4 = setTimeout(() => setStage(5), 2500);
+    const t4 = setTimeout(() => setStage(5), 2900);
     const t5 = setTimeout(() => {
       onComplete();
-    }, 3100);
+    }, 3600);
 
     return () => {
       clearTimeout(t1);
@@ -39,12 +39,12 @@ export default function IntroAnimation({ onComplete }) {
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-50 bg-white flex flex-col items-center justify-center overflow-hidden pointer-events-auto"
+        className="fixed inset-0 z-50 bg-white flex flex-col items-center justify-center overflow-hidden pointer-events-auto select-none"
         initial={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.6, ease: "easeInOut" }}
       >
-        {/* Step 2: Stadium Atmosphere */}
+        {/* Step 2: Stadium Atmosphere & Glow */}
         {stage >= 2 && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -95,7 +95,7 @@ export default function IntroAnimation({ onComplete }) {
           </div>
         )}
 
-        {/* Step 5: Particles */}
+        {/* Step 5: Energy Particles */}
         {stage >= 2 && (
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
             {[...Array(16)].map((_, i) => (
@@ -145,45 +145,62 @@ export default function IntroAnimation({ onComplete }) {
           </svg>
         )}
 
-        {/* Step 7, 8, 9: Official Logo, Title & Motto Reveal */}
-        <div className="relative z-10 text-center px-4 max-w-3xl">
+        {/* Step 7, 8, 9: Official Logo, Mascot & Motto Reveal */}
+        <div className="relative z-10 text-center px-4 max-w-4xl w-full">
           {stage >= 4 && (
             <motion.div
-              initial={{ scale: 0.7, opacity: 0 }}
+              initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.6, type: "spring", stiffness: 120 }}
-              className="flex flex-col items-center"
+              className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10"
             >
-              {/* Official Logo Display */}
-              <div className="relative mb-6">
+              {/* Mascot Entrance Graphic */}
+              <motion.div
+                initial={{ x: -40, opacity: 0, scale: 0.8 }}
+                animate={{ x: 0, opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.1, type: "spring" }}
+                className="relative shrink-0"
+              >
                 <div className="absolute inset-0 bg-[#E50914] blur-2xl opacity-30 rounded-full animate-pulse" />
                 <img
-                  src="/logo.png"
-                  alt="NPVL Official Logo"
-                  className="h-28 md:h-36 w-auto object-contain relative z-10 filter drop-shadow-xl"
+                  src="/npvl-mascot.jpg"
+                  alt="Official NPVL Mascot"
+                  className="h-36 sm:h-52 md:h-64 w-auto object-contain relative z-10 filter drop-shadow-2xl rounded-2xl"
                 />
+              </motion.div>
+
+              {/* Logo & League Titles */}
+              <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
+                {/* Official Logo Display */}
+                <div className="relative mb-3">
+                  <img
+                    src="/logo.png"
+                    alt="NPVL Official Logo"
+                    className="h-16 sm:h-24 w-auto object-contain filter drop-shadow-lg"
+                  />
+                </div>
+
+                {/* Text: NORTH PREMIER VOLLEYBALL LEAGUE */}
+                <motion.h1
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="font-bebas text-3xl sm:text-5xl md:text-6xl text-gray-900 tracking-wider uppercase leading-none"
+                >
+                  NORTH PREMIER <br />
+                  <span className="text-[#E50914]">VOLLEYBALL LEAGUE</span>
+                </motion.h1>
+
+                {/* Text: INSPIRE. EMPOWER. UNITE. */}
+                <motion.p
+                  initial={{ y: 15, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="font-bebas text-lg sm:text-2xl text-gray-800 tracking-[0.25em] uppercase mt-2"
+                >
+                  INSPIRE. <span className="text-[#E50914]">EMPOWER.</span> UNITE.
+                </motion.p>
               </div>
-
-              {/* Text: NORTH PREMIER VOLLEYBALL LEAGUE */}
-              <motion.h1
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="font-bebas text-4xl md:text-6xl text-gray-900 tracking-wider uppercase leading-none"
-              >
-                NORTH PREMIER <br />
-                <span className="text-[#E50914]">VOLLEYBALL LEAGUE</span>
-              </motion.h1>
-
-              {/* Text: INSPIRE. EMPOWER. UNITE. */}
-              <motion.p
-                initial={{ y: 15, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                className="font-bebas text-xl md:text-3xl text-gray-800 tracking-[0.25em] uppercase mt-4"
-              >
-                INSPIRE. <span className="text-[#E50914]">EMPOWER.</span> UNITE.
-              </motion.p>
             </motion.div>
           )}
         </div>
