@@ -53,7 +53,7 @@ export default function MobileCarousel({ children, desktopClass = 'md:grid-cols-
                 key={idx}
                 onClick={() => goTo(idx)}
                 className={`h-1.5 rounded-full transition-all duration-300 ${
-                  idx === active ? 'w-6 bg-[#E50914]' : 'w-1.5 bg-gray-300'
+                  idx === active ? 'w-6 bg-[#3854A4]' : 'w-1.5 bg-gray-300'
                 }`}
                 aria-label={`Slide ${idx + 1}`}
               />

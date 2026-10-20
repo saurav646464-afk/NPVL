@@ -17,12 +17,12 @@ export default function Fans({ onOpenContact }) {
         
         {/* Header */}
         <div className="text-center max-w-4xl mx-auto space-y-4">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#E50914] bg-[#E50914]/10 px-3 py-1 rounded-full border border-[#E50914]/30">
+          <span className="text-xs font-bold uppercase tracking-widest text-[#3854A4] bg-[#3854A4]/10 px-3 py-1 rounded-full border border-[#3854A4]/30">
             FANS & COMMUNITY
           </span>
           <h1 className="font-bebas text-3xl sm:text-6xl md:text-8xl text-gray-900 tracking-wider uppercase leading-none break-words">
             THE GAME BELONGS TO <br />
-            <span className="text-[#E50914]">EVERYONE.</span>
+            <span className="text-[#3854A4]">EVERYONE.</span>
           </h1>
           <p className="text-xs sm:text-base text-gray-700 font-medium leading-relaxed">
             A league is only as strong as the people who follow it. NPVL is dedicated to creating ways for fans, families, students, and local communities across North India to feel part of the game.
@@ -30,9 +30,9 @@ export default function Fans({ onOpenContact }) {
         </div>
 
         {/* 🐯 OFFICIAL NPVL MASCOT FEATURE SECTION */}
-        <div className="relative bg-gradient-to-br from-gray-950 via-gray-900 to-black text-white rounded-3xl p-5 sm:p-10 md:p-12 overflow-hidden shadow-2xl border-2 border-[#E50914]">
+        <div className="relative bg-gradient-to-br from-gray-950 via-gray-900 to-black text-white rounded-3xl p-5 sm:p-10 md:p-12 overflow-hidden shadow-2xl border-2 border-[#3854A4]">
           {/* Background Ambient Glow */}
-          <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#E50914]/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#3854A4]/20 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-80 h-80 bg-red-600/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
@@ -49,14 +49,14 @@ export default function Fans({ onOpenContact }) {
 
             {/* Mascot Story & Details Right */}
             <div className="lg:col-span-7 space-y-5 text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 bg-[#E50914]/20 border border-[#E50914]/40 px-3.5 py-1 rounded-full text-[#E50914] text-xs font-montserrat font-bold uppercase tracking-widest">
+              <div className="inline-flex items-center gap-2 bg-[#3854A4]/20 border border-[#3854A4]/40 px-3.5 py-1 rounded-full text-[#3854A4] text-xs font-montserrat font-bold uppercase tracking-widest">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>MEET THE OFFICIAL LEAGUE MASCOT</span>
               </div>
 
               <h2 className="font-montserrat font-black text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-white tracking-wider uppercase leading-tight break-words">
                 THE ROAR OF <br />
-                <span className="text-[#E50914]">NORTH INDIAN VOLLEYBALL</span>
+                <span className="text-[#3854A4]">NORTH INDIAN VOLLEYBALL</span>
               </h2>
 
               <p className="text-xs sm:text-base text-gray-300 font-sans leading-relaxed">
@@ -66,7 +66,7 @@ export default function Fans({ onOpenContact }) {
               {/* 4 Feature Badges */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-left">
                 <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md p-3 rounded-xl border border-white/10">
-                  <Zap className="w-5 h-5 text-[#E50914] shrink-0" />
+                  <Zap className="w-5 h-5 text-[#3854A4] shrink-0" />
                   <div>
                     <span className="font-montserrat font-bold text-xs uppercase block text-white">Matchday Arena Energy</span>
                     <span className="text-[11px] text-gray-400 font-medium">Leading stadium chants & crowd cheers</span>
@@ -74,7 +74,7 @@ export default function Fans({ onOpenContact }) {
                 </div>
 
                 <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md p-3 rounded-xl border border-white/10">
-                  <Award className="w-5 h-5 text-[#E50914] shrink-0" />
+                  <Award className="w-5 h-5 text-[#3854A4] shrink-0" />
                   <div>
                     <span className="font-montserrat font-bold text-xs uppercase block text-white">Campus & School Tours</span>
                     <span className="text-[11px] text-gray-400 font-medium">Youth engagement across North India</span>
@@ -82,7 +82,7 @@ export default function Fans({ onOpenContact }) {
                 </div>
 
                 <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md p-3 rounded-xl border border-white/10">
-                  <Camera className="w-5 h-5 text-[#E50914] shrink-0" />
+                  <Camera className="w-5 h-5 text-[#3854A4] shrink-0" />
                   <div>
                     <span className="font-montserrat font-bold text-xs uppercase block text-white">Fan Zone Photo Booths</span>
                     <span className="text-[11px] text-gray-400 font-medium">Exclusive arena selfies & meetups</span>
@@ -90,7 +90,7 @@ export default function Fans({ onOpenContact }) {
                 </div>
 
                 <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md p-3 rounded-xl border border-white/10">
-                  <Heart className="w-5 h-5 text-[#E50914] shrink-0" />
+                  <Heart className="w-5 h-5 text-[#3854A4] shrink-0" />
                   <div>
                     <span className="font-montserrat font-bold text-xs uppercase block text-white">Official Merch & Plushies</span>
                     <span className="text-[11px] text-gray-400 font-medium">Collectibles coming in Season 1</span>
@@ -102,7 +102,7 @@ export default function Fans({ onOpenContact }) {
               <div className="pt-3 flex flex-wrap items-center justify-center lg:justify-start gap-3">
                 <button
                   onClick={onOpenContact}
-                  className="red-sweep-btn bg-[#E50914] hover:bg-[#B20710] text-white font-montserrat font-bold text-xs uppercase tracking-wider px-6 py-3 rounded-xl shadow-lg transition-all"
+                  className="red-sweep-btn bg-[#E82024] hover:bg-[#C71216] text-white font-montserrat font-bold text-xs uppercase tracking-wider px-6 py-3 rounded-xl shadow-lg transition-all"
                 >
                   INVITE MASCOT TO YOUR CAMPUS / CITY
                 </button>
@@ -112,7 +112,7 @@ export default function Fans({ onOpenContact }) {
         </div>
 
         {/* Stadium Atmosphere Card */}
-        <div className="relative border-2 border-[#E50914]/40 rounded-2xl text-center overflow-hidden shadow-lg min-h-[200px] sm:min-h-[240px] flex flex-col items-center justify-center">
+        <div className="relative border-2 border-[#3854A4]/40 rounded-2xl text-center overflow-hidden shadow-lg min-h-[200px] sm:min-h-[240px] flex flex-col items-center justify-center">
           {/* Background stadium image */}
           <img
             src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1600&q=80&auto=format&fit=crop"
@@ -121,7 +121,7 @@ export default function Fans({ onOpenContact }) {
           />
           <div className="absolute inset-0 bg-gray-900/75" />
           <div className="relative z-10 p-6 md:p-14">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#E50914]">BRINGING FANS CLOSER</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-[#3854A4]">BRINGING FANS CLOSER</span>
             <h2 className="font-bebas text-2xl sm:text-5xl md:text-7xl text-white tracking-wider uppercase mt-2 mb-4 break-words">
               PACKED ARENAS. ELECTRIC ATMOSPHERE.
             </h2>
@@ -136,11 +136,11 @@ export default function Fans({ onOpenContact }) {
           {fanPillars.map((pillar, idx) => {
             const Icon = pillar.icon;
             return (
-              <div key={idx} className="bg-gray-50 border-2 border-gray-200 hover:border-[#E50914] p-6 sm:p-8 rounded-2xl transition-all space-y-4 group shadow-2xs hover:shadow-md">
-                <div className="w-12 h-12 bg-[#E50914]/10 rounded-lg flex items-center justify-center text-[#E50914] border border-[#E50914]/30 group-hover:scale-105 transition-transform">
+              <div key={idx} className="bg-gray-50 border-2 border-gray-200 hover:border-[#3854A4] p-6 sm:p-8 rounded-2xl transition-all space-y-4 group shadow-2xs hover:shadow-md">
+                <div className="w-12 h-12 bg-[#3854A4]/10 rounded-lg flex items-center justify-center text-[#3854A4] border border-[#3854A4]/30 group-hover:scale-105 transition-transform">
                   <Icon className="w-6 h-6" />
                 </div>
-                <h3 className="font-bebas text-xl sm:text-2xl text-gray-900 tracking-wider group-hover:text-[#E50914] transition-colors">
+                <h3 className="font-bebas text-xl sm:text-2xl text-gray-900 tracking-wider group-hover:text-[#3854A4] transition-colors">
                   {pillar.title}
                 </h3>
                 <p className="text-xs text-gray-700 font-medium leading-relaxed font-sans">
@@ -163,7 +163,7 @@ export default function Fans({ onOpenContact }) {
           </div>
           <button
             onClick={onOpenContact}
-            className="red-sweep-btn bg-[#E50914] hover:bg-[#B20710] text-white font-bold text-xs uppercase tracking-wider px-8 py-3.5 rounded-lg shadow-md whitespace-nowrap"
+            className="red-sweep-btn bg-[#E82024] hover:bg-[#C71216] text-white font-bold text-xs uppercase tracking-wider px-8 py-3.5 rounded-lg shadow-md whitespace-nowrap"
           >
             JOIN THE COMMUNITY
           </button>

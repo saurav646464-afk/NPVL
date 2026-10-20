@@ -28,7 +28,7 @@ export default function ContactModal({ isOpen, onClose, initialInterest = 'Gener
       });
       if (res.ok) {
         setSubmitted(true);
-        try { confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 }, colors: ['#E50914', '#FFFFFF', '#111827'] }); } catch (_) {}
+        try { confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 }, colors: ['#3854A4', '#E82024', '#FFFFFF', '#0F172A'] }); } catch (_) {}
       } else {
         alert('Submission failed. Please email hello@npvlofficial.com directly.');
       }
@@ -58,7 +58,7 @@ export default function ContactModal({ isOpen, onClose, initialInterest = 'Gener
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 backdrop-blur-md animate-fadeIn overflow-y-auto">
-      <div className="relative w-full max-w-2xl bg-white border-2 border-[#E50914] rounded-2xl shadow-2xl my-4 mx-3 overflow-hidden">
+      <div className="relative w-full max-w-2xl bg-white border-2 border-[#3854A4] rounded-2xl shadow-2xl my-4 mx-3 overflow-hidden">
 
         {/* Sticky Close Bar — always visible on mobile */}
         <div className="sticky top-0 z-10 bg-white border-b border-gray-200 px-5 py-3 flex items-center justify-between">
@@ -68,9 +68,9 @@ export default function ContactModal({ isOpen, onClose, initialInterest = 'Gener
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-900 rounded-full hover:bg-red-50 transition-colors border border-gray-200"
+            className="p-2 text-gray-400 hover:text-gray-900 rounded-full hover:bg-blue-50 transition-colors border border-gray-200"
           >
-            <X className="w-5 h-5 text-[#E50914]" />
+            <X className="w-5 h-5 text-[#3854A4]" />
           </button>
         </div>
 
@@ -78,7 +78,7 @@ export default function ContactModal({ isOpen, onClose, initialInterest = 'Gener
         {!submitted ? (
           <div>
             <div className="mb-6">
-              <span className="text-xs font-bold uppercase tracking-widest text-[#E50914] bg-[#E50914]/10 px-3 py-1 rounded-full border border-[#E50914]/30">
+              <span className="text-xs font-bold uppercase tracking-widest text-[#3854A4] bg-[#3854A4]/10 px-3 py-1 rounded-full border border-[#3854A4]/30">
                 OFFICIAL NPVL ENQUIRY
               </span>
               <h2 className="font-bebas text-3xl md:text-5xl text-gray-900 tracking-wider uppercase mt-2 leading-none">
@@ -102,7 +102,7 @@ export default function ContactModal({ isOpen, onClose, initialInterest = 'Gener
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Enter your full name"
-                    className="w-full bg-gray-50 border border-gray-300 focus:border-[#E50914] focus:ring-1 focus:ring-[#E50914] rounded-lg px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none"
+                    className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] focus:ring-1 focus:ring-[#3854A4] rounded-lg px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none"
                   />
                 </div>
 
@@ -117,7 +117,7 @@ export default function ContactModal({ isOpen, onClose, initialInterest = 'Gener
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="name@company.com"
-                    className="w-full bg-gray-50 border border-gray-300 focus:border-[#E50914] focus:ring-1 focus:ring-[#E50914] rounded-lg px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none"
+                    className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] focus:ring-1 focus:ring-[#3854A4] rounded-lg px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none"
                   />
                 </div>
               </div>
@@ -134,7 +134,7 @@ export default function ContactModal({ isOpen, onClose, initialInterest = 'Gener
                     value={formData.phone}
                     onChange={handleChange}
                     placeholder="+91 XXXXX XXXXX"
-                    className="w-full bg-gray-50 border border-gray-300 focus:border-[#E50914] focus:ring-1 focus:ring-[#E50914] rounded-lg px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none"
+                    className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] focus:ring-1 focus:ring-[#3854A4] rounded-lg px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none"
                   />
                 </div>
 
@@ -148,7 +148,7 @@ export default function ContactModal({ isOpen, onClose, initialInterest = 'Gener
                     value={formData.organisation}
                     onChange={handleChange}
                     placeholder="Company or Academy name"
-                    className="w-full bg-gray-50 border border-gray-300 focus:border-[#E50914] focus:ring-1 focus:ring-[#E50914] rounded-lg px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none"
+                    className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] focus:ring-1 focus:ring-[#3854A4] rounded-lg px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none"
                   />
                 </div>
               </div>
@@ -161,7 +161,7 @@ export default function ContactModal({ isOpen, onClose, initialInterest = 'Gener
                   name="interest"
                   value={formData.interest}
                   onChange={handleChange}
-                  className="w-full bg-gray-50 border border-gray-300 focus:border-[#E50914] focus:ring-1 focus:ring-[#E50914] rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none"
+                  className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] focus:ring-1 focus:ring-[#3854A4] rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none"
                 >
                   <option value="General Enquiry">General Enquiry</option>
                   <option value="Partnership">Partnership Opportunities</option>
@@ -183,14 +183,14 @@ export default function ContactModal({ isOpen, onClose, initialInterest = 'Gener
                   value={formData.message}
                   onChange={handleChange}
                   placeholder="Tell us how you would like to engage with NPVL..."
-                  className="w-full bg-gray-50 border border-gray-300 focus:border-[#E50914] focus:ring-1 focus:ring-[#E50914] rounded-lg px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none resize-none"
+                  className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] focus:ring-1 focus:ring-[#3854A4] rounded-lg px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none resize-none"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="red-sweep-btn w-full bg-[#E50914] hover:bg-[#B20710] text-white font-bold text-sm uppercase tracking-wider py-3.5 rounded-lg shadow-md transition-all flex items-center justify-center gap-2 mt-4"
+                className="red-sweep-btn w-full bg-[#E82024] hover:bg-[#C71216] text-white font-bold text-sm uppercase tracking-wider py-3.5 rounded-lg shadow-md transition-all flex items-center justify-center gap-2 mt-4"
               >
                 {loading ? (
                   <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
@@ -205,7 +205,7 @@ export default function ContactModal({ isOpen, onClose, initialInterest = 'Gener
           </div>
         ) : (
           <div className="text-center py-8 animate-fadeIn space-y-4">
-            <div className="w-16 h-16 bg-red-100 border-2 border-[#E50914] rounded-full flex items-center justify-center mx-auto text-[#E50914]">
+            <div className="w-16 h-16 bg-blue-50 border-2 border-[#3854A4] rounded-full flex items-center justify-center mx-auto text-[#3854A4]">
               <CheckCircle2 className="w-10 h-10" />
             </div>
 
@@ -214,12 +214,12 @@ export default function ContactModal({ isOpen, onClose, initialInterest = 'Gener
             </h3>
 
             <p className="text-sm text-gray-700 max-w-md mx-auto">
-              Thank you <span className="text-[#E50914] font-bold">{formData.name}</span>. Your details regarding <span className="text-gray-900 font-bold">"{formData.interest}"</span> have been recorded. The NPVL Team will contact you shortly.
+              Thank you <span className="text-[#3854A4] font-bold">{formData.name}</span>. Your details regarding <span className="text-gray-900 font-bold">"{formData.interest}"</span> have been recorded. The NPVL Team will contact you shortly.
             </p>
 
             <button
               onClick={handleReset}
-              className="mt-6 bg-[#E50914] hover:bg-[#B20710] text-white font-bold uppercase tracking-wider text-xs px-8 py-3 rounded-lg shadow-md"
+              className="mt-6 bg-[#3854A4] hover:bg-[#2A448E] text-white font-bold uppercase tracking-wider text-xs px-8 py-3 rounded-lg shadow-md"
             >
               CLOSE WINDOW
             </button>

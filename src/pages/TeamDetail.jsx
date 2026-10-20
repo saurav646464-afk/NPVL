@@ -22,9 +22,9 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
               if (setCurrentPage) setCurrentPage('teams');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="inline-flex items-center gap-2 text-xs font-montserrat font-bold uppercase tracking-wider text-gray-600 hover:text-[#E50914] transition-colors py-1.5 px-3 rounded-lg hover:bg-gray-100"
+            className="inline-flex items-center gap-2 text-xs font-montserrat font-bold uppercase tracking-wider text-gray-600 hover:text-[#3854A4] transition-colors py-1.5 px-3 rounded-lg hover:bg-gray-100"
           >
-            <ArrowLeft className="w-4 h-4 text-[#E50914]" />
+            <ArrowLeft className="w-4 h-4 text-[#3854A4]" />
             <span>BACK TO ALL TEAMS</span>
           </button>
 
@@ -33,12 +33,12 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
             <span>/</span>
             <span className="hover:text-gray-700 cursor-pointer" onClick={() => setCurrentPage('teams')}>TEAMS</span>
             <span>/</span>
-            <span className="text-[#E50914] font-bold uppercase">{team.name}</span>
+            <span className="text-[#3854A4] font-bold uppercase">{team.name}</span>
           </div>
         </div>
 
         {/* Hero Banner Header */}
-        <div className="relative bg-gradient-to-br from-gray-900 via-gray-950 to-black text-white rounded-3xl p-6 sm:p-10 md:p-12 overflow-hidden shadow-2xl border-2 border-[#E50914]/40">
+        <div className="relative bg-gradient-to-br from-gray-900 via-gray-950 to-black text-white rounded-3xl p-6 sm:p-10 md:p-12 overflow-hidden shadow-2xl border-2 border-[#3854A4]/40">
           {/* Subtle background image */}
           <img
             src={team.bgBanner}
@@ -46,12 +46,12 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
             className="absolute inset-0 w-full h-full object-cover opacity-15 mix-blend-luminosity pointer-events-none"
           />
           {/* Ambient red light glow */}
-          <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#E50914]/25 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#3854A4]/25 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             {/* Logo Left */}
             <div className="lg:col-span-4 flex flex-col items-center justify-center">
-              <div className="relative w-44 h-44 sm:w-56 sm:h-56 bg-white p-4 rounded-3xl shadow-2xl border-4 border-[#E50914] flex items-center justify-center group">
+              <div className="relative w-44 h-44 sm:w-56 sm:h-56 bg-white p-4 rounded-3xl shadow-2xl border-4 border-[#3854A4] flex items-center justify-center group">
                 <img
                   src={team.logo}
                   alt={team.name}
@@ -66,13 +66,13 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
             {/* Team Info Right */}
             <div className="lg:col-span-8 space-y-4 text-center lg:text-left">
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5">
-                <span className="bg-[#E50914] text-white font-montserrat font-bold text-xs uppercase tracking-widest px-3 py-1 rounded-full shadow-md">
+                <span className="bg-[#3854A4] text-white font-montserrat font-bold text-xs uppercase tracking-widest px-3 py-1 rounded-full shadow-md">
                   TEAM #{team.teamNumber}
                 </span>
                 <span className="bg-white/10 backdrop-blur-md text-gray-200 border border-white/20 font-montserrat font-semibold text-xs uppercase tracking-wider px-3 py-1 rounded-full">
                   {team.region}
                 </span>
-                <span className="bg-white/10 backdrop-blur-md text-[#E50914] border border-[#E50914]/40 font-montserrat font-bold text-xs uppercase tracking-wider px-3 py-1 rounded-full flex items-center gap-1">
+                <span className="bg-white/10 backdrop-blur-md text-[#3854A4] border border-[#3854A4]/40 font-montserrat font-bold text-xs uppercase tracking-wider px-3 py-1 rounded-full flex items-center gap-1">
                   <Shield className="w-3.5 h-3.5" />
                   SEASON 1 FOUNDING FRANCHISE
                 </span>
@@ -89,7 +89,7 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
               <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-3">
                 <button
                   onClick={onOpenContact}
-                  className="red-sweep-btn bg-[#E50914] hover:bg-[#B20710] text-white font-montserrat font-bold text-xs uppercase tracking-wider px-6 py-3 rounded-xl shadow-lg transition-all"
+                  className="red-sweep-btn bg-[#E82024] hover:bg-[#C71216] text-white font-montserrat font-bold text-xs uppercase tracking-wider px-6 py-3 rounded-xl shadow-lg transition-all"
                 >
                   ENQUIRE ABOUT THIS FRANCHISE
                 </button>
@@ -109,17 +109,17 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
 
         {/* Key Quick Stats Strip */}
         <MobileCarousel desktopClass="sm:grid-cols-3">
-          <div className="bg-gray-50 border-2 border-gray-200 p-6 rounded-2xl shadow-sm hover:border-[#E50914] transition-colors text-center h-full">
+          <div className="bg-gray-50 border-2 border-gray-200 p-6 rounded-2xl shadow-sm hover:border-[#3854A4] transition-colors text-center h-full">
             <span className="text-xs font-montserrat font-bold text-gray-500 uppercase tracking-widest block mb-1">
               ESTABLISHED STATUS
             </span>
-            <div className="font-bebas text-3xl sm:text-4xl text-[#E50914] tracking-wider">
+            <div className="font-bebas text-3xl sm:text-4xl text-[#3854A4] tracking-wider">
               {team.stats.championships}
             </div>
             <p className="text-xs text-gray-600 font-medium mt-1">Official Season 1 Founding Franchise</p>
           </div>
 
-          <div className="bg-gray-50 border-2 border-gray-200 p-6 rounded-2xl shadow-sm hover:border-[#E50914] transition-colors text-center h-full">
+          <div className="bg-gray-50 border-2 border-gray-200 p-6 rounded-2xl shadow-sm hover:border-[#3854A4] transition-colors text-center h-full">
             <span className="text-xs font-montserrat font-bold text-gray-500 uppercase tracking-widest block mb-1">
               REGIONAL REACH
             </span>
@@ -129,11 +129,11 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
             <p className="text-xs text-gray-600 font-medium mt-1">Across {team.region} territory</p>
           </div>
 
-          <div className="bg-gray-50 border-2 border-gray-200 p-6 rounded-2xl shadow-sm hover:border-[#E50914] transition-colors text-center h-full">
+          <div className="bg-gray-50 border-2 border-gray-200 p-6 rounded-2xl shadow-sm hover:border-[#3854A4] transition-colors text-center h-full">
             <span className="text-xs font-montserrat font-bold text-gray-500 uppercase tracking-widest block mb-1">
               HOME ARENA CAPACITY
             </span>
-            <div className="font-bebas text-3xl sm:text-4xl text-[#E50914] tracking-wider">
+            <div className="font-bebas text-3xl sm:text-4xl text-[#3854A4] tracking-wider">
               {team.stats.homeCapacity}
             </div>
             <p className="text-xs text-gray-600 font-medium mt-1">Proposed Match Infrastructure</p>
@@ -144,7 +144,7 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Left Column: Story */}
           <div className="lg:col-span-7 bg-white border-2 border-gray-200 p-8 rounded-3xl shadow-md space-y-6">
-            <div className="inline-flex items-center gap-2 bg-[#E50914]/10 border border-[#E50914]/30 px-3 py-1 rounded-full text-[#E50914] text-xs font-bold uppercase tracking-widest font-montserrat">
+            <div className="inline-flex items-center gap-2 bg-[#3854A4]/10 border border-[#3854A4]/30 px-3 py-1 rounded-full text-[#3854A4] text-xs font-bold uppercase tracking-widest font-montserrat">
               <Zap className="w-3.5 h-3.5" />
               <span>FRANCHISE BLUEPRINT & IDENTITY</span>
             </div>
@@ -164,7 +164,7 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
               <div className="space-y-2">
                 {team.strengths.map((str, idx) => (
                   <div key={idx} className="flex items-center gap-3 bg-gray-50 p-3 rounded-xl border border-gray-200">
-                    <CheckCircle2 className="w-4 h-4 text-[#E50914] shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-[#3854A4] shrink-0" />
                     <span className="text-sm font-semibold text-gray-800">{str}</span>
                   </div>
                 ))}
@@ -174,7 +174,7 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
 
           {/* Right Column: Home Venues & Hubs */}
           <div id="team-hubs-section" className="lg:col-span-5 bg-gray-50 border-2 border-gray-200 p-8 rounded-3xl shadow-md space-y-6">
-            <div className="inline-flex items-center gap-2 bg-[#E50914]/10 border border-[#E50914]/30 px-3 py-1 rounded-full text-[#E50914] text-xs font-bold uppercase tracking-widest font-montserrat">
+            <div className="inline-flex items-center gap-2 bg-[#3854A4]/10 border border-[#3854A4]/30 px-3 py-1 rounded-full text-[#3854A4] text-xs font-bold uppercase tracking-widest font-montserrat">
               <MapPin className="w-3.5 h-3.5" />
               <span>TERRITORY & HOST INFRASTRUCTURE</span>
             </div>
@@ -190,7 +190,7 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
             <div className="space-y-3">
               {team.homeVenues.map((venue, idx) => (
                 <div key={idx} className="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-[#E50914]/10 text-[#E50914] flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-lg bg-[#3854A4]/10 text-[#3854A4] flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
                     0{idx + 1}
                   </div>
                   <div>
@@ -201,12 +201,12 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
               ))}
             </div>
 
-            <div className="p-4 bg-white border border-[#E50914]/30 rounded-2xl flex items-center justify-between">
+            <div className="p-4 bg-white border border-[#3854A4]/30 rounded-2xl flex items-center justify-between">
               <div>
-                <span className="text-[10px] font-bold text-[#E50914] uppercase tracking-wider block">PRIMARY BASE</span>
+                <span className="text-[10px] font-bold text-[#3854A4] uppercase tracking-wider block">PRIMARY BASE</span>
                 <span className="font-montserrat font-bold text-sm text-gray-900">{team.primaryHub}</span>
               </div>
-              <span className="text-xs bg-[#E50914] text-white px-3 py-1 rounded-lg font-montserrat font-bold">
+              <span className="text-xs bg-[#3854A4] text-white px-3 py-1 rounded-lg font-montserrat font-bold">
                 CONFIRMED
               </span>
             </div>
@@ -217,7 +217,7 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
         <div className="bg-white border-2 border-gray-200 p-8 sm:p-10 rounded-3xl shadow-md space-y-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-gray-200 pb-6">
             <div>
-              <div className="inline-flex items-center gap-2 bg-[#E50914]/10 border border-[#E50914]/30 px-3 py-1 rounded-full text-[#E50914] text-xs font-bold uppercase tracking-widest font-montserrat mb-2">
+              <div className="inline-flex items-center gap-2 bg-[#3854A4]/10 border border-[#3854A4]/30 px-3 py-1 rounded-full text-[#3854A4] text-xs font-bold uppercase tracking-widest font-montserrat mb-2">
                 <Users className="w-3.5 h-3.5" />
                 <span>TECHNICAL SQUAD & ROSTER</span>
               </div>
@@ -225,7 +225,7 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
                 {team.name} SQUAD STRUCTURE
               </h2>
             </div>
-            <span className="text-xs font-montserrat font-bold text-[#E50914] bg-[#E50914]/10 px-3.5 py-1.5 rounded-full border border-[#E50914]/30">
+            <span className="text-xs font-montserrat font-bold text-[#3854A4] bg-[#3854A4]/10 px-3.5 py-1.5 rounded-full border border-[#3854A4]/30">
               SEASON 1 PLAYER DRAFT PENDING
             </span>
           </div>
@@ -239,9 +239,9 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
             ].map((card, idx) => {
               const Icon = card.icon;
               return (
-                <div key={idx} className="bg-gray-50 border-2 border-gray-200 p-6 rounded-2xl flex flex-col justify-between space-y-4 hover:border-[#E50914] transition-all group h-full">
+                <div key={idx} className="bg-gray-50 border-2 border-gray-200 p-6 rounded-2xl flex flex-col justify-between space-y-4 hover:border-[#3854A4] transition-all group h-full">
                   <div>
-                    <div className="w-10 h-10 rounded-xl bg-[#E50914]/10 text-[#E50914] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <div className="w-10 h-10 rounded-xl bg-[#3854A4]/10 text-[#3854A4] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                       <Icon className="w-5 h-5" />
                     </div>
                     <h3 className="font-montserrat font-bold text-base text-gray-900 tracking-wider">
@@ -251,7 +251,7 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
                       {card.status}
                     </p>
                   </div>
-                  <div className="pt-3 border-t border-gray-200 text-[10px] font-bold text-[#E50914] uppercase tracking-wider">
+                  <div className="pt-3 border-t border-gray-200 text-[10px] font-bold text-[#3854A4] uppercase tracking-wider">
                     NPVL DRAFT ALLOCATION
                   </div>
                 </div>
@@ -266,7 +266,7 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
             </div>
             <button
               onClick={onOpenContact}
-              className="bg-[#E50914] hover:bg-[#B20710] text-white font-montserrat font-bold text-xs uppercase tracking-wider px-5 py-2.5 rounded-lg whitespace-nowrap shadow-md"
+              className="bg-[#E82024] hover:bg-[#C71216] text-white font-montserrat font-bold text-xs uppercase tracking-wider px-5 py-2.5 rounded-lg whitespace-nowrap shadow-md"
             >
               REGISTER FOR TRIALS
             </button>
@@ -274,7 +274,7 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
         </div>
 
         {/* Commercial & Franchise Ownership CTA */}
-        <div className="relative bg-[#E50914] text-white rounded-3xl p-8 sm:p-12 overflow-hidden shadow-2xl text-center space-y-4">
+        <div className="relative bg-gradient-to-r from-[#121C38] via-[#3854A4] to-[#121C38] text-white border-2 border-[#3854A4] rounded-3xl p-8 sm:p-12 overflow-hidden shadow-2xl text-center space-y-4">
           <div className="relative z-10 max-w-3xl mx-auto space-y-4">
             <span className="text-xs font-montserrat font-bold uppercase tracking-widest bg-white/20 px-3 py-1 rounded-full border border-white/30 inline-block">
               COMMERCIAL & PARTNERSHIP RIGHTS
@@ -289,7 +289,7 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
               onClick={onOpenContact}
               className="bg-white text-gray-900 hover:bg-gray-100 font-montserrat font-bold text-xs uppercase tracking-widest px-8 py-3.5 rounded-xl shadow-xl transition-all inline-flex items-center gap-2 mt-2"
             >
-              <Mail className="w-4 h-4 text-[#E50914]" />
+              <Mail className="w-4 h-4 text-[#3854A4]" />
               <span>REQUEST FRANCHISE DOSSIER</span>
             </button>
           </div>
@@ -306,7 +306,7 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
                 if (setCurrentPage) setCurrentPage('teams');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="text-xs font-montserrat font-bold text-[#E50914] uppercase hover:underline"
+              className="text-xs font-montserrat font-bold text-[#3854A4] uppercase hover:underline"
             >
               VIEW ALL 7 TEAMS →
             </button>
@@ -320,13 +320,13 @@ export default function TeamDetail({ teamId = 'up', setCurrentPage, onSelectTeam
                   if (onSelectTeam) onSelectTeam(other.id);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="bg-gray-50 hover:bg-white border-2 border-gray-200 hover:border-[#E50914] p-4 rounded-2xl text-center transition-all duration-300 shadow-2xs hover:shadow-lg flex flex-col items-center justify-between group"
+                className="bg-gray-50 hover:bg-white border-2 border-gray-200 hover:border-[#3854A4] p-4 rounded-2xl text-center transition-all duration-300 shadow-2xs hover:shadow-lg flex flex-col items-center justify-between group"
               >
                 <div className="w-16 h-16 my-2 flex items-center justify-center p-1 group-hover:scale-110 transition-transform">
                   <img src={other.logo} alt={other.name} className="w-full h-full object-contain" />
                 </div>
                 <div className="w-full">
-                  <span className="font-montserrat font-bold text-xs text-gray-900 block leading-tight truncate group-hover:text-[#E50914] transition-colors">
+                  <span className="font-montserrat font-bold text-xs text-gray-900 block leading-tight truncate group-hover:text-[#3854A4] transition-colors">
                     {other.name}
                   </span>
                   <span className="text-[10px] text-gray-500 font-semibold block mt-0.5 uppercase truncate">

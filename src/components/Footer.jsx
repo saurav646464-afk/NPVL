@@ -15,7 +15,7 @@ export default function Footer({ setCurrentPage, onOpenContact }) {
   };
 
   return (
-    <footer className="bg-white border-t-2 border-[#E50914]/30 pt-10 pb-6 text-gray-900">
+    <footer className="bg-white border-t-2 border-[#3854A4]/30 pt-10 pb-6 text-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Top row: logo + quick links */}
@@ -24,10 +24,10 @@ export default function Footer({ setCurrentPage, onOpenContact }) {
           {/* Logo + tagline */}
           <div className="flex flex-col items-center sm:items-start gap-2 shrink-0">
             <img src="/logo.png" alt="NPVL" className="h-14 w-auto object-contain" />
-            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-[#3854A4]">
               North Premier Volleyball League
             </p>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-[#E50914] bg-[#E50914]/10 border border-[#E50914]/30 px-2 py-0.5 rounded-full">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-[#E82024] bg-[#E82024]/10 border border-[#E82024]/30 px-2.5 py-0.5 rounded-full">
               COMING SOON — SEASON 1
             </span>
           </div>
@@ -38,7 +38,7 @@ export default function Footer({ setCurrentPage, onOpenContact }) {
               <button
                 key={l.id}
                 onClick={() => go(l.id)}
-                className="text-sm font-bold text-gray-700 hover:text-[#E50914] transition-colors uppercase tracking-wide"
+                className="text-sm font-bold text-gray-700 hover:text-[#3854A4] transition-colors uppercase tracking-wide"
               >
                 {l.label}
               </button>
@@ -55,7 +55,7 @@ export default function Footer({ setCurrentPage, onOpenContact }) {
                 key={s}
                 href="#"
                 onClick={(e) => e.preventDefault()}
-                className="text-xs font-bold text-gray-700 hover:text-[#E50914] transition-colors"
+                className="text-xs font-bold text-gray-700 hover:text-[#3854A4] transition-colors"
               >
                 {s}
               </a>
@@ -63,14 +63,14 @@ export default function Footer({ setCurrentPage, onOpenContact }) {
             <span className="text-gray-300">|</span>
             <a
               href="mailto:hello@npvlofficial.com"
-              className="text-xs font-bold text-[#E50914] hover:underline"
+              className="text-xs font-bold text-[#3854A4] hover:text-[#E82024] transition-colors"
             >
               ✉ hello@npvlofficial.com
             </a>
           </div>
           <button
             onClick={onOpenContact}
-            className="bg-[#E50914] hover:bg-[#B20710] text-white text-xs font-bold uppercase tracking-wider px-5 py-2.5 rounded-lg shadow-sm transition-all whitespace-nowrap"
+            className="red-sweep-btn bg-[#E82024] hover:bg-[#C71216] text-white text-xs font-bold uppercase tracking-wider px-5 py-2.5 rounded-lg shadow-sm transition-all whitespace-nowrap"
           >
             JOIN THE JOURNEY
           </button>

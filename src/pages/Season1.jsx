@@ -29,13 +29,13 @@ export default function Season1({ onOpenContact }) {
     <div className="min-h-screen bg-white text-gray-900 pt-28 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto space-y-16">
         <div className="text-center max-w-4xl mx-auto space-y-4">
-          <div className="inline-flex items-center gap-2 bg-[#E50914]/10 border border-[#E50914]/30 px-3.5 py-1 rounded-full text-[#E50914] text-xs font-bold uppercase tracking-widest">
-            <Zap className="w-3.5 h-3.5 animate-pulse" />
+          <div className="inline-flex items-center gap-2 bg-[#3854A4]/10 border border-[#3854A4]/30 px-3.5 py-1 rounded-full text-[#3854A4] text-xs font-bold uppercase tracking-widest">
+            <Zap className="w-3.5 h-3.5 animate-pulse text-[#E82024]" />
             <span>COMING SOON — SEASON 1</span>
           </div>
           <h1 className="font-bebas text-3xl sm:text-6xl md:text-8xl text-gray-900 tracking-wider uppercase leading-none break-words">
             SEASON 1 <br />
-            <span className="text-[#E50914]">THE JOURNEY BEGINS</span>
+            <span className="text-[#3854A4]">THE JOURNEY BEGINS</span>
           </h1>
           <p className="text-xs sm:text-base text-gray-700 font-medium leading-relaxed">
             The inaugurational season of the North Premier Volleyball League brings together 7 premier regional franchises for 15 intense days of men's professional volleyball action.
@@ -57,37 +57,37 @@ export default function Season1({ onOpenContact }) {
 
         {/* Fact Cards */}
         <MobileCarousel desktopClass="md:grid-cols-5">
-          <div className="bg-gray-50 border-2 border-gray-200 p-6 rounded-xl text-center shadow-2xs">
-            <span className="font-bebas text-5xl text-[#E50914] block">07</span>
+          <div className="bg-slate-50 border-2 border-gray-200 p-6 rounded-xl text-center shadow-2xs">
+            <span className="font-bebas text-5xl text-[#3854A4] block">07</span>
             <span className="font-bebas text-xl text-gray-900 tracking-wider uppercase">TEAMS</span>
             <span className="text-[10px] sm:text-xs text-gray-500 font-bold block mt-1">Regional Squads</span>
           </div>
-          <div className="bg-gray-50 border-2 border-gray-200 p-6 rounded-xl text-center shadow-2xs">
-            <span className="font-bebas text-5xl text-[#E50914] block">15</span>
+          <div className="bg-slate-50 border-2 border-gray-200 p-6 rounded-xl text-center shadow-2xs">
+            <span className="font-bebas text-5xl text-[#3854A4] block">15</span>
             <span className="font-bebas text-xl text-gray-900 tracking-wider uppercase">DAYS</span>
             <span className="text-[10px] sm:text-xs text-gray-500 font-bold block mt-1">High-Octane Action</span>
           </div>
-          <div className="bg-gray-50 border-2 border-gray-200 p-6 rounded-xl text-center shadow-2xs">
-            <span className="font-bebas text-5xl text-[#E50914] block">25*</span>
+          <div className="bg-slate-50 border-2 border-gray-200 p-6 rounded-xl text-center shadow-2xs">
+            <span className="font-bebas text-5xl text-[#3854A4] block">25*</span>
             <span className="font-bebas text-xl text-gray-900 tracking-wider uppercase">MATCHES</span>
             <span className="text-[10px] sm:text-xs text-gray-500 font-bold block mt-1">Proposed Structure</span>
           </div>
-          <div className="bg-gray-50 border-2 border-gray-200 p-6 rounded-xl text-center shadow-2xs">
-            <span className="font-bebas text-5xl text-[#E50914] block">03</span>
+          <div className="bg-slate-50 border-2 border-gray-200 p-6 rounded-xl text-center shadow-2xs">
+            <span className="font-bebas text-5xl text-[#3854A4] block">03</span>
             <span className="font-bebas text-xl text-gray-900 tracking-wider uppercase">HOST CITIES</span>
             <span className="text-[10px] sm:text-xs text-gray-500 font-bold block mt-1">UP & Punjab Arenas</span>
           </div>
-          <div className="bg-gray-50 border-2 border-gray-200 p-6 rounded-xl text-center shadow-2xs">
+          <div className="bg-slate-50 border-2 border-gray-200 p-6 rounded-xl text-center shadow-2xs">
             <span className="font-bebas text-5xl text-gray-900 block">MEN</span>
-            <span className="font-bebas text-xl text-[#E50914] tracking-wider uppercase">CATEGORY</span>
+            <span className="font-bebas text-xl text-[#E82024] tracking-wider uppercase">CATEGORY</span>
             <span className="text-[10px] sm:text-xs text-gray-500 font-bold block mt-1">Premier Division</span>
           </div>
         </MobileCarousel>
 
         {/* Proposed Match Structure */}
-        <section className="bg-gray-50 border-2 border-gray-200 p-6 md:p-12 rounded-2xl space-y-8 shadow-sm">
+        <section className="bg-slate-50 border-2 border-gray-200 p-6 md:p-12 rounded-2xl space-y-8 shadow-sm">
           <div className="text-center">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#E50914]">PROPOSED FORMAT</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-[#3854A4]">PROPOSED FORMAT</span>
             <h2 className="font-bebas text-3xl sm:text-5xl md:text-6xl text-gray-900 tracking-wider uppercase mt-1 break-words">
               PROPOSED MATCH STRUCTURE
             </h2>
@@ -95,17 +95,17 @@ export default function Season1({ onOpenContact }) {
 
           <MobileCarousel desktopClass="md:grid-cols-3">
             <div className="bg-white border-2 border-gray-200 p-6 sm:p-8 rounded-xl space-y-2 shadow-2xs text-center">
-              <span className="font-bebas text-5xl sm:text-6xl text-[#E50914]">21</span>
+              <span className="font-bebas text-5xl sm:text-6xl text-[#3854A4]">21</span>
               <h3 className="font-bebas text-xl sm:text-2xl text-gray-900 tracking-wider">LEAGUE STAGE MATCHES</h3>
               <p className="text-xs text-gray-600 font-medium">Round-robin competition among all 7 franchises.</p>
             </div>
             <div className="bg-white border-2 border-gray-200 p-6 sm:p-8 rounded-xl space-y-2 shadow-2xs text-center">
-              <span className="font-bebas text-5xl sm:text-6xl text-[#E50914]">03</span>
+              <span className="font-bebas text-5xl sm:text-6xl text-[#3854A4]">03</span>
               <h3 className="font-bebas text-xl sm:text-2xl text-gray-900 tracking-wider">QUALIFICATION MATCHES</h3>
               <p className="text-xs text-gray-600 font-medium">Top 4 teams battle for qualification spots.</p>
             </div>
-            <div className="bg-white border-2 border-[#E50914] p-6 sm:p-8 rounded-xl space-y-2 shadow-md text-center">
-              <span className="font-bebas text-5xl sm:text-6xl text-[#E50914]">01</span>
+            <div className="bg-white border-2 border-[#E82024] p-6 sm:p-8 rounded-xl space-y-2 shadow-md text-center">
+              <span className="font-bebas text-5xl sm:text-6xl text-[#E82024]">01</span>
               <h3 className="font-bebas text-lg sm:text-2xl text-gray-900 tracking-wider leading-tight">CHAMPIONSHIP FINAL</h3>
               <p className="text-xs text-gray-600 font-medium">Crowning the Season 1 NPVL Champions.</p>
             </div>
@@ -115,7 +115,7 @@ export default function Season1({ onOpenContact }) {
         {/* Host Cities */}
         <section className="space-y-8">
           <div className="text-center">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#E50914]">DESTINATIONS</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-[#3854A4]">DESTINATIONS</span>
             <h2 className="font-bebas text-3xl sm:text-5xl md:text-6xl text-gray-900 tracking-wider uppercase mt-1 break-words">
               SEASON 1 HOST CITIES
             </h2>
@@ -123,17 +123,17 @@ export default function Season1({ onOpenContact }) {
 
           <MobileCarousel desktopClass="md:grid-cols-3">
             {hostCities.map((city, idx) => (
-              <div key={idx} className="bg-white border-2 border-gray-200 p-6 sm:p-8 rounded-2xl space-y-4 hover:border-[#E50914] transition-colors shadow-sm">
+              <div key={idx} className="bg-white border-2 border-gray-200 p-6 sm:p-8 rounded-2xl space-y-4 hover:border-[#3854A4] transition-colors shadow-sm">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-[#E50914] bg-[#E50914]/10 px-2.5 py-1 rounded uppercase border border-[#E50914]/30">
+                  <span className="text-xs font-bold text-[#3854A4] bg-[#3854A4]/10 px-2.5 py-1 rounded uppercase border border-[#3854A4]/30">
                     {city.state}
                   </span>
-                  <MapPin className="w-5 h-5 text-[#E50914]" />
+                  <MapPin className="w-5 h-5 text-[#E82024]" />
                 </div>
                 <h3 className="font-bebas text-2xl sm:text-3xl text-gray-900 tracking-wider">{city.city}</h3>
                 <p className="text-xs text-gray-700 font-medium">{city.desc}</p>
                 <div className="pt-4 border-t border-gray-100 flex items-center gap-2 text-xs text-gray-500 font-bold italic">
-                  <Info className="w-4 h-4 text-[#E50914]" />
+                  <Info className="w-4 h-4 text-[#3854A4]" />
                   <span>{city.venue}</span>
                 </div>
               </div>

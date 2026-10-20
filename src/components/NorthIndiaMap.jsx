@@ -137,22 +137,22 @@ export default function NorthIndiaMap({ onSelectTeam, onOpenContact }) {
   return (
     <div className="bg-white border-2 border-gray-200 rounded-3xl p-5 sm:p-8 md:p-10 shadow-xl relative overflow-hidden">
       {/* Background ambient lighting */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-[#E50914]/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 right-0 w-96 h-96 bg-[#3854A4]/5 rounded-full blur-3xl pointer-events-none" />
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-gray-200 mb-8">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E50914]/10 border border-[#E50914]/30 text-[#E50914] text-xs font-bold uppercase tracking-widest font-montserrat mb-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#3854A4]/10 border border-[#3854A4]/30 text-[#3854A4] text-xs font-bold uppercase tracking-widest font-montserrat mb-2">
             <Sparkles className="w-3.5 h-3.5" />
             <span>OFFICIAL INTERACTIVE FRANCHISE MAP</span>
           </div>
           <h2 className="font-montserrat font-bold text-3xl sm:text-5xl text-gray-900 tracking-wider uppercase leading-none">
-            INDIA MAP — <span className="text-[#E50914]">7 NPVL TEAMS</span>
+            INDIA MAP — <span className="text-[#3854A4]">7 NPVL TEAMS</span>
           </h2>
         </div>
         <div className="flex items-center gap-2">
-          <span className="flex items-center gap-1.5 text-xs font-montserrat font-bold text-[#E50914] bg-red-50 border border-[#E50914]/30 px-3 py-1.5 rounded-lg">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#E50914] animate-pulse" />
+          <span className="flex items-center gap-1.5 text-xs font-montserrat font-bold text-[#3854A4] bg-blue-50/60 border border-[#3854A4]/30 px-3 py-1.5 rounded-lg">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#E82024] animate-pulse" />
             CLICK ANY STATE TO OPEN OFFICIAL TEAM PAGE
           </span>
         </div>
@@ -183,8 +183,8 @@ export default function NorthIndiaMap({ onSelectTeam, onOpenContact }) {
                   onMouseLeave={() => setHoveredStateId(null)}
                   className={`w-full flex items-center justify-between p-3.5 rounded-2xl border text-left transition-all duration-200 group ${
                     isSelected
-                      ? 'bg-gray-900 border-[#E50914] text-white shadow-lg'
-                      : 'bg-gray-50 hover:bg-red-50/50 border-gray-200 text-gray-900 hover:border-[#E50914]'
+                      ? 'bg-[#121C38] border-[#3854A4] text-white shadow-lg'
+                      : 'bg-gray-50 hover:bg-blue-50/50 border-gray-200 text-gray-900 hover:border-[#3854A4]'
                   }`}
                 >
                   <div className="flex items-center gap-3 truncate">
@@ -208,10 +208,10 @@ export default function NorthIndiaMap({ onSelectTeam, onOpenContact }) {
                     </div>
                   </div>
                   <div className="flex items-center gap-1.5 shrink-0">
-                    <span className="text-[10px] font-montserrat font-bold uppercase tracking-wider text-[#E50914] hidden sm:inline group-hover:underline">
+                    <span className="text-[10px] font-montserrat font-bold uppercase tracking-wider text-[#3854A4] group-hover:text-[#E82024] hidden sm:inline group-hover:underline">
                       VIEW
                     </span>
-                    <ChevronRight className={`w-4 h-4 transition-transform group-hover:translate-x-0.5 ${isSelected ? 'text-[#E50914]' : 'text-gray-400 group-hover:text-[#E50914]'}`} />
+                    <ChevronRight className={`w-4 h-4 transition-transform group-hover:translate-x-0.5 ${isSelected ? 'text-[#E82024]' : 'text-gray-400 group-hover:text-[#3854A4]'}`} />
                   </div>
                 </button>
               );
@@ -280,8 +280,8 @@ export default function NorthIndiaMap({ onSelectTeam, onOpenContact }) {
 
             {/* Bottom floating instruction overlay */}
             <div className="mt-3 bg-white/95 border border-gray-200 py-2 px-3 rounded-xl flex items-center justify-between text-[11px] text-gray-700 shadow-2xs">
-              <span className="font-montserrat font-bold flex items-center gap-1 text-[#E50914]">
-                <MapPin className="w-3.5 h-3.5" />
+              <span className="font-montserrat font-bold flex items-center gap-1 text-[#3854A4]">
+                <MapPin className="w-3.5 h-3.5 text-[#E82024]" />
                 TAP ANY PIN OR STATE TO OPEN TEAM PAGE
               </span>
               <span className="text-[10px] text-gray-500 font-semibold hidden sm:inline">

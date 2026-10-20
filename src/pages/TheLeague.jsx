@@ -34,12 +34,12 @@ export default function TheLeague({ onOpenContact }) {
       <div className="max-w-7xl mx-auto space-y-16 sm:space-y-20">
         {/* Header */}
         <div className="text-center max-w-4xl mx-auto space-y-4">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#E50914] bg-[#E50914]/10 px-3 py-1 rounded-full border border-[#E50914]/30">
+          <span className="text-xs font-bold uppercase tracking-widest text-[#3854A4] bg-[#3854A4]/10 px-3 py-1 rounded-full border border-[#3854A4]/30">
             THE NPVL BLUEPRINT
           </span>
           <h1 className="font-bebas text-3xl sm:text-5xl md:text-7xl lg:text-8xl text-gray-900 tracking-wider uppercase leading-none break-words">
             THE LEAGUE ARCHITECTURE & <br />
-            <span className="text-[#E50914]">VOLLEYBALL ECOSYSTEM</span>
+            <span className="text-[#3854A4]">VOLLEYBALL ECOSYSTEM</span>
           </h1>
           <p className="text-xs sm:text-sm md:text-base text-gray-700 font-medium leading-relaxed max-w-3xl mx-auto">
             NPVL builds the sport through one connected approach — uniting regional pride, grassroots talent, professional match management, and modern sports entertainment.
@@ -53,7 +53,7 @@ export default function TheLeague({ onOpenContact }) {
             alt="Volleyball match action"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#E50914]/85 via-black/50 to-transparent flex items-center p-6 sm:p-8 md:p-12">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#3854A4]/90 via-black/50 to-transparent flex items-center p-6 sm:p-8 md:p-12">
             <div>
               <p className="font-bebas text-xl sm:text-3xl md:text-4xl text-white tracking-wider">NORTH INDIA'S BIGGEST</p>
               <p className="font-bebas text-2xl sm:text-4xl md:text-6xl text-white tracking-wider leading-none">VOLLEYBALL PLATFORM</p>
@@ -64,7 +64,7 @@ export default function TheLeague({ onOpenContact }) {
         {/* Regional Footprint Map Section */}
         <section className="space-y-6">
           <div className="text-center">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#E50914]">REGIONAL FOOTPRINT</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-[#3854A4]">REGIONAL FOOTPRINT</span>
             <h2 className="font-bebas text-3xl sm:text-4xl md:text-6xl text-gray-900 tracking-wider uppercase mt-1">
               THE NORTH ZONE DOMAIN
             </h2>
@@ -75,7 +75,7 @@ export default function TheLeague({ onOpenContact }) {
         {/* Approach Carousel */}
         <section className="bg-gray-50 border-2 border-gray-200 p-5 sm:p-8 md:p-12 rounded-3xl space-y-6 sm:space-y-8 shadow-sm">
           <div className="text-center">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#E50914]">METHODOLOGY</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-[#3854A4]">METHODOLOGY</span>
             <h3 className="font-bebas text-3xl sm:text-4xl md:text-6xl text-gray-900 tracking-wider uppercase mt-1">
               THE NPVL APPROACH
             </h3>
@@ -85,11 +85,11 @@ export default function TheLeague({ onOpenContact }) {
             {approachSteps.map((step, idx) => (
               <div
                 key={idx}
-                className="bg-white border-2 border-gray-200 hover:border-[#E50914] p-6 rounded-2xl transition-all duration-300 flex flex-col justify-between group shadow-2xs hover:shadow-md h-full"
+                className="bg-white border-2 border-gray-200 hover:border-[#3854A4] p-6 rounded-2xl transition-all duration-300 flex flex-col justify-between group shadow-2xs hover:shadow-md h-full"
               >
                 <div>
-                  <span className="font-bebas text-3xl text-[#E50914] block mb-2">0{idx + 1}</span>
-                  <h4 className="font-bebas text-2xl text-gray-900 tracking-wider group-hover:text-[#E50914] transition-colors">
+                  <span className="font-bebas text-3xl text-[#3854A4] block mb-2">0{idx + 1}</span>
+                  <h4 className="font-bebas text-2xl text-gray-900 tracking-wider group-hover:text-[#3854A4] transition-colors">
                     {step.title}
                   </h4>
                   <p className="text-xs text-gray-600 font-medium leading-relaxed mt-2">
@@ -104,7 +104,7 @@ export default function TheLeague({ onOpenContact }) {
         {/* Player Journey */}
         <section className="space-y-8 sm:space-y-12">
           <div className="text-center">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#E50914] bg-[#E50914]/10 px-3 py-1 rounded-full border border-[#E50914]/30">
+            <span className="text-xs font-bold uppercase tracking-widest text-[#3854A4] bg-[#3854A4]/10 px-3 py-1 rounded-full border border-[#3854A4]/30">
               ATHLETE DEVELOPMENT
             </span>
             <h2 className="font-bebas text-3xl sm:text-5xl md:text-7xl text-gray-900 tracking-wider uppercase mt-3 break-words">
@@ -118,8 +118,8 @@ export default function TheLeague({ onOpenContact }) {
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-6 gap-2.5 sm:gap-3 text-center">
               {['GRASSROOTS', 'SCHOOLS & COLLEGES', 'ACADEMIES & CLUBS', 'COMPETITIVE PLATFORMS', 'NPVL LEAGUE', 'HIGHER OPPORTUNITIES'].map((stage, idx) => (
-                <div key={idx} className="bg-gray-50 border-2 border-[#E50914]/30 p-3 sm:p-4 rounded-xl flex flex-col items-center justify-center">
-                  <span className="font-bebas text-lg sm:text-xl text-[#E50914]">{idx + 1}</span>
+                <div key={idx} className="bg-gray-50 border-2 border-[#3854A4]/30 p-3 sm:p-4 rounded-xl flex flex-col items-center justify-center">
+                  <span className="font-bebas text-lg sm:text-xl text-[#3854A4]">{idx + 1}</span>
                   <span className="text-[11px] sm:text-xs font-bold text-gray-900 uppercase tracking-wider mt-1">{stage}</span>
                 </div>
               ))}
@@ -133,10 +133,10 @@ export default function TheLeague({ onOpenContact }) {
             <div className="flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4">
               {['PARTICIPATE', 'COMPETE', 'PERFORM', 'GAIN EXPOSURE', 'PROGRESS'].map((step, idx) => (
                 <React.Fragment key={idx}>
-                  <div className="w-full md:w-auto flex-1 bg-white hover:bg-[#E50914] text-gray-900 hover:text-white p-3.5 sm:p-4 rounded-xl border-2 border-gray-200 hover:border-[#E50914] transition-all text-center group shadow-2xs">
+                  <div className="w-full md:w-auto flex-1 bg-white hover:bg-[#3854A4] text-gray-900 hover:text-white p-3.5 sm:p-4 rounded-xl border-2 border-gray-200 hover:border-[#3854A4] transition-all text-center group shadow-2xs">
                     <span className="font-bebas text-xl sm:text-2xl tracking-wider block">{step}</span>
                   </div>
-                  {idx < 4 && <ArrowRight className="hidden md:block w-5 h-5 text-[#E50914] shrink-0" />}
+                  {idx < 4 && <ArrowRight className="hidden md:block w-5 h-5 text-[#3854A4] shrink-0" />}
                 </React.Fragment>
               ))}
             </div>
@@ -146,7 +146,7 @@ export default function TheLeague({ onOpenContact }) {
         {/* Stakeholders Carousel */}
         <section className="bg-white border-2 border-gray-200 p-5 sm:p-8 md:p-12 rounded-3xl space-y-6 sm:space-y-8 shadow-sm">
           <div className="text-center max-w-3xl mx-auto">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#E50914]">STAKEHOLDER INTEGRATION</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-[#3854A4]">STAKEHOLDER INTEGRATION</span>
             <h3 className="font-bebas text-2xl sm:text-4xl md:text-6xl text-gray-900 tracking-wider uppercase mt-1 break-words">
               THE VOLLEYBALL ECOSYSTEM
             </h3>
@@ -154,8 +154,8 @@ export default function TheLeague({ onOpenContact }) {
 
           <MobileCarousel desktopClass="md:grid-cols-2 lg:grid-cols-3">
             {ecosystemStakeholders.map((sh, idx) => (
-              <div key={idx} className="bg-gray-50 border-2 border-gray-200 hover:border-[#E50914] p-6 rounded-2xl space-y-2 h-full shadow-2xs hover:shadow-md transition-all">
-                <span className="text-xs font-bold text-[#E50914] uppercase tracking-wider">STAKEHOLDER 0{idx + 1}</span>
+              <div key={idx} className="bg-gray-50 border-2 border-gray-200 hover:border-[#3854A4] p-6 rounded-2xl space-y-2 h-full shadow-2xs hover:shadow-md transition-all">
+                <span className="text-xs font-bold text-[#3854A4] uppercase tracking-wider">STAKEHOLDER 0{idx + 1}</span>
                 <h4 className="font-bebas text-2xl sm:text-3xl text-gray-900 tracking-wider">{sh.title}</h4>
                 <p className="text-xs text-gray-700 font-medium leading-relaxed font-sans">{sh.desc}</p>
               </div>
@@ -164,9 +164,9 @@ export default function TheLeague({ onOpenContact }) {
         </section>
 
         {/* Impact Areas Carousel */}
-        <section className="bg-gray-50 border-2 border-[#E50914]/40 p-5 sm:p-8 md:p-12 rounded-3xl space-y-6 sm:space-y-8 shadow-sm">
+        <section className="bg-gray-50 border-2 border-[#3854A4]/40 p-5 sm:p-8 md:p-12 rounded-3xl space-y-6 sm:space-y-8 shadow-sm">
           <div className="text-center max-w-3xl mx-auto">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#E50914]">WHAT WE CREATE</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-[#3854A4]">WHAT WE CREATE</span>
             <h3 className="font-bebas text-2xl sm:text-4xl md:text-6xl text-gray-900 tracking-wider uppercase mt-1 break-words">
               THE NPVL IMPACT
             </h3>
@@ -174,8 +174,8 @@ export default function TheLeague({ onOpenContact }) {
 
           <MobileCarousel desktopClass="md:grid-cols-3 lg:grid-cols-5">
             {impactAreas.map((imp, idx) => (
-              <div key={idx} className="bg-white p-6 rounded-2xl border-2 border-gray-200 hover:border-[#E50914] shadow-2xs h-full transition-all">
-                <h4 className="font-bebas text-xl text-[#E50914] mb-2">{imp.title}</h4>
+              <div key={idx} className="bg-white p-6 rounded-2xl border-2 border-gray-200 hover:border-[#3854A4] shadow-2xs h-full transition-all">
+                <h4 className="font-bebas text-xl text-[#3854A4] mb-2">{imp.title}</h4>
                 <p className="text-xs text-gray-700 font-medium leading-relaxed font-sans">{imp.desc}</p>
               </div>
             ))}

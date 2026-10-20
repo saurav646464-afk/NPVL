@@ -28,11 +28,11 @@ export default function StadiumBrandingShowcase({ onOpenContact }) {
   const items = activeCategory === 'stadium' ? stadiumBranding : outdoorBranding;
 
   return (
-    <div className="bg-gray-50 border-2 border-gray-200 rounded-2xl p-6 md:p-12 shadow-xl relative overflow-hidden">
+    <div className="bg-slate-50 border-2 border-gray-200 rounded-2xl p-6 md:p-12 shadow-xl relative overflow-hidden">
       {/* Category Toggle Header */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-8 border-b border-gray-200 mb-8">
         <div>
-          <span className="text-xs font-bold uppercase tracking-widest text-[#E50914] bg-[#E50914]/10 px-3 py-1 rounded-full border border-[#E50914]/30">
+          <span className="text-xs font-bold uppercase tracking-widest text-[#3854A4] bg-[#3854A4]/10 px-3 py-1 rounded-full border border-[#3854A4]/30">
             360° BRAND VISIBILITY
           </span>
           <h3 className="font-bebas text-3xl md:text-5xl text-gray-900 tracking-wider uppercase mt-2">
@@ -45,7 +45,7 @@ export default function StadiumBrandingShowcase({ onOpenContact }) {
             onClick={() => setActiveCategory('stadium')}
             className={`flex-1 sm:flex-none px-3 sm:px-5 py-2 rounded-lg font-bebas text-sm sm:text-base md:text-lg tracking-wider transition-all leading-tight text-center ${
               activeCategory === 'stadium'
-                ? 'bg-[#E50914] text-white shadow-md'
+                ? 'bg-[#3854A4] text-white shadow-md'
                 : 'text-gray-700 hover:text-gray-900'
             }`}
           >
@@ -55,7 +55,7 @@ export default function StadiumBrandingShowcase({ onOpenContact }) {
             onClick={() => setActiveCategory('outdoor')}
             className={`flex-1 sm:flex-none px-3 sm:px-5 py-2 rounded-lg font-bebas text-sm sm:text-base md:text-lg tracking-wider transition-all leading-tight text-center ${
               activeCategory === 'outdoor'
-                ? 'bg-[#E50914] text-white shadow-md'
+                ? 'bg-[#3854A4] text-white shadow-md'
                 : 'text-gray-700 hover:text-gray-900'
             }`}
           >
@@ -71,22 +71,22 @@ export default function StadiumBrandingShowcase({ onOpenContact }) {
           return (
             <div
               key={idx}
-              className="group bg-white hover:bg-red-50/50 border border-gray-200 hover:border-[#E50914] p-6 rounded-xl transition-all duration-300 relative overflow-hidden flex flex-col justify-between shadow-sm hover:shadow-md h-full"
+              className="group bg-white hover:bg-blue-50/40 border border-gray-200 hover:border-[#3854A4] p-6 rounded-xl transition-all duration-300 relative overflow-hidden flex flex-col justify-between shadow-sm hover:shadow-md h-full"
             >
               <div>
-                <div className="w-12 h-12 rounded-lg bg-[#E50914]/10 border border-[#E50914]/30 flex items-center justify-center text-[#E50914] mb-4 group-hover:scale-105 transition-transform">
+                <div className="w-12 h-12 rounded-lg bg-[#3854A4]/10 border border-[#3854A4]/30 flex items-center justify-center text-[#3854A4] mb-4 group-hover:scale-105 transition-transform">
                   <Icon className="w-6 h-6" />
                 </div>
-                <h4 className="font-bebas text-2xl text-gray-900 tracking-wider mb-2 group-hover:text-[#E50914] transition-colors">
+                <h4 className="font-bebas text-2xl text-gray-900 tracking-wider mb-2 group-hover:text-[#3854A4] transition-colors">
                   {item.title}
                 </h4>
                 <p className="text-xs text-gray-700 leading-relaxed font-sans">
                   {item.desc}
                 </p>
               </div>
-              <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between text-[10px] uppercase font-bold text-[#E50914] tracking-widest">
+              <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between text-[10px] uppercase font-bold text-[#3854A4] tracking-widest">
                 <span>HIGH VISIBILITY</span>
-                <span className="w-2 h-2 rounded-full bg-[#E50914]" />
+                <span className="w-2 h-2 rounded-full bg-[#E82024]" />
               </div>
             </div>
           );
@@ -94,7 +94,7 @@ export default function StadiumBrandingShowcase({ onOpenContact }) {
       </MobileCarousel>
 
       {/* Bottom Callout */}
-      <div className="mt-12 p-6 rounded-xl bg-white border-2 border-[#E50914]/40 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-md">
+      <div className="mt-12 p-6 rounded-xl bg-white border-2 border-[#3854A4]/40 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-md">
         <div>
           <h4 className="font-bebas text-2xl md:text-3xl text-gray-900 tracking-wider">
             READY TO ELEVATE YOUR BRAND WITH NPVL?
@@ -105,7 +105,7 @@ export default function StadiumBrandingShowcase({ onOpenContact }) {
         </div>
         <button
           onClick={onOpenContact}
-          className="red-sweep-btn bg-[#E50914] hover:bg-[#B20710] text-white font-bold text-xs uppercase tracking-wider px-6 py-3 rounded whitespace-nowrap shadow-md"
+          className="red-sweep-btn bg-[#E82024] hover:bg-[#C71216] text-white font-bold text-xs uppercase tracking-wider px-6 py-3 rounded whitespace-nowrap shadow-md"
         >
           BECOME A PARTNER
         </button>

@@ -12,9 +12,9 @@ export default function BroadcastMarquee() {
   const repeated = [...items, ...items, ...items, ...items, ...items];
 
   return (
-    <div className="bg-gray-900 border-y-2 border-[#E50914] py-3 overflow-hidden relative shadow-md select-none">
+    <div className="bg-[#0F172A] border-y-2 border-[#3854A4] py-3 overflow-hidden relative shadow-md select-none">
       {/* Background glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(229,9,20,0.12),transparent)] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(56,84,164,0.18),transparent)] pointer-events-none" />
 
       <div className="flex items-center">
         {/* Marquee track */}
@@ -36,11 +36,11 @@ export default function BroadcastMarquee() {
                   {item.name}
                 </span>
                 {/* Tag */}
-                <span className="text-[10px] font-bold bg-[#E50914]/20 border border-[#E50914]/40 text-[#E50914] px-2 py-0.5 rounded uppercase">
+                <span className="text-[10px] font-bold bg-[#E82024]/20 border border-[#E82024]/40 text-[#E82024] px-2 py-0.5 rounded uppercase">
                   {item.tag}
                 </span>
                 {/* Separator */}
-                <span className="text-[#E50914] font-bold text-xl mx-1">·</span>
+                <span className="text-[#3854A4] font-bold text-xl mx-1">·</span>
               </div>
             ))}
           </div>

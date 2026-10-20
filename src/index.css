@@ -34,10 +34,10 @@
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #E50914;
+  background: #3854A4;
 }
 
-/* Red Light Sweep FX */
+/* Red / Blue Light Sweep FX */
 .red-sweep-btn {
   position: relative;
   overflow: hidden;
@@ -66,20 +66,23 @@
 .glass-panel-light {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(229, 9, 20, 0.15);
+  border: 1px solid rgba(56, 84, 164, 0.15);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
 .glass-header-light {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.97);
   backdrop-filter: blur(20px);
-  border-bottom: 2px solid #E50914;
-  box-shadow: 0 4px 20px rgba(229, 9, 20, 0.1);
+  border-bottom: 2px solid #3854A4;
+  box-shadow: 0 4px 20px rgba(56, 84, 164, 0.12);
 }
 
-/* Sports Glow Text (Light Mode) */
+/* Sports Glow Text */
 .glow-text-red {
-  text-shadow: 0 0 15px rgba(229, 9, 20, 0.3);
+  text-shadow: 0 0 15px rgba(232, 32, 36, 0.35);
+}
+.glow-text-blue {
+  text-shadow: 0 0 15px rgba(56, 84, 164, 0.35);
 }
 
 /* Interactive SVG Map Highlights (Light Mode) */
@@ -88,8 +91,8 @@
   cursor: pointer;
 }
 .state-path:hover, .state-path.active {
-  fill: #E50914 !important;
-  filter: drop-shadow(0 0 12px rgba(229, 9, 20, 0.5));
+  fill: #3854A4 !important;
+  filter: drop-shadow(0 0 12px rgba(56, 84, 164, 0.5));
 }
 
 @keyframes pulseGlow {

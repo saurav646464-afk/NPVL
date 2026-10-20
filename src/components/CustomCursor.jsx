@@ -35,7 +35,7 @@ export default function CustomCursor() {
     <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden hidden lg:block">
       {/* Primary Dot */}
       <div
-        className="fixed w-3 h-3 bg-[#E50914] rounded-full -translate-x-1/2 -translate-y-1/2 transition-transform duration-75 ease-out shadow-[0_0_12px_#E50914]"
+        className="fixed w-3 h-3 bg-[#E82024] rounded-full -translate-x-1/2 -translate-y-1/2 transition-transform duration-75 ease-out shadow-[0_0_12px_#E82024]"
         style={{
           left: `${pos.x}px`,
           top: `${pos.y}px`,
@@ -44,13 +44,13 @@ export default function CustomCursor() {
       />
       {/* Secondary Outer Ring */}
       <div
-        className="fixed w-9 h-9 border border-[#E50914]/50 rounded-full -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-out"
+        className="fixed w-9 h-9 border border-[#3854A4]/50 rounded-full -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-out"
         style={{
           left: `${pos.x}px`,
           top: `${pos.y}px`,
           transform: `translate(-50%, -50%) scale(${isHovered ? 1.8 : 1})`,
-          backgroundColor: isHovered ? 'rgba(229, 9, 20, 0.15)' : 'transparent',
-          borderColor: isHovered ? '#E50914' : 'rgba(229, 9, 20, 0.4)'
+          backgroundColor: isHovered ? 'rgba(56, 84, 164, 0.2)' : 'transparent',
+          borderColor: isHovered ? '#3854A4' : 'rgba(56, 84, 164, 0.4)'
         }}
       />
     </div>

@@ -48,23 +48,23 @@ export default function IntroAnimation({ onComplete }) {
         {stage >= 2 && (
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.4 }}
+            animate={{ opacity: 0.45 }}
             transition={{ duration: 1 }}
             className="absolute inset-0 pointer-events-none"
           >
-            <div className="absolute -top-32 left-1/4 w-96 h-96 bg-[#E50914] blur-[140px] rounded-full opacity-20" />
-            <div className="absolute -top-32 right-1/4 w-96 h-96 bg-[#E50914] blur-[140px] rounded-full opacity-20" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(229,9,20,0.08)_0,transparent_70%)]" />
+            <div className="absolute -top-32 left-1/4 w-96 h-96 bg-[#3854A4] blur-[140px] rounded-full opacity-25" />
+            <div className="absolute -top-32 right-1/4 w-96 h-96 bg-[#E82024] blur-[140px] rounded-full opacity-25" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(56,84,164,0.08)_0,transparent_70%)]" />
           </motion.div>
         )}
 
-        {/* Step 3: Red Line Court Markings SVG Animation */}
+        {/* Step 3: Dual-Tone Court Markings SVG Animation */}
         {stage >= 2 && (
           <div className="absolute inset-0 flex items-center justify-center opacity-30 pointer-events-none">
             <svg className="w-[90vw] max-w-4xl h-[60vh]" viewBox="0 0 800 450" fill="none">
               <motion.rect
                 x="40" y="40" width="720" height="370"
-                stroke="#E50914" strokeWidth="2.5"
+                stroke="#3854A4" strokeWidth="2.5"
                 strokeDasharray="2180"
                 initial={{ strokeDashoffset: 2180 }}
                 animate={{ strokeDashoffset: 0 }}
@@ -72,21 +72,21 @@ export default function IntroAnimation({ onComplete }) {
               />
               <motion.line
                 x1="400" y1="40" x2="400" y2="410"
-                stroke="#E50914" strokeWidth="3" strokeDasharray="370"
+                stroke="#E82024" strokeWidth="3" strokeDasharray="370"
                 initial={{ strokeDashoffset: 370 }}
                 animate={{ strokeDashoffset: 0 }}
                 transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
               />
               <motion.line
                 x1="280" y1="40" x2="280" y2="410"
-                stroke="#DC2626" strokeWidth="1.5" strokeDasharray="370"
+                stroke="#3854A4" strokeWidth="1.5" strokeDasharray="370"
                 initial={{ strokeDashoffset: 370 }}
                 animate={{ strokeDashoffset: 0 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
               />
               <motion.line
                 x1="520" y1="40" x2="520" y2="410"
-                stroke="#DC2626" strokeWidth="1.5" strokeDasharray="370"
+                stroke="#3854A4" strokeWidth="1.5" strokeDasharray="370"
                 initial={{ strokeDashoffset: 370 }}
                 animate={{ strokeDashoffset: 0 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
@@ -95,13 +95,15 @@ export default function IntroAnimation({ onComplete }) {
           </div>
         )}
 
-        {/* Step 5: Energy Particles */}
+        {/* Step 5: Dual-Tone Energy Particles */}
         {stage >= 2 && (
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
             {[...Array(16)].map((_, i) => (
               <motion.div
                 key={i}
-                className="absolute w-2 h-2 bg-[#E50914] rounded-full blur-[1px]"
+                className={`absolute w-2 h-2 rounded-full blur-[1px] ${
+                  i % 2 === 0 ? 'bg-[#3854A4]' : 'bg-[#E82024]'
+                }`}
                 style={{
                   left: `${(i * 13) % 100}%`,
                   top: `${(i * 19) % 100}%`,
@@ -128,7 +130,7 @@ export default function IntroAnimation({ onComplete }) {
             <motion.path
               d="M 50 500 Q 500 100 950 500"
               fill="none"
-              stroke="url(#redGlowGradLight)"
+              stroke="url(#brandGlowGradLight)"
               strokeWidth="5"
               strokeDasharray="1400"
               initial={{ strokeDashoffset: 1400 }}
@@ -136,9 +138,10 @@ export default function IntroAnimation({ onComplete }) {
               transition={{ duration: 0.9, ease: "easeOut" }}
             />
             <defs>
-              <linearGradient id="redGlowGradLight" x1="0%" y1="0%" x2="100%" y2="0%">
+              <linearGradient id="brandGlowGradLight" x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="0%" stopColor="transparent" />
-                <stop offset="50%" stopColor="#E50914" />
+                <stop offset="35%" stopColor="#3854A4" />
+                <stop offset="65%" stopColor="#E82024" />
                 <stop offset="100%" stopColor="#DC2626" />
               </linearGradient>
             </defs>
@@ -154,24 +157,25 @@ export default function IntroAnimation({ onComplete }) {
               transition={{ duration: 0.7, type: "spring", stiffness: 100 }}
               className="relative flex items-center justify-center"
             >
-              {/* Subtle red ambient glow behind logo */}
-              <div className="absolute inset-0 bg-[#E50914] blur-3xl opacity-25 rounded-full scale-125 pointer-events-none" />
+              {/* Dual ambient glow behind logo */}
+              <div className="absolute inset-0 bg-[#3854A4] blur-3xl opacity-30 rounded-full scale-125 pointer-events-none" />
+              <div className="absolute inset-0 bg-[#E82024] blur-2xl opacity-20 rounded-full scale-90 pointer-events-none" />
               <img
                 src="/logo.png"
                 alt="NPVL Official Logo"
-                className="h-32 sm:h-44 md:h-52 w-auto object-contain relative z-10 filter drop-shadow-2xl"
+                className="h-36 sm:h-48 md:h-56 w-auto object-contain relative z-10 filter drop-shadow-2xl"
               />
             </motion.div>
           )}
         </div>
 
-        {/* Step 10: Powerful Red Light Sweep Pass */}
+        {/* Step 10: Powerful Dual-Tone Sweep Pass */}
         {stage >= 5 && (
           <motion.div
             initial={{ x: "-100%" }}
             animate={{ x: "200%" }}
             transition={{ duration: 0.6, ease: "easeInOut" }}
-            className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-[#E50914]/40 to-transparent skew-x-12 pointer-events-none"
+            className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-[#3854A4]/30 to-[#E82024]/20 skew-x-12 pointer-events-none"
           />
         )}
 

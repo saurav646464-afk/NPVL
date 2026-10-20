@@ -99,7 +99,7 @@ export default function App() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#070708] text-white selection:bg-[#E50914] selection:text-white">
+    <div className="relative min-h-screen bg-[#070708] text-white selection:bg-[#3854A4] selection:text-white">
       {/* Desktop Custom Cursor */}
       <CustomCursor />
 

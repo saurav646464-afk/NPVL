@@ -5,12 +5,12 @@ export default function Ecosystem() {
     <div className="min-h-screen bg-white text-gray-900 pt-28 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto space-y-16">
         <div className="text-center max-w-4xl mx-auto space-y-4">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#E50914] bg-[#E50914]/10 px-3 py-1 rounded-full border border-[#E50914]/30">
+          <span className="text-xs font-bold uppercase tracking-widest text-[#3854A4] bg-[#3854A4]/10 px-3 py-1 rounded-full border border-[#3854A4]/30">
             BUSINESS ECONOMY
           </span>
           <h1 className="font-bebas text-4xl sm:text-6xl md:text-8xl text-gray-900 tracking-wider uppercase leading-none">
             SHARED-VALUE <br />
-            <span className="text-[#E50914]">SPORTS ECOSYSTEM</span>
+            <span className="text-[#3854A4]">SPORTS ECOSYSTEM</span>
           </h1>
           <p className="text-sm md:text-base text-gray-700 font-medium leading-relaxed">
             NPVL is built on a sustainable sports economy where the league, team franchises, and brand partners grow together through shared commercial value pools.
@@ -19,13 +19,13 @@ export default function Ecosystem() {
 
         {/* 3 Core Pillars */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-gray-50 border-2 border-[#E50914]/40 p-8 rounded-2xl space-y-4 shadow-sm">
-            <span className="font-bebas text-5xl text-[#E50914]">01 / LEAGUE</span>
+          <div className="bg-gray-50 border-2 border-[#3854A4]/40 p-8 rounded-2xl space-y-4 shadow-sm">
+            <span className="font-bebas text-5xl text-[#3854A4]">01 / LEAGUE</span>
             <h3 className="font-bebas text-3xl text-gray-900 tracking-wider">CENTRAL RIGHTS POOL</h3>
             <p className="text-xs text-gray-700 font-medium leading-relaxed font-sans">
               Owns central rights: media & broadcast, title & associate sponsorships, OTT licensing, and central digital assets. Revenue flows into a central pool for distribution.
             </p>
-            <div className="pt-4 border-t border-gray-200 text-[11px] text-[#E50914] font-bold uppercase">
+            <div className="pt-4 border-t border-gray-200 text-[11px] text-[#3854A4] font-bold uppercase">
               CENTRAL REVENUE GENERATOR
             </div>
           </div>
@@ -42,12 +42,12 @@ export default function Ecosystem() {
           </div>
 
           <div className="bg-gray-50 border-2 border-gray-200 p-8 rounded-2xl space-y-4 shadow-sm">
-            <span className="font-bebas text-5xl text-[#E50914]">03 / PARTNERS</span>
+            <span className="font-bebas text-5xl text-[#3854A4]">03 / PARTNERS</span>
             <h3 className="font-bebas text-3xl text-gray-900 tracking-wider">BRAND INTEGRATION</h3>
             <p className="text-xs text-gray-700 font-medium leading-relaxed font-sans">
               Brands invest in sponsorship and activation packages in return for high broadcast visibility, youth engagement, stadium branding, and authentic association.
             </p>
-            <div className="pt-4 border-t border-gray-200 text-[11px] text-[#E50914] font-bold uppercase">
+            <div className="pt-4 border-t border-gray-200 text-[11px] text-[#3854A4] font-bold uppercase">
               COMMERCIAL BRAND ENGINE
             </div>
           </div>
@@ -56,7 +56,7 @@ export default function Ecosystem() {
         {/* Revenue Streams */}
         <section className="bg-gray-50 border-2 border-gray-200 p-8 md:p-12 rounded-2xl space-y-8 shadow-sm">
           <div className="text-center">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#E50914]">REVENUE STREAMS BREAKDOWN</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-[#3854A4]">REVENUE STREAMS BREAKDOWN</span>
             <h2 className="font-bebas text-4xl md:text-6xl text-gray-900 tracking-wider uppercase mt-1">
               WHERE THE REVENUE COMES FROM
             </h2>
@@ -66,7 +66,7 @@ export default function Ecosystem() {
             <div className="bg-white border-2 border-gray-200 p-8 rounded-xl space-y-4 shadow-2xs">
               <div className="flex items-center justify-between border-b border-gray-200 pb-3">
                 <h3 className="font-bebas text-3xl text-gray-900 tracking-wider">CENTRAL (LEAGUE STREAMS)</h3>
-                <span className="text-xs bg-[#E50914] text-white font-bold px-2.5 py-1 rounded">CENTRAL POOL</span>
+                <span className="text-xs bg-[#E82024] text-white font-bold px-2.5 py-1 rounded">CENTRAL POOL</span>
               </div>
               <ul className="space-y-3 text-xs text-gray-800 font-medium font-sans">
                 <li className="flex items-center gap-2">• Media & Broadcast Rights Distribution</li>

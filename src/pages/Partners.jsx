@@ -26,12 +26,12 @@ export default function Partners({ onOpenContact }) {
       <div className="max-w-7xl mx-auto space-y-16">
         {/* Header */}
         <div className="text-center max-w-4xl mx-auto space-y-4">
-          <span className="text-xs font-montserrat font-bold uppercase tracking-widest text-[#E50914] bg-[#E50914]/10 px-3 py-1 rounded-full border border-[#E50914]/30">
+          <span className="text-xs font-montserrat font-bold uppercase tracking-widest text-[#3854A4] bg-[#3854A4]/10 px-3 py-1 rounded-full border border-[#3854A4]/30">
             PARTNERSHIP OPPORTUNITIES
           </span>
           <h1 className="font-montserrat font-black text-3xl sm:text-5xl md:text-7xl lg:text-8xl text-gray-900 tracking-wider uppercase leading-tight break-words">
             BUILD THE FUTURE OF <br />
-            <span className="text-[#E50914]">VOLLEYBALL WITH US</span>
+            <span className="text-[#3854A4]">VOLLEYBALL WITH US</span>
           </h1>
           <p className="text-xs sm:text-sm md:text-base text-gray-700 font-medium leading-relaxed font-sans max-w-3xl mx-auto">
             Brands can become part of the sporting narrative rather than simply appear around it. NPVL offers shared-value partnerships designed for high visibility and authentic youth connection.
@@ -48,7 +48,7 @@ export default function Partners({ onOpenContact }) {
           <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-transparent flex items-center p-6 sm:p-8 md:p-12">
             <div>
               <p className="font-montserrat font-extrabold text-xl sm:text-3xl md:text-4xl text-white tracking-wider">BECOME PART OF</p>
-              <p className="font-montserrat font-black text-2xl sm:text-4xl md:text-5xl text-[#E50914] tracking-wider leading-none">NORTH INDIA'S SPORT</p>
+              <p className="font-montserrat font-black text-2xl sm:text-4xl md:text-5xl text-[#3854A4] tracking-wider leading-none">NORTH INDIA'S SPORT</p>
             </div>
           </div>
         </div>
@@ -56,7 +56,7 @@ export default function Partners({ onOpenContact }) {
         {/* Commercial Tier Cards Carousel */}
         <div>
           <div className="text-center mb-8">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#E50914]">COMMERCIAL PACKAGES</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-[#3854A4]">COMMERCIAL PACKAGES</span>
             <h2 className="font-bebas text-3xl sm:text-4xl md:text-5xl text-gray-900 tracking-wider uppercase mt-1">
               PARTNERSHIP TIERS
             </h2>
@@ -66,19 +66,19 @@ export default function Partners({ onOpenContact }) {
             {categories.map((cat, idx) => {
               const Icon = cat.icon;
               return (
-                <div key={idx} className="bg-gray-50 border-2 border-gray-200 hover:border-[#E50914] p-6 sm:p-8 rounded-3xl transition-colors space-y-3 flex flex-col justify-between group shadow-2xs hover:shadow-md h-full">
+                <div key={idx} className="bg-gray-50 border-2 border-gray-200 hover:border-[#3854A4] p-6 sm:p-8 rounded-3xl transition-colors space-y-3 flex flex-col justify-between group shadow-2xs hover:shadow-md h-full">
                   <div>
-                    <div className="w-12 h-12 bg-[#E50914]/10 rounded-xl flex items-center justify-center text-[#E50914] border border-[#E50914]/30 mb-4 group-hover:scale-105 transition-transform">
+                    <div className="w-12 h-12 bg-[#3854A4]/10 rounded-xl flex items-center justify-center text-[#3854A4] border border-[#3854A4]/30 mb-4 group-hover:scale-105 transition-transform">
                       <Icon className="w-6 h-6" />
                     </div>
-                    <h3 className="font-montserrat font-bold text-lg sm:text-xl md:text-2xl text-gray-900 tracking-wider group-hover:text-[#E50914] transition-colors">
+                    <h3 className="font-montserrat font-bold text-lg sm:text-xl md:text-2xl text-gray-900 tracking-wider group-hover:text-[#3854A4] transition-colors">
                       {cat.title}
                     </h3>
                     <p className="text-xs text-gray-700 font-medium leading-relaxed font-sans mt-2">
                       {cat.desc}
                     </p>
                   </div>
-                  <div className="pt-4 border-t border-gray-200 flex items-center justify-between text-[10px] text-[#E50914] font-montserrat font-bold uppercase tracking-widest">
+                  <div className="pt-4 border-t border-gray-200 flex items-center justify-between text-[10px] text-[#3854A4] font-montserrat font-bold uppercase tracking-widest">
                     <span>TIER 0{idx + 1}</span>
                     <span>COMMERCIAL OPPORTUNITY</span>
                   </div>
@@ -89,25 +89,25 @@ export default function Partners({ onOpenContact }) {
         </div>
 
         {/* PR & Outreach Partners Section */}
-        <section className="bg-gray-50 border-2 border-[#E50914]/40 p-5 sm:p-8 md:p-12 rounded-3xl space-y-6 shadow-sm">
+        <section className="bg-gray-50 border-2 border-[#3854A4]/40 p-5 sm:p-8 md:p-12 rounded-3xl space-y-6 shadow-sm">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-gray-200 pb-4">
             <div>
-              <span className="text-xs font-montserrat font-bold uppercase tracking-widest text-[#E50914] block mb-1">
+              <span className="text-xs font-montserrat font-bold uppercase tracking-widest text-[#3854A4] block mb-1">
                 OUTREACH & MEDIA RELATIONS — TENTATIVE
               </span>
               <h2 className="font-montserrat font-black text-2xl sm:text-3xl md:text-4xl text-gray-900 tracking-wider uppercase">
                 PR & OUTREACH PARTNERS
               </h2>
             </div>
-            <span className="bg-[#E50914] text-white text-xs font-montserrat font-bold px-3 py-1 rounded-full uppercase shrink-0">
+            <span className="bg-[#E82024] text-white text-xs font-montserrat font-bold px-3 py-1 rounded-full uppercase shrink-0">
               TENTATIVE
             </span>
           </div>
 
           <MobileCarousel desktopClass="sm:grid-cols-2 lg:grid-cols-4">
             {prCategories.map((pr, idx) => (
-              <div key={idx} className="bg-white border-2 border-gray-200 hover:border-[#E50914] p-5 rounded-2xl space-y-2 shadow-2xs h-full transition-all">
-                <span className="font-montserrat font-bold text-sm text-[#E50914] tracking-wider block">
+              <div key={idx} className="bg-white border-2 border-gray-200 hover:border-[#3854A4] p-5 rounded-2xl space-y-2 shadow-2xs h-full transition-all">
+                <span className="font-montserrat font-bold text-sm text-[#3854A4] tracking-wider block">
                   {pr.title}
                 </span>
                 <p className="text-xs text-gray-700 font-sans font-medium">{pr.desc}</p>

@@ -36,7 +36,7 @@ export default function Header({ currentPage, setCurrentPage, onOpenContact }) {
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-          scrolled ? 'glass-header-light py-2.5 shadow-lg' : 'bg-white/95 border-b-2 border-[#E50914] py-3.5 shadow-sm'
+          scrolled ? 'glass-header-light py-2.5 shadow-lg' : 'bg-white/95 border-b-2 border-[#3854A4] py-3.5 shadow-sm'
         }`}
       >
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between gap-2">
@@ -51,10 +51,10 @@ export default function Header({ currentPage, setCurrentPage, onOpenContact }) {
               className="h-9 md:h-12 w-auto object-contain transition-transform group-hover:scale-105"
             />
             <div className="hidden sm:block">
-              <span className="font-bebas text-xl md:text-2xl text-gray-900 tracking-wider block leading-none group-hover:text-[#E50914] transition-colors">
+              <span className="font-bebas text-xl md:text-2xl text-gray-900 tracking-wider block leading-none group-hover:text-[#3854A4] transition-colors">
                 NPVL
               </span>
-              <span className="text-[9px] text-gray-500 tracking-widest block uppercase font-bold">
+              <span className="text-[9px] text-[#3854A4] tracking-widest block uppercase font-bold">
                 North Premier League
               </span>
             </div>
@@ -65,22 +65,22 @@ export default function Header({ currentPage, setCurrentPage, onOpenContact }) {
             {/* All Pages MENU Button */}
             <button
               onClick={() => setMenuDropdownOpen(!menuDropdownOpen)}
-              className="flex items-center gap-1.5 bg-gray-100 hover:bg-gray-200 border-2 border-gray-300 hover:border-[#E50914] text-gray-900 text-xs font-bold uppercase tracking-wider px-3 py-2 rounded-lg transition-all shadow-2xs"
+              className="flex items-center gap-1.5 bg-gray-100 hover:bg-blue-50/50 border-2 border-gray-300 hover:border-[#3854A4] text-gray-900 text-xs font-bold uppercase tracking-wider px-3 py-2 rounded-lg transition-all shadow-2xs"
             >
-              <Grid className="w-3.5 h-3.5 text-[#E50914]" />
+              <Grid className="w-3.5 h-3.5 text-[#3854A4]" />
               <span>MENU</span>
             </button>
 
             {/* COMING SOON Badge — hidden on mobile */}
-            <div className="hidden sm:flex items-center gap-1.5 bg-[#E50914]/10 border border-[#E50914]/30 text-[#E50914] text-[10px] uppercase font-bold tracking-widest px-3 py-2 rounded-full">
-              <Zap className="w-3 h-3 animate-pulse" />
+            <div className="hidden sm:flex items-center gap-1.5 bg-[#E82024]/10 border border-[#E82024]/30 text-[#E82024] text-[10px] uppercase font-bold tracking-widest px-3 py-2 rounded-full">
+              <Zap className="w-3 h-3 animate-pulse text-[#E82024]" />
               <span>COMING SOON</span>
             </div>
 
             {/* JOIN THE JOURNEY — icon only on mobile, full text on sm+ */}
             <button
               onClick={onOpenContact}
-              className="red-sweep-btn bg-[#E50914] hover:bg-[#B20710] text-white text-xs font-bold uppercase tracking-wider px-3 sm:px-5 md:px-6 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all whitespace-nowrap"
+              className="red-sweep-btn bg-[#E82024] hover:bg-[#C71216] text-white text-xs font-bold uppercase tracking-wider px-3 sm:px-5 md:px-6 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all whitespace-nowrap"
             >
               <span className="hidden sm:inline">JOIN THE JOURNEY</span>
               <span className="sm:hidden">JOIN</span>
@@ -92,7 +92,7 @@ export default function Header({ currentPage, setCurrentPage, onOpenContact }) {
       {/* Clean Interactive All Pages MENU Directory Modal */}
       {menuDropdownOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-start justify-center pt-10 sm:pt-20 px-3 sm:px-4 animate-fadeIn">
-          <div className="bg-white border-2 border-[#E50914] rounded-2xl w-full max-w-lg sm:max-w-3xl p-3.5 sm:p-6 md:p-8 shadow-2xl relative max-h-[88vh] overflow-y-auto">
+          <div className="bg-white border-2 border-[#3854A4] rounded-2xl w-full max-w-lg sm:max-w-3xl p-3.5 sm:p-6 md:p-8 shadow-2xl relative max-h-[88vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-gray-200 pb-3 mb-3 sm:mb-4">
               <div className="flex items-center gap-2">
                 <img src="/logo.png" alt="NPVL" className="h-7 sm:h-8 w-auto" />
@@ -100,7 +100,7 @@ export default function Header({ currentPage, setCurrentPage, onOpenContact }) {
                   <h3 className="font-bebas text-lg sm:text-2xl text-gray-900 tracking-wider leading-none">
                     NPVL DIRECTORY
                   </h3>
-                  <p className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-widest">
+                  <p className="text-[9px] sm:text-[10px] text-[#3854A4] font-bold uppercase tracking-widest">
                     INSPIRE. EMPOWER. UNITE.
                   </p>
                 </div>
@@ -109,7 +109,7 @@ export default function Header({ currentPage, setCurrentPage, onOpenContact }) {
                 onClick={() => setMenuDropdownOpen(false)}
                 className="p-1.5 text-gray-500 hover:text-gray-900 rounded-full hover:bg-gray-100"
               >
-                <X className="w-5 h-5 text-[#E50914]" />
+                <X className="w-5 h-5 text-[#3854A4]" />
               </button>
             </div>
 
@@ -121,19 +121,19 @@ export default function Header({ currentPage, setCurrentPage, onOpenContact }) {
                   onClick={() => handleNavClick(item.id)}
                   className={`flex items-center justify-between p-2 sm:p-3.5 rounded-xl border-2 text-left font-bebas text-sm sm:text-lg md:text-xl tracking-wider transition-all ${
                     currentPage === item.id
-                      ? 'bg-[#E50914] text-white border-[#E50914] shadow-md'
-                      : 'bg-gray-50 hover:bg-red-50 text-gray-900 border-gray-200 hover:border-[#E50914]'
+                      ? 'bg-[#3854A4] text-white border-[#3854A4] shadow-md'
+                      : 'bg-gray-50 hover:bg-blue-50/50 text-gray-900 border-gray-200 hover:border-[#3854A4]'
                   }`}
                 >
                   <span className="flex items-center gap-1 truncate">
                     {item.label}
                     {item.badge && (
-                      <span className="text-[8px] sm:text-[9px] bg-[#E50914] text-white px-1 py-0.5 rounded font-sans font-bold shrink-0">
+                      <span className="text-[8px] sm:text-[9px] bg-[#E82024] text-white px-1 py-0.5 rounded font-sans font-bold shrink-0">
                         {item.badge}
                       </span>
                     )}
                   </span>
-                  <ChevronRight className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${currentPage === item.id ? 'text-white' : 'text-[#E50914]'}`} />
+                  <ChevronRight className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${currentPage === item.id ? 'text-white' : 'text-[#3854A4]'}`} />
                 </button>
               ))}
             </div>
@@ -147,7 +147,7 @@ export default function Header({ currentPage, setCurrentPage, onOpenContact }) {
                   setMenuDropdownOpen(false);
                   onOpenContact();
                 }}
-                className="w-full sm:w-auto bg-[#E50914] hover:bg-[#B20710] text-white font-bold text-xs uppercase tracking-wider px-5 py-2.5 rounded-lg shadow-md"
+                className="w-full sm:w-auto bg-[#E82024] hover:bg-[#C71216] text-white font-bold text-xs uppercase tracking-wider px-5 py-2.5 rounded-lg shadow-md"
               >
                 JOIN THE JOURNEY
               </button>
