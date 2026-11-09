@@ -76,10 +76,47 @@ export default function Footer({ setCurrentPage, onOpenContact }) {
           </button>
         </div>
 
-        {/* Bottom legal */}
-        <div className="pt-5 flex flex-col sm:flex-row items-center justify-between text-[11px] text-gray-400 font-medium gap-2 text-center sm:text-left">
-          <p>© {new Date().getFullYear()} NPVL. All rights reserved.</p>
-          <p>Proposed structure. Dates & venues subject to confirmation.</p>
+        {/* Bottom legal & Compliance */}
+        <div className="pt-6 flex flex-col md:flex-row items-center justify-between text-xs text-gray-500 font-medium gap-4 text-center md:text-left">
+          <div className="space-y-1">
+            <p className="text-gray-900 font-bold">
+              © {new Date().getFullYear()} North Premier Volleyball League (NPVL). All rights reserved.
+            </p>
+            <p className="text-[11px] text-gray-400">
+              Official Media & Digital Infrastructure Partner: <strong className="text-gray-700">The Backstory Media</strong>
+            </p>
+          </div>
+
+          {/* Mandatory Compliance Policy Links for Razorpay */}
+          <div className="flex items-center gap-x-4 gap-y-2 flex-wrap justify-center text-xs">
+            <button
+              onClick={() => go('terms')}
+              className="hover:text-[#3854A4] underline transition-colors"
+            >
+              Terms & Conditions
+            </button>
+            <span className="text-gray-300">•</span>
+            <button
+              onClick={() => go('privacy')}
+              className="hover:text-[#3854A4] underline transition-colors"
+            >
+              Privacy Policy
+            </button>
+            <span className="text-gray-300">•</span>
+            <button
+              onClick={() => go('refund')}
+              className="hover:text-[#3854A4] underline transition-colors"
+            >
+              Refund & Cancellation
+            </button>
+            <span className="text-gray-300">•</span>
+            <button
+              onClick={() => go('contact')}
+              className="hover:text-[#3854A4] underline transition-colors"
+            >
+              Contact Us
+            </button>
+          </div>
         </div>
 
       </div>

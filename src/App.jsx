@@ -18,6 +18,9 @@ import Ecosystem from './pages/Ecosystem';
 import Fans from './pages/Fans';
 import Contact from './pages/Contact';
 import TeamDetail from './pages/TeamDetail';
+import TermsAndConditions from './pages/TermsAndConditions';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import RefundPolicy from './pages/RefundPolicy';
 
 export default function App() {
   const [showIntro, setShowIntro] = useState(true);
@@ -87,6 +90,12 @@ export default function App() {
         return <Fans onOpenContact={() => openContactWithInterest('Community')} />;
       case 'contact':
         return <Contact />;
+      case 'terms':
+        return <TermsAndConditions onOpenContact={() => openContactWithInterest('General Enquiry')} />;
+      case 'privacy':
+        return <PrivacyPolicy onOpenContact={() => openContactWithInterest('General Enquiry')} />;
+      case 'refund':
+        return <RefundPolicy onOpenContact={() => openContactWithInterest('General Enquiry')} />;
       default:
         return (
           <Home
