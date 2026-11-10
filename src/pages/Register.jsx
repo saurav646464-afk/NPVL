@@ -240,6 +240,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
         medical_history: {
           account_password: formData.account_password || '123456',
           voluntary_payment_consent: formData.voluntary_payment_consent,
+          photo_data_url: photoDataUrl || null,
         },
         registration_id: regId,
         payment_status: 'paid',

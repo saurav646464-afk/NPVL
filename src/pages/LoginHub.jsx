@@ -72,7 +72,11 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
           }
         }
 
-        setPlayerRecord(found);
+        // Extract photo from medical_history JSONB (where it's stored during registration)
+        const photoFromDB = found.medical_history?.photo_data_url || found.photo_data_url || null;
+        const playerWithPhoto = { ...found, photo_data_url: photoFromDB };
+
+        setPlayerRecord(playerWithPhoto);
         setViewMode('player_dashboard');
       } else {
         // Fallback demo mock if test id
