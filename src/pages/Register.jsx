@@ -496,11 +496,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
             Please fill out all details accurately as per your official government identification records. Note: Incomplete forms or those without proper fee submission will not be processed.
           </p>
 
-          <div className="pt-2 flex items-center justify-center gap-4 text-xs font-bold text-gray-500">
-            <span>Query Helpline: +91 98765 43210</span>
-            <span>•</span>
-            <span>Email: trials@npvlofficial.com</span>
-          </div>
+
         </div>
 
         {/* Form Container */}

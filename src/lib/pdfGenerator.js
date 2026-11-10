@@ -81,91 +81,97 @@ export async function generateIdCardPDF(playerData) {
   doc.setTextColor(255, 255, 255);
   doc.text((playerData.player_category || 'CANDIDATE PLAYER').toUpperCase(), width / 2, 79.5, { align: 'center' });
 
-  // 6. Comprehensive Details Box (White Container)
+  // 6. Comprehensive Details Box (White Container) — height=52 to fit all rows
   doc.setFillColor(255, 255, 255);
-  doc.roundedRect(5, 84, width - 10, 44, 2.5, 2.5, 'F');
+  doc.roundedRect(5, 84, width - 10, 50, 2.5, 2.5, 'F');
   doc.setDrawColor(203, 213, 225);
   doc.setLineWidth(0.4);
-  doc.roundedRect(5, 84, width - 10, 44, 2.5, 2.5, 'D');
+  doc.roundedRect(5, 84, width - 10, 50, 2.5, 2.5, 'D');
 
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(6.5);
   doc.setTextColor(18, 28, 56);
 
-  // Line 1: Registration ID + Payment
+  // Row 1: REG ID (left) + FEE PAID (right) — compact to stay inside card
   doc.text('REG ID:', 8, 90);
   doc.setTextColor(232, 32, 36);
   doc.text(`${playerData.registration_id || 'NPVL-2026-F001'}`, 24, 90);
-
+  doc.setFont('helvetica', 'bold');
   doc.setTextColor(18, 28, 56);
-  doc.text('FEE:', 50, 90);
+  doc.text('FEE:', 53, 90);
   doc.setTextColor(22, 163, 74);
-  doc.text('₹500 PAID (VERIFIED)', 58, 90);
+  doc.setFontSize(6);
+  doc.text('500 PAID (VERIFIED)', 59, 90);
+  doc.setFontSize(6.5);
 
-  // Line 2: Aadhar No & DOB / Age
+  // Row 2: AADHAAR (left) + DOB/AGE (right)
+  doc.setFont('helvetica', 'bold');
   doc.setTextColor(18, 28, 56);
   doc.text('AADHAAR:', 8, 96);
   doc.setFont('helvetica', 'normal');
   const maskedAadhar = playerData.aadhar_no ? `XXXX XXXX ${String(playerData.aadhar_no).slice(-4)}` : 'XXXXXXXXXXXX';
   doc.text(maskedAadhar, 24, 96);
-
   doc.setFont('helvetica', 'bold');
   doc.text('DOB/AGE:', 50, 96);
   doc.setFont('helvetica', 'normal');
   doc.text(`${playerData.dob || '-'} (${playerData.age || '-'}Y)`, 63, 96);
 
-  // Line 3: Contact & City
+  // Row 3: MOBILE (left) — full width
   doc.setFont('helvetica', 'bold');
   doc.text('MOBILE:', 8, 102);
   doc.setFont('helvetica', 'normal');
   doc.text(`${playerData.mobile_no || '-'}`, 24, 102);
 
+  // Row 4: CITY (left) + STATE (right)
   doc.setFont('helvetica', 'bold');
-  doc.text('CITY/STATE:', 50, 102);
+  doc.text('CITY:', 8, 108);
   doc.setFont('helvetica', 'normal');
-  const cityState = `${playerData.city || ''}, ${playerData.state || ''}`.slice(0, 16);
-  doc.text(cityState, 65, 102);
-
-  // Line 4: Height & Weight
+  doc.text((playerData.city || '-').slice(0, 15), 20, 108);
   doc.setFont('helvetica', 'bold');
-  doc.text('HEIGHT:', 8, 108);
+  doc.text('STATE:', 50, 108);
   doc.setFont('helvetica', 'normal');
-  doc.text(`${playerData.height_cms || '-'} cm`, 24, 108);
+  doc.text((playerData.state || '-').slice(0, 14), 61, 108);
 
+  // Row 5: HEIGHT (left) + WEIGHT (right)
   doc.setFont('helvetica', 'bold');
-  doc.text('WEIGHT:', 50, 108);
+  doc.text('HEIGHT:', 8, 114);
   doc.setFont('helvetica', 'normal');
-  doc.text(`${playerData.weight_kgs || '-'} kg`, 63, 108);
-
-  // Line 5: Reaches (Standing & Jump Reach)
+  doc.text(`${playerData.height_cms || '-'} cm`, 24, 114);
   doc.setFont('helvetica', 'bold');
-  doc.text('STAND REACH:', 8, 114);
+  doc.text('WEIGHT:', 50, 114);
   doc.setFont('helvetica', 'normal');
-  doc.text(`${playerData.standing_reach_cms || '-'} cm`, 28, 114);
+  doc.text(`${playerData.weight_kgs || '-'} kg`, 63, 114);
 
+  // Row 6: STAND REACH (left) + JUMP REACH (right)
   doc.setFont('helvetica', 'bold');
-  doc.text('JUMP REACH:', 50, 114);
+  doc.text('STAND REACH:', 8, 120);
   doc.setFont('helvetica', 'normal');
-  doc.text(`${playerData.jump_reach_cms || '-'} cm`, 68, 114);
-
-  // Line 6: Achievement & Team
+  doc.text(`${playerData.standing_reach_cms || '-'} cm`, 28, 120);
   doc.setFont('helvetica', 'bold');
-  doc.text('ACHIEVE:', 8, 120);
+  doc.text('JUMP REACH:', 50, 120);
   doc.setFont('helvetica', 'normal');
-  const ach = (playerData.top_achievement || 'Registered Candidate').slice(0, 24);
-  doc.text(ach, 24, 120);
+  doc.text(`${playerData.jump_reach_cms || '-'} cm`, 68, 120);
 
-  // Line 7: Verification Security Hash & Date
+  // Row 7: ACHIEVEMENT
+  doc.setFont('helvetica', 'bold');
+  doc.text('ACHIEVE:', 8, 126);
+  doc.setFont('helvetica', 'normal');
+  const ach = (playerData.top_achievement || 'Registered Candidate').slice(0, 28);
+  doc.text(ach, 24, 126);
+
+  // Row 8: Security Hash + Issue Date
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(56, 84, 164);
-  doc.text('SECURITY HASH: AUTH-NPVL-VALIDATED', 8, 125);
+  doc.text('SECURITY HASH: AUTH-NPVL-VALIDATED', 8, 131);
   doc.setTextColor(100, 116, 139);
   doc.setFont('helvetica', 'normal');
-  doc.text(`ISSUED: ${new Date().toLocaleDateString('en-IN')}`, 54, 125);
+  doc.setFontSize(5.5);
+  doc.text(`ISSUED: ${new Date().toLocaleDateString('en-IN')}`, 55, 131);
+  doc.setFontSize(6.5);
 
   // 7. Security Barcode Simulation (Decorative stripes)
   doc.setFillColor(18, 28, 56);
-  const barY = 129.5;
+  const barY = 136;
   for (let x = 8; x < width - 8; x += 1.8) {
     const barW = (x % 3 === 0) ? 1.1 : 0.6;
     doc.rect(x, barY, barW, 4.5, 'F');
