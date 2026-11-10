@@ -21,10 +21,15 @@ import TeamDetail from './pages/TeamDetail';
 import TermsAndConditions from './pages/TermsAndConditions';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import RefundPolicy from './pages/RefundPolicy';
+import Register from './pages/Register';
+import PlayerLogin from './pages/PlayerLogin';
+import AdminDashboard from './pages/AdminDashboard';
+import LoginHub from './pages/LoginHub';
 
 export default function App() {
   const [showIntro, setShowIntro] = useState(true);
   const [currentPage, setCurrentPage] = useState('home');
+  const [adminLoggedIn, setAdminLoggedIn] = useState(false);
   const [selectedTeamId, setSelectedTeamId] = useState('up');
   const [contactModalOpen, setContactModalOpen] = useState(false);
   const [modalInterest, setModalInterest] = useState('General Enquiry');
@@ -90,6 +95,14 @@ export default function App() {
         return <Fans onOpenContact={() => openContactWithInterest('Community')} />;
       case 'contact':
         return <Contact />;
+      case 'register':
+        return <Register onOpenContact={() => openContactWithInterest('General Enquiry')} setCurrentPage={setCurrentPage} />;
+      case 'login-hub':
+        return <LoginHub setCurrentPage={setCurrentPage} setAdminLoggedIn={setAdminLoggedIn} />;
+      case 'player-login':
+        return <PlayerLogin setCurrentPage={setCurrentPage} />;
+      case 'admin':
+        return <AdminDashboard setCurrentPage={setCurrentPage} initialAuthenticated={adminLoggedIn} />;
       case 'terms':
         return <TermsAndConditions onOpenContact={() => openContactWithInterest('General Enquiry')} />;
       case 'privacy':

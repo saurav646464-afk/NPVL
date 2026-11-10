@@ -5,6 +5,7 @@ import StadiumBrandingShowcase from '../components/StadiumBrandingShowcase';
 import BroadcastMarquee from '../components/BroadcastMarquee';
 import MobileCarousel from '../components/MobileCarousel';
 import NorthIndiaMap from '../components/NorthIndiaMap';
+import RegistrationCountdownBanner from '../components/RegistrationCountdownBanner';
 
 export default function Home({ setCurrentPage, onSelectTeam, onOpenContact }) {
   const stats = [
@@ -24,6 +25,16 @@ export default function Home({ setCurrentPage, onSelectTeam, onOpenContact }) {
 
   return (
     <div className="min-h-screen bg-white text-gray-900 overflow-hidden">
+      {/* 0. PROMINENT REGISTRATION COUNTDOWN SPOTLIGHT BANNER */}
+      <div className="pt-20 sm:pt-24">
+        <RegistrationCountdownBanner
+          onNavigateRegister={() => {
+            setCurrentPage('register');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+        />
+      </div>
+
       {/* 1. CINEMATIC HERO SECTION (ROYAL BLUE + RED + WHITE) */}
       <section className="relative min-h-screen flex items-center justify-center pt-24 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden bg-gradient-to-b from-white via-slate-50/50 to-white">
         {/* Dynamic Background Visuals */}
@@ -102,20 +113,31 @@ export default function Home({ setCurrentPage, onSelectTeam, onOpenContact }) {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
             <button
               onClick={() => {
-                setCurrentPage('league');
+                setCurrentPage('register');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="red-sweep-btn w-full sm:w-auto bg-[#3854A4] hover:bg-[#2A448E] text-white font-bold text-sm uppercase tracking-wider px-8 py-4 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2"
+              className="red-sweep-btn w-full sm:w-auto bg-[#E82024] hover:bg-[#C71216] text-white font-bold text-sm uppercase tracking-wider px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
             >
-              <span>EXPLORE THE LEAGUE</span>
+              <Zap className="w-4 h-4 text-white" />
+              <span>PLAYER REGISTRATION</span>
               <ArrowRight className="w-4 h-4" />
             </button>
 
             <button
-              onClick={onOpenContact}
-              className="red-sweep-btn w-full sm:w-auto bg-[#E82024] hover:bg-[#C71216] text-white font-bold text-sm uppercase tracking-wider px-8 py-4 rounded-lg shadow-md transition-all flex items-center justify-center gap-2"
+              onClick={() => {
+                setCurrentPage('league');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="red-sweep-btn w-full sm:w-auto bg-[#3854A4] hover:bg-[#2A448E] text-white font-bold text-sm uppercase tracking-wider px-8 py-4 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2"
             >
-              <span>JOIN THE JOURNEY</span>
+              <span>EXPLORE THE LEAGUE</span>
+            </button>
+
+            <button
+              onClick={onOpenContact}
+              className="w-full sm:w-auto bg-gray-100 hover:bg-gray-200 text-gray-900 border border-gray-300 font-bold text-sm uppercase tracking-wider px-6 py-4 rounded-xl transition-all flex items-center justify-center gap-2"
+            >
+              <span>ENQUIRE</span>
             </button>
           </div>
         </div>

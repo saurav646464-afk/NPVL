@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, ChevronRight, Zap, Grid } from 'lucide-react';
+import { X, ChevronRight, Zap, Grid, LogIn } from 'lucide-react';
 
 export default function Header({ currentPage, setCurrentPage, onOpenContact }) {
   const [scrolled, setScrolled] = useState(false);
@@ -15,6 +15,7 @@ export default function Header({ currentPage, setCurrentPage, onOpenContact }) {
 
   const navItems = [
     { id: 'home', label: 'HOME' },
+    { id: 'register', label: 'PLAYER REGISTRATION', badge: 'NOV 16' },
     { id: 'about', label: 'ABOUT' },
     { id: 'league', label: 'THE LEAGUE' },
     { id: 'season1', label: 'SEASON 1', badge: 'SOON' },
@@ -60,30 +61,41 @@ export default function Header({ currentPage, setCurrentPage, onOpenContact }) {
             </div>
           </button>
 
-          {/* Right side: MENU Button + COMING SOON Badge + JOIN THE JOURNEY CTA */}
-          <div className="flex items-center gap-2 md:gap-3.5">
+          {/* Right side: REGISTER NOW CTA + MENU Button + JOIN THE JOURNEY */}
+          <div className="flex items-center gap-1.5 md:gap-3">
+            {/* Direct Quick Register Button */}
+            <button
+              onClick={() => handleNavClick('register')}
+              className="bg-[#E82024] hover:bg-[#C71216] text-white text-[11px] font-bold uppercase tracking-wider px-2.5 sm:px-3.5 py-2 rounded-lg shadow-sm flex items-center gap-1.5 transition-all animate-pulse"
+            >
+              <Zap className="w-3 h-3 text-white" />
+              <span>REGISTER</span>
+            </button>
+
             {/* All Pages MENU Button */}
             <button
               onClick={() => setMenuDropdownOpen(!menuDropdownOpen)}
-              className="flex items-center gap-1.5 bg-gray-100 hover:bg-blue-50/50 border-2 border-gray-300 hover:border-[#3854A4] text-gray-900 text-xs font-bold uppercase tracking-wider px-3 py-2 rounded-lg transition-all shadow-2xs"
+              className="flex items-center gap-1.5 bg-gray-100 hover:bg-blue-50/50 border-2 border-gray-300 hover:border-[#3854A4] text-gray-900 text-xs font-bold uppercase tracking-wider px-2.5 sm:px-3 py-2 rounded-lg transition-all shadow-2xs"
             >
               <Grid className="w-3.5 h-3.5 text-[#3854A4]" />
               <span>MENU</span>
             </button>
 
-            {/* COMING SOON Badge — hidden on mobile */}
-            <div className="hidden sm:flex items-center gap-1.5 bg-[#E82024]/10 border border-[#E82024]/30 text-[#E82024] text-[10px] uppercase font-bold tracking-widest px-3 py-2 rounded-full">
-              <Zap className="w-3 h-3 animate-pulse text-[#E82024]" />
-              <span>COMING SOON</span>
-            </div>
+            {/* LOGIN Button (Right next to Menu) */}
+            <button
+              onClick={() => handleNavClick('login-hub')}
+              className="flex items-center gap-1.5 bg-blue-50/80 hover:bg-blue-100 border-2 border-[#3854A4] text-[#3854A4] text-xs font-bold uppercase tracking-wider px-2.5 sm:px-3.5 py-2 rounded-lg transition-all shadow-2xs"
+            >
+              <LogIn className="w-3.5 h-3.5 text-[#3854A4]" />
+              <span>LOGIN</span>
+            </button>
 
             {/* JOIN THE JOURNEY — icon only on mobile, full text on sm+ */}
             <button
               onClick={onOpenContact}
-              className="red-sweep-btn bg-[#E82024] hover:bg-[#C71216] text-white text-xs font-bold uppercase tracking-wider px-3 sm:px-5 md:px-6 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all whitespace-nowrap"
+              className="red-sweep-btn bg-[#121C38] hover:bg-[#1E293B] border border-[#3854A4] text-white text-xs font-bold uppercase tracking-wider px-3 sm:px-4 md:px-5 py-2 rounded-lg shadow-md hover:shadow-lg transition-all whitespace-nowrap hidden sm:inline-block"
             >
-              <span className="hidden sm:inline">JOIN THE JOURNEY</span>
-              <span className="sm:hidden">JOIN</span>
+              <span>ENQUIRE</span>
             </button>
           </div>
         </div>
