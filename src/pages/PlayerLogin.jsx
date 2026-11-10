@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { User, Phone, Search, Download, AlertCircle, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { generateCertificatePDF, generateIdCardPDF } from '../lib/pdfGenerator';
+import { generateIdCardPDF } from '../lib/pdfGenerator';
 
 export default function PlayerLogin({ setCurrentPage }) {
   const [identifier, setIdentifier] = useState(''); // Mobile No or Registration ID
@@ -86,10 +86,10 @@ export default function PlayerLogin({ setCurrentPage }) {
               CANDIDATE PORTAL
             </span>
             <h1 className="font-bebas text-3xl sm:text-5xl text-gray-900 tracking-wider">
-              PLAYER LOGIN & CERTIFICATE DOWNLOAD
+              PLAYER LOGIN & ID CARD DOWNLOAD
             </h1>
             <p className="text-xs sm:text-sm text-gray-500 max-w-md mx-auto">
-              Enter your registered Mobile Number or Registration ID to access your official documents.
+              Enter your registered Mobile Number or Registration ID to access your official Player Trial ID Pass.
             </p>
           </div>
 
@@ -176,20 +176,12 @@ export default function PlayerLogin({ setCurrentPage }) {
               </div>
 
               {/* Action Buttons */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                <button
-                  onClick={() => generateCertificatePDF(playerRecord)}
-                  className="bg-[#3854A4] hover:bg-[#2A4080] text-white font-bebas text-base tracking-wider py-3 px-4 rounded-xl shadow-md flex items-center justify-center gap-2 transition-all"
-                >
-                  <Download className="w-4 h-4" />
-                  <span>DOWNLOAD CERTIFICATE (PDF)</span>
-                </button>
-
+              <div className="flex justify-center pt-2">
                 <button
                   onClick={() => generateIdCardPDF(playerRecord)}
-                  className="bg-[#E82024] hover:bg-[#C71216] text-white font-bebas text-base tracking-wider py-3 px-4 rounded-xl shadow-md flex items-center justify-center gap-2 transition-all"
+                  className="w-full bg-[#E82024] hover:bg-[#C71216] text-white font-bebas text-lg tracking-wider py-3.5 px-6 rounded-xl shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
                 >
-                  <Download className="w-4 h-4" />
+                  <Download className="w-5 h-5" />
                   <span>DOWNLOAD PLAYER ID CARD (PDF)</span>
                 </button>
               </div>

@@ -4,7 +4,7 @@ import {
   ArrowRight, Download, Search, ShieldCheck, User
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { generateCertificatePDF, generateIdCardPDF } from '../lib/pdfGenerator';
+import { generateIdCardPDF } from '../lib/pdfGenerator';
 
 export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
   const [identifier, setIdentifier] = useState(''); // Email, Mobile No, or Reg ID
@@ -175,21 +175,13 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
             </div>
 
             {/* Download Buttons */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-              <button
-                onClick={() => generateCertificatePDF(playerRecord)}
-                className="bg-[#3854A4] hover:bg-[#2A4080] text-white font-bebas text-lg tracking-wider py-3.5 px-4 rounded-xl shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
-              >
-                <Download className="w-5 h-5" />
-                <span>DOWNLOAD CERTIFICATE (PDF)</span>
-              </button>
-
+            <div className="flex justify-center pt-2">
               <button
                 onClick={() => generateIdCardPDF(playerRecord)}
-                className="bg-[#E82024] hover:bg-[#C71216] text-white font-bebas text-lg tracking-wider py-3.5 px-4 rounded-xl shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
+                className="w-full bg-[#E82024] hover:bg-[#C71216] text-white font-bebas text-xl tracking-wider py-4 px-6 rounded-2xl shadow-lg flex items-center justify-center gap-2 transition-all cursor-pointer"
               >
-                <Download className="w-5 h-5" />
-                <span>DOWNLOAD PLAYER ID CARD (PDF)</span>
+                <Download className="w-6 h-6" />
+                <span>DOWNLOAD OFFICIAL PLAYER ID CARD (PDF)</span>
               </button>
             </div>
 
@@ -227,7 +219,7 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
             NPVL OFFICIAL LOGIN
           </h1>
           <p className="text-xs sm:text-sm text-gray-500 max-w-xs mx-auto">
-            Sign in to access your registered candidate profile, certificate downloads, or official administrative dashboard.
+            Sign in to access your registered candidate profile, Player ID Card download, or official administrative dashboard.
           </p>
         </div>
 

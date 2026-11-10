@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { 
   User, Calendar, Phone, Mail, MapPin, Award, 
   Upload, FileCheck, CheckCircle2, AlertTriangle, 
-  Download, ArrowRight, ShieldCheck, HeartPulse, Clock, Sparkles
+  Download, ArrowRight, ShieldCheck, Clock, Sparkles
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { generateCertificatePDF, generateIdCardPDF } from '../lib/pdfGenerator';
+import { generateIdCardPDF } from '../lib/pdfGenerator';
 import confetti from 'canvas-confetti';
 
 export default function Register({ onOpenContact, setCurrentPage }) {
@@ -15,7 +15,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   // Mode: 'form' | 'success' | 'bypass_preview'
-  const [previewMode, setPreviewMode] = useState(false); // allows user to explore form before countdown ends
+  const [previewMode, setPreviewMode] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [completedData, setCompletedData] = useState(null);
 
@@ -37,7 +37,6 @@ export default function Register({ onOpenContact, setCurrentPage }) {
     state: '',
     country: 'India',
     instagram_id: '',
-    facebook_id: '',
     employment_status: 'Pursuing Studies',
     institution_name: '',
     account_password: '', // Candidate login password
@@ -52,30 +51,15 @@ export default function Register({ onOpenContact, setCurrentPage }) {
     standing_reach_cms: '',
     jump_reach_cms: '',
 
-    // Medical History Checkboxes
-    medical_history: {
-      no_history: true,
-      past_surgeries: false,
-      surgeries_details: '',
-      ongoing_conditions: false,
-      conditions_details: '',
-      allergies: false,
-      allergies_details: '',
-      heart_issues: false,
-      bone_muscle_injuries: false,
-      bone_injuries_details: '',
-      recent_illness: false,
-      recent_illness_details: '',
-    },
-
-    // Agreements
+    // Agreements & Voluntary Payment Consent
     declaration_agreed: false,
+    voluntary_payment_consent: false,
   });
 
-  // File states (mock/base64 or local paths for now)
+  // Photo & Certificate files
   const [photoFile, setPhotoFile] = useState(null);
+  const [photoDataUrl, setPhotoDataUrl] = useState('');
   const [certificateFile, setCertificateFile] = useState(null);
-  const [stampPaperFile, setStampPaperFile] = useState(null);
 
   // Countdown timer logic
   useEffect(() => {
@@ -97,6 +81,19 @@ export default function Register({ onOpenContact, setCurrentPage }) {
     const interval = setInterval(checkTimer, 1000);
     return () => clearInterval(interval);
   }, [targetDate]);
+
+  // Handle photo upload and convert to base64 for ID card preview/pdf
+  const handlePhotoUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setPhotoFile(file);
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setPhotoDataUrl(event.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   // Auto-calculate age whenever DOB changes
   const handleDobChange = (e) => {
@@ -124,49 +121,6 @@ export default function Register({ onOpenContact, setCurrentPage }) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleMedicalCheckbox = (key) => {
-    setFormData((prev) => {
-      const updated = { ...prev.medical_history };
-      if (key === 'no_history') {
-        const newVal = !updated.no_history;
-        return {
-          ...prev,
-          medical_history: {
-            no_history: newVal,
-            past_surgeries: false,
-            surgeries_details: '',
-            ongoing_conditions: false,
-            conditions_details: '',
-            allergies: false,
-            allergies_details: '',
-            heart_issues: false,
-            bone_muscle_injuries: false,
-            bone_injuries_details: '',
-            recent_illness: false,
-            recent_illness_details: '',
-          },
-        };
-      } else {
-        updated[key] = !updated[key];
-        updated.no_history = false;
-        return {
-          ...prev,
-          medical_history: updated,
-        };
-      }
-    });
-  };
-
-  const handleMedicalDetailChange = (key, text) => {
-    setFormData((prev) => ({
-      ...prev,
-      medical_history: {
-        ...prev.medical_history,
-        [key]: text,
-      },
-    }));
-  };
-
   // Razorpay Checkout & Submission Handler
   const handleSubmitAndPay = async (e) => {
     e.preventDefault();
@@ -177,7 +131,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
     }
 
     if (!formData.account_password || formData.account_password.length < 6) {
-      alert('Please create a login password of at least 6 characters.');
+      alert('Please create an account password of at least 6 characters.');
       return;
     }
 
@@ -191,33 +145,32 @@ export default function Register({ onOpenContact, setCurrentPage }) {
       return;
     }
 
-    if (!stampPaperFile) {
-      alert('Signed Notary on ₹10 Stamp Paper is mandatory. Please upload the signed agreement.');
+    if (!formData.declaration_agreed) {
+      alert('Please agree to the official declaration and code of conduct before proceeding.');
       return;
     }
 
-    if (!formData.declaration_agreed) {
-      alert('Please agree to the official declaration and code of conduct before proceeding.');
+    if (!formData.voluntary_payment_consent) {
+      alert('Please confirm your consent for voluntary payment of the ₹500 registration fee.');
       return;
     }
 
     setSubmitting(true);
 
     try {
-      // Generate unique registration id e.g. NPVL-2026-F1042
+      // Generate unique registration id e.g. NPVL-2026-M1042
       const randomSuffix = Math.floor(1000 + Math.random() * 9000);
-      const regId = `NPVL-2026-F${randomSuffix}`;
+      const regId = `NPVL-2026-M${randomSuffix}`;
 
       // Razorpay Checkout Options
       const options = {
-        key: 'rzp_test_mock_keys_active', // Will automatically accept test/live once keys are plugged
+        key: 'rzp_test_mock_keys_active',
         amount: 500 * 100, // 500 INR in paise
         currency: 'INR',
         name: 'North Premier Volleyball League',
         description: 'Season 1 Player Trial & Registration Fee',
         image: '/logo.png',
         handler: async function (response) {
-          // Success callback
           await finalizeRegistration(regId, response.razorpay_payment_id || `PAY_MOCK_${Date.now()}`);
         },
         prefill: {
@@ -235,14 +188,12 @@ export default function Register({ onOpenContact, setCurrentPage }) {
         },
       };
 
-      // Check if Razorpay script is loaded in window
       if (window.Razorpay) {
         const rzp1 = new window.Razorpay(options);
         rzp1.open();
       } else {
-        // Fallback for environment before live key integration: Instant Mock Payment Complete
         const confirmSim = window.confirm(
-          `[NPVL Razorpay Payment Gateway]\n\nRegistration Fee: ₹500\nCandidate: ${formData.full_name}\n\nClick OK to simulate successful ₹500 payment and generate official certificate & ID card!`
+          `[NPVL Razorpay Payment Gateway]\n\nRegistration Fee: ₹500\nCandidate: ${formData.full_name}\n\nClick OK to simulate successful ₹500 payment and generate your official Player ID Card!`
         );
         if (confirmSim) {
           await finalizeRegistration(regId, `PAY_TEST_${Date.now()}`);
@@ -260,25 +211,53 @@ export default function Register({ onOpenContact, setCurrentPage }) {
   const finalizeRegistration = async (regId, paymentId) => {
     try {
       const payload = {
-        ...formData,
+        full_name: formData.full_name,
+        dob: formData.dob,
+        age: formData.age,
+        gender: formData.gender,
+        nationality: formData.nationality,
+        aadhar_no: formData.aadhar_no,
+        mobile_no: formData.mobile_no,
+        whatsapp_no: formData.whatsapp_no,
+        email: formData.email,
+        postal_address: formData.postal_address,
+        city: formData.city,
+        pincode: formData.pincode,
+        state: formData.state,
+        country: formData.country,
+        instagram_id: formData.instagram_id,
+        employment_status: formData.employment_status,
+        institution_name: formData.institution_name,
+        player_category: formData.player_category,
+        top_achievement: formData.top_achievement,
+        certificate_year_place: formData.certificate_year_place,
+        current_team_dept: formData.current_team_dept,
+        height_cms: formData.height_cms,
+        weight_kgs: formData.weight_kgs,
+        standing_reach_cms: formData.standing_reach_cms,
+        jump_reach_cms: formData.jump_reach_cms,
+        declaration_agreed: formData.declaration_agreed,
         medical_history: {
-          ...formData.medical_history,
           account_password: formData.account_password || '123456',
+          voluntary_payment_consent: formData.voluntary_payment_consent,
         },
         registration_id: regId,
         payment_status: 'paid',
         razorpay_payment_id: paymentId,
         amount: 500,
-        certificate_generated: true,
+        certificate_generated: false,
         id_card_generated: true,
       };
 
-      const { data, error } = await supabase.from('player_registrations').insert([payload]);
+      const { error } = await supabase.from('player_registrations').insert([payload]);
       if (error) {
         console.warn('Supabase insert note:', error.message);
       }
 
-      setCompletedData(payload);
+      setCompletedData({
+        ...payload,
+        photo_data_url: photoDataUrl,
+      });
       setSubmitting(false);
       try {
         confetti({ particleCount: 120, spread: 90, origin: { y: 0.6 } });
@@ -290,56 +269,19 @@ export default function Register({ onOpenContact, setCurrentPage }) {
         registration_id: regId,
         payment_status: 'paid',
         amount: 500,
+        photo_data_url: photoDataUrl,
       });
       setSubmitting(false);
     }
   };
 
-  // Download Sample Notary Stamp Paper PDF
-  const downloadNotarySample = () => {
-    const notaryText = `SAMPLE FORMAT FOR NOTARY ON ₹10 STAMP PAPER
-------------------------------------------------------------
-BEFORE THE EXECUTIVE GOVERNING BODY
-NORTH PREMIER VOLLEYBALL LEAGUE (NPVL) - SEASON 1
-
-I, ${formData.full_name || '__________________________'}, 
-D/o, S/o: ____________________________________,
-Resident of: ${formData.postal_address || '____________________________________________________'},
-City: ${formData.city || '____________'}, State: ${formData.state || '____________'},
-Aadhaar No: ${formData.aadhar_no || '________________________'},
-Date of Birth: ${formData.dob || '____________'} (Age: ${formData.age || '___'} years)
-
-DO HEREBY SOLEMNLY AFFIRM AND DECLARE AS UNDER:
-1. That all information furnished by me in the NPVL Season 1 Registration Form is true and authentic.
-2. That I agree to abide by all the rules, codes of conduct, and regulations of the North Premier Volleyball League (NPVL).
-3. That I am physically and mentally fit to participate in competitive volleyball trials and tournament matches.
-4. That I assume full responsibility for any pre-existing medical conditions or injuries disclosed in my form.
-5. That I consent to the use of my photograph, name, and match footage for promotional and official League broadcasting.
-
-DEPONENT SIGNATURE: _______________________
-(In case of Minor: Parent / Guardian Signature): _______________________
-
-VERIFICATION:
-Verified at _____________ on this _____ day of __________, 2026.
-ATTESTED BY NOTARY PUBLIC (WITH SEAL & STAMP)
-`;
-
-    const blob = new Blob([notaryText], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'NPVL_Rs10_Stamp_Paper_Notary_Sample.txt';
-    link.click();
-    URL.revokeObjectURL(url);
-  };
-
   // -------------------------------------------------------------
-  // VIEW: REGISTRATION SUCCESS & DIGITAL CERTIFICATE SCREEN
+  // VIEW: REGISTRATION SUCCESS & DIGITAL PLAYER ID CARD SCREEN
   // -------------------------------------------------------------
   if (completedData) {
     return (
       <div className="min-h-screen bg-gray-50 text-gray-900 pt-28 pb-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto space-y-8">
+        <div className="max-w-2xl mx-auto space-y-8">
           
           <div className="bg-white border-2 border-green-500 rounded-3xl p-6 sm:p-10 text-center shadow-xl space-y-6">
             <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto text-green-600 shadow-md">
@@ -354,7 +296,7 @@ ATTESTED BY NOTARY PUBLIC (WITH SEAL & STAMP)
                 CONGRATULATIONS, {completedData.full_name.toUpperCase()}!
               </h1>
               <p className="text-sm text-gray-600 max-w-xl mx-auto">
-                Your application for <strong>North Premier Volleyball League (NPVL) Season 1</strong> has been successfully registered and encrypted into the official central draft database.
+                Your application for <strong>North Premier Volleyball League (NPVL) Season 1</strong> has been successfully registered. Your official Player ID Card is generated below.
               </p>
             </div>
 
@@ -378,31 +320,23 @@ ATTESTED BY NOTARY PUBLIC (WITH SEAL & STAMP)
               </div>
             </div>
 
-            {/* Action Buttons: Download PDF Certificate & ID Card */}
-            <div className="pt-4 border-t border-gray-200 space-y-3">
+            {/* ID Card Download Action */}
+            <div className="pt-4 border-t border-gray-200 space-y-4">
               <p className="text-xs text-gray-500">
-                Please download and keep your official Certificate and Player Trial ID Card. You can also re-download it anytime using your Mobile & Reg ID from the Player Login portal.
+                Please download and keep your official Player Trial ID Card. You can also re-download it anytime using your Mobile / Email & Password from the Login page.
               </p>
               
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <button
-                  onClick={() => generateCertificatePDF(completedData)}
-                  className="w-full sm:w-auto bg-[#3854A4] hover:bg-[#2A4080] text-white font-bebas text-lg tracking-wider px-6 py-3.5 rounded-xl shadow-md flex items-center justify-center gap-2 transition-all"
-                >
-                  <Download className="w-5 h-5" />
-                  <span>DOWNLOAD OFFICIAL CERTIFICATE (PDF)</span>
-                </button>
-
+              <div className="flex justify-center">
                 <button
                   onClick={() => generateIdCardPDF(completedData)}
-                  className="w-full sm:w-auto bg-[#E82024] hover:bg-[#C71216] text-white font-bebas text-lg tracking-wider px-6 py-3.5 rounded-xl shadow-md flex items-center justify-center gap-2 transition-all"
+                  className="w-full sm:w-auto bg-[#E82024] hover:bg-[#C71216] text-white font-bebas text-xl tracking-wider px-8 py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all cursor-pointer"
                 >
-                  <Download className="w-5 h-5" />
-                  <span>GENERATE PLAYER ID CARD (PDF)</span>
+                  <Download className="w-6 h-6" />
+                  <span>DOWNLOAD PLAYER ID CARD (PDF)</span>
                 </button>
               </div>
 
-              <div className="pt-4">
+              <div className="pt-2">
                 <button
                   onClick={() => setCurrentPage('home')}
                   className="text-xs text-gray-500 hover:text-gray-900 font-bold uppercase tracking-wider underline"
@@ -486,10 +420,10 @@ ATTESTED BY NOTARY PUBLIC (WITH SEAL & STAMP)
                   PREVIEW REGISTRATION FORM & GUIDELINES
                 </button>
                 <button
-                  onClick={() => setCurrentPage('player-login')}
+                  onClick={() => setCurrentPage('login-hub')}
                   className="bg-[#3854A4] hover:bg-[#2A4080] text-white text-xs font-bold uppercase tracking-wider px-6 py-3 rounded-xl shadow-md transition-all"
                 >
-                  ALREADY REGISTERED? DOWNLOAD CERTIFICATE
+                  ALREADY REGISTERED? DOWNLOAD ID CARD
                 </button>
               </div>
 
@@ -505,7 +439,7 @@ ATTESTED BY NOTARY PUBLIC (WITH SEAL & STAMP)
                 <li>Aadhaar Card (front & back)</li>
                 <li>Passport size photograph (Max 2MB)</li>
                 <li>Participation / Merit sports certificate</li>
-                <li>₹10 Stamp Paper Notary agreement</li>
+                <li>Online self-consent verification</li>
               </ul>
             </div>
 
@@ -515,7 +449,7 @@ ATTESTED BY NOTARY PUBLIC (WITH SEAL & STAMP)
               <ul className="text-xs text-gray-600 space-y-1.5 list-disc pl-4">
                 <li>Auto calculated age verification</li>
                 <li>Physical dimensions (height, reaches)</li>
-                <li>Medical disclosures & declaration</li>
+                <li>Create personal login password</li>
                 <li>Upload documents directly in portal</li>
               </ul>
             </div>
@@ -526,8 +460,8 @@ ATTESTED BY NOTARY PUBLIC (WITH SEAL & STAMP)
               <ul className="text-xs text-gray-600 space-y-1.5 list-disc pl-4">
                 <li>₹500 Fee via Razorpay (UPI, Cards)</li>
                 <li>Instant Verified Registration ID</li>
-                <li>Automatic Digital Certificate PDF</li>
-                <li>Official Player Trial ID Pass</li>
+                <li>Detailed Player Trial ID Card PDF</li>
+                <li>Valid for Season 1 Player Draft</li>
               </ul>
             </div>
           </div>
@@ -637,8 +571,8 @@ ATTESTED BY NOTARY PUBLIC (WITH SEAL & STAMP)
                   onChange={handleInputChange}
                   className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] focus:ring-1 focus:ring-[#3854A4] rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none"
                 >
-                  <option value="Female">Male</option>
                   <option value="Male">Male</option>
+                  <option value="Female">Female</option>
                   <option value="Other">Other</option>
                 </select>
               </div>
@@ -808,7 +742,7 @@ ATTESTED BY NOTARY PUBLIC (WITH SEAL & STAMP)
               </div>
 
               {/* Instagram ID */}
-              <div>
+              <div className="sm:col-span-2">
                 <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
                   Instagram ID (Optional)
                 </label>
@@ -818,21 +752,6 @@ ATTESTED BY NOTARY PUBLIC (WITH SEAL & STAMP)
                   value={formData.instagram_id}
                   onChange={handleInputChange}
                   placeholder="@username"
-                  className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] focus:ring-1 focus:ring-[#3854A4] rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none"
-                />
-              </div>
-
-              {/* Facebook ID */}
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
-                  Facebook Profile ID (Optional)
-                </label>
-                <input
-                  type="text"
-                  name="facebook_id"
-                  value={formData.facebook_id}
-                  onChange={handleInputChange}
-                  placeholder="profile URL or username"
                   className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] focus:ring-1 focus:ring-[#3854A4] rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none"
                 />
               </div>
@@ -873,10 +792,10 @@ ATTESTED BY NOTARY PUBLIC (WITH SEAL & STAMP)
               {/* Set Account Password for Login */}
               <div className="sm:col-span-2 bg-gradient-to-r from-blue-50/70 to-red-50/40 border border-blue-200 p-4 rounded-2xl">
                 <label className="block text-xs font-bold uppercase tracking-wider text-[#3854A4] mb-1">
-                  Create Account Password (For Candidate Login & Certificate Retrieval) *
+                  Create Account Password (For Candidate Login & ID Card Retrieval) *
                 </label>
                 <p className="text-[11px] text-gray-500 mb-2">
-                  Create a password so you can log in later via the website to access your profile and re-download your Certificate or ID Card anytime.
+                  Create a password so you can log in later via the website to access your profile and re-download your Player ID Card anytime.
                 </p>
                 <input
                   type="password"
@@ -892,7 +811,7 @@ ATTESTED BY NOTARY PUBLIC (WITH SEAL & STAMP)
               {/* Photo Upload */}
               <div className="sm:col-span-2 bg-blue-50/50 border border-blue-200 p-4 rounded-2xl">
                 <label className="block text-xs font-bold uppercase tracking-wider text-[#3854A4] mb-1">
-                  Passport Size Photograph (To Be Uploaded) *
+                  Passport Size Photograph (To Be Uploaded on ID Card) *
                 </label>
                 <p className="text-[11px] text-gray-500 mb-2">
                   Format: JPG, PNG, WEBP • Max Size: 2MB • Clear front face with white/light background.
@@ -901,7 +820,7 @@ ATTESTED BY NOTARY PUBLIC (WITH SEAL & STAMP)
                   type="file"
                   required
                   accept="image/*"
-                  onChange={(e) => setPhotoFile(e.target.files[0])}
+                  onChange={handlePhotoUpload}
                   className="block w-full text-xs text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#3854A4] file:text-white hover:file:bg-[#2A4080]"
                 />
               </div>
@@ -1083,212 +1002,70 @@ ATTESTED BY NOTARY PUBLIC (WITH SEAL & STAMP)
             </div>
           </div>
 
-          {/* SECTION 3: MEDICAL HISTORY & COMPLICATIONS */}
+          {/* SECTION 3: DECLARATION & VOLUNTARY PAYMENT CONSENT (REPLACES OLD MEDICAL & STAMP PAPER) */}
           <div className="bg-white border-2 border-gray-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
             <div className="border-b border-gray-200 pb-4">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#E82024] block">SECTION 03</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-[#3854A4] block">SECTION 03</span>
               <h2 className="font-bebas text-2xl sm:text-3xl text-gray-900 tracking-wider">
-                MEDICAL HISTORY & FITNESS DISCLOSURE
+                DECLARATION & VOLUNTARY PAYMENT CONSENT
               </h2>
-              <p className="text-xs text-gray-500">
-                Disclose any pre-existing complications. Check all that apply and provide details.
-              </p>
-            </div>
-
-            <div className="space-y-3 text-xs">
-              
-              {/* No Significant History */}
-              <label className="flex items-center gap-3 p-3 bg-green-50/70 border border-green-200 rounded-xl cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={formData.medical_history.no_history}
-                  onChange={() => handleMedicalCheckbox('no_history')}
-                  className="w-4 h-4 text-green-600 rounded"
-                />
-                <span className="font-bold text-green-900">
-                  No significant medical history (I am fully fit and cleared for high-performance sports)
-                </span>
-              </label>
-
-              {/* Past Surgeries */}
-              <div className="p-3 bg-gray-50 rounded-xl border border-gray-200 space-y-2">
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.medical_history.past_surgeries}
-                    onChange={() => handleMedicalCheckbox('past_surgeries')}
-                    className="w-4 h-4 text-[#3854A4] rounded"
-                  />
-                  <span className="font-bold text-gray-800">Past Surgeries</span>
-                </label>
-                {formData.medical_history.past_surgeries && (
-                  <input
-                    type="text"
-                    placeholder="List surgery details & year..."
-                    value={formData.medical_history.surgeries_details}
-                    onChange={(e) => handleMedicalDetailChange('surgeries_details', e.target.value)}
-                    className="w-full bg-white border border-gray-300 rounded-lg p-2 text-xs"
-                  />
-                )}
-              </div>
-
-              {/* On-going conditions */}
-              <div className="p-3 bg-gray-50 rounded-xl border border-gray-200 space-y-2">
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.medical_history.ongoing_conditions}
-                    onChange={() => handleMedicalCheckbox('ongoing_conditions')}
-                    className="w-4 h-4 text-[#3854A4] rounded"
-                  />
-                  <span className="font-bold text-gray-800">On-going conditions (e.g. asthma, diabetes)</span>
-                </label>
-                {formData.medical_history.ongoing_conditions && (
-                  <input
-                    type="text"
-                    placeholder="Specify condition details..."
-                    value={formData.medical_history.conditions_details}
-                    onChange={(e) => handleMedicalDetailChange('conditions_details', e.target.value)}
-                    className="w-full bg-white border border-gray-300 rounded-lg p-2 text-xs"
-                  />
-                )}
-              </div>
-
-              {/* Allergies */}
-              <div className="p-3 bg-gray-50 rounded-xl border border-gray-200 space-y-2">
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.medical_history.allergies}
-                    onChange={() => handleMedicalCheckbox('allergies')}
-                    className="w-4 h-4 text-[#3854A4] rounded"
-                  />
-                  <span className="font-bold text-gray-800">Allergies (medicines / food / insects)</span>
-                </label>
-                {formData.medical_history.allergies && (
-                  <input
-                    type="text"
-                    placeholder="List allergies..."
-                    value={formData.medical_history.allergies_details}
-                    onChange={(e) => handleMedicalDetailChange('allergies_details', e.target.value)}
-                    className="w-full bg-white border border-gray-300 rounded-lg p-2 text-xs"
-                  />
-                )}
-              </div>
-
-              {/* Heart issues */}
-              <div className="p-3 bg-gray-50 rounded-xl border border-gray-200">
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.medical_history.heart_issues}
-                    onChange={() => handleMedicalCheckbox('heart_issues')}
-                    className="w-4 h-4 text-[#3854A4] rounded"
-                  />
-                  <span className="font-bold text-gray-800">Heart issues or fainting during exercise</span>
-                </label>
-              </div>
-
-              {/* Bone/joint injuries */}
-              <div className="p-3 bg-gray-50 rounded-xl border border-gray-200 space-y-2">
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.medical_history.bone_muscle_injuries}
-                    onChange={() => handleMedicalCheckbox('bone_muscle_injuries')}
-                    className="w-4 h-4 text-[#3854A4] rounded"
-                  />
-                  <span className="font-bold text-gray-800">Bone / Joint / Muscle injuries</span>
-                </label>
-                {formData.medical_history.bone_muscle_injuries && (
-                  <input
-                    type="text"
-                    placeholder="Injury details (ACL, ankle, shoulder, etc.)..."
-                    value={formData.medical_history.bone_injuries_details}
-                    onChange={(e) => handleMedicalDetailChange('bone_injuries_details', e.target.value)}
-                    className="w-full bg-white border border-gray-300 rounded-lg p-2 text-xs"
-                  />
-                )}
-              </div>
-
-            </div>
-          </div>
-
-          {/* SECTION 4: AGREEMENTS & ₹10 NOTARY STAMP PAPER */}
-          <div className="bg-white border-2 border-gray-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
-            <div className="border-b border-gray-200 pb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-[#3854A4] block">SECTION 04</span>
-                <h2 className="font-bebas text-2xl sm:text-3xl text-gray-900 tracking-wider">
-                  AGREEMENTS & CONSENTS (₹10 STAMP PAPER)
-                </h2>
-              </div>
-              <button
-                type="button"
-                onClick={downloadNotarySample}
-                className="bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold px-4 py-2 rounded-xl border border-gray-300 flex items-center gap-1.5 transition-all"
-              >
-                <Download className="w-4 h-4 text-[#3854A4]" />
-                <span>DOWNLOAD NOTARY SAMPLE (.TXT)</span>
-              </button>
             </div>
 
             {/* Declaration Text Box */}
-            <div className="bg-gray-50 p-4 rounded-2xl border border-gray-200 text-xs text-gray-700 space-y-2 leading-relaxed">
-              <p className="font-bold text-gray-900">I hereby declare and agree to the following:</p>
-              <ul className="list-disc pl-5 space-y-1">
-                <li>The information provided in this form is true and correct to the best of my knowledge.</li>
-                <li>I agree to abide by all rules and regulations of the North Premier Volleyball League (NPVL).</li>
-                <li>I am physically fit and capable of participating in high-intensity volleyball activities.</li>
-                <li>I assume full responsibility for any pre-existing medical conditions or injuries.</li>
-                <li>I agree to follow the League's Code of Conduct and Disciplinary Rules at all times.</li>
-                <li>I consent to the use of my photograph, name, and match footage for promotional, media, and official League purposes.</li>
+            <div className="bg-gray-50 p-5 rounded-2xl border border-gray-200 text-xs text-gray-700 space-y-2 leading-relaxed">
+              <p className="font-bold text-gray-900 text-sm">Official Declaration & Player Commitment:</p>
+              <ul className="list-disc pl-5 space-y-1.5">
+                <li>I confirm that all details, statistics, and certificates submitted in this registration form are true and accurate to the best of my knowledge.</li>
+                <li>I agree to abide by all the rules, codes of conduct, and disciplinary regulations of the North Premier Volleyball League (NPVL).</li>
+                <li>I confirm that I am physically fit to participate in competitive volleyball activities and selection trials.</li>
+                <li>I consent to the use of my photograph, name, and sports information for official league accreditation, promotional purposes, and tournament broadcasts.</li>
               </ul>
             </div>
 
-            {/* Upload Stamp Paper */}
-            <div className="p-4 bg-red-50/50 border border-red-200 rounded-2xl space-y-2">
-              <label className="block text-xs font-bold uppercase tracking-wider text-[#E82024]">
-                Upload Signed Notary on ₹10 Stamp Paper *
+            {/* Consent Checkboxes */}
+            <div className="space-y-4 pt-2">
+              
+              {/* Checkbox 1: General Declaration */}
+              <label className="flex items-start gap-3 p-4 bg-blue-50/50 border border-blue-200 rounded-2xl cursor-pointer hover:bg-blue-50 transition-colors">
+                <input
+                  type="checkbox"
+                  required
+                  checked={formData.declaration_agreed}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, declaration_agreed: e.target.checked }))}
+                  className="w-5 h-5 text-[#3854A4] rounded mt-0.5"
+                />
+                <span className="text-xs font-bold text-gray-900 leading-snug">
+                  I solemnly declare that the information provided is correct, and I agree to abide by the official rules and code of conduct of the North Premier Volleyball League (NPVL). *
+                </span>
               </label>
-              <p className="text-[11px] text-gray-600">
-                Printed & signed by the player (in case of minor, to be signed by parent/guardian on ₹10 stamp paper). <br />
-                Acceptable Formats: PDF, JPG, PNG • Max Size: 5MB
-              </p>
-              <input
-                type="file"
-                required
-                accept=".pdf,image/*"
-                onChange={(e) => setStampPaperFile(e.target.files[0])}
-                className="block w-full text-xs text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#E82024] file:text-white hover:file:bg-[#C71216]"
-              />
-            </div>
 
-            {/* Agreement Checkbox */}
-            <label className="flex items-start gap-3 cursor-pointer pt-2">
-              <input
-                type="checkbox"
-                required
-                checked={formData.declaration_agreed}
-                onChange={(e) => setFormData((prev) => ({ ...prev, declaration_agreed: e.target.checked }))}
-                className="w-5 h-5 text-[#3854A4] rounded mt-0.5"
-              />
-              <span className="text-xs font-bold text-gray-900 leading-snug">
-                I solemnly confirm that I have reviewed all terms, disclosed relevant medical records, and agree to submit this registration along with the non-refundable fee of ₹500.
-              </span>
-            </label>
+              {/* Checkbox 2: Voluntary Payment Consent (Self Consent for ₹500 Payment) */}
+              <label className="flex items-start gap-3 p-4 bg-red-50/50 border border-red-200 rounded-2xl cursor-pointer hover:bg-red-50 transition-colors">
+                <input
+                  type="checkbox"
+                  required
+                  checked={formData.voluntary_payment_consent}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, voluntary_payment_consent: e.target.checked }))}
+                  className="w-5 h-5 text-[#E82024] rounded mt-0.5"
+                />
+                <span className="text-xs font-bold text-gray-900 leading-snug">
+                  VOLUNTARY PAYMENT CONSENT: I hereby confirm that I am making the voluntary registration fee payment of ₹500 (Five Hundred Rupees) with my full knowledge and free personal consent for NPVL Season 1 Player Draft & Trial entry. *
+                </span>
+              </label>
+
+            </div>
 
           </div>
 
           {/* SUBMISSION & RAZORPAY TRIGGER BOX */}
           <div className="bg-[#121C38] border-2 border-[#3854A4] rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6">
             <div className="space-y-1 text-center sm:text-left">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#E82024]">STEP 5 OF 5</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-[#E82024]">STEP 4 OF 4</span>
               <h3 className="font-bebas text-3xl sm:text-4xl tracking-wider text-white">
-                FEE PAYMENT & FINAL SUBMISSION
+                FEE PAYMENT & GENERATE PLAYER ID CARD
               </h3>
               <p className="text-xs text-gray-300">
-                Total Payable: <strong className="text-white text-base">₹500 INR</strong> (Includes Draft Evaluation & Digital ID Card)
+                Total Payable: <strong className="text-white text-base">₹500 INR</strong> (Includes Draft Evaluation & Official Player ID Pass)
               </p>
             </div>
 

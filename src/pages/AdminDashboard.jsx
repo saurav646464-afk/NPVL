@@ -4,7 +4,7 @@ import {
   Search, Filter, Download, ArrowLeft, RefreshCw, Eye, ShieldAlert, Lock, Mail, KeyRound, AlertCircle
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { generateCertificatePDF, generateIdCardPDF } from '../lib/pdfGenerator';
+import { generateIdCardPDF } from '../lib/pdfGenerator';
 
 export default function AdminDashboard({ setCurrentPage, initialAuthenticated = false }) {
   const [isAuthenticated, setIsAuthenticated] = useState(initialAuthenticated);
@@ -607,20 +607,14 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
                           PAID ₹500
                         </span>
                       </td>
-                      <td className="p-4 text-right space-x-2">
-                        <button
-                          onClick={() => generateCertificatePDF(player)}
-                          title="Download Certificate"
-                          className="bg-blue-50 hover:bg-blue-100 text-[#3854A4] p-2 rounded-lg font-bold"
-                        >
-                          Certificate
-                        </button>
+                      <td className="p-4 text-right">
                         <button
                           onClick={() => generateIdCardPDF(player)}
-                          title="Download ID Card"
-                          className="bg-red-50 hover:bg-red-100 text-[#E82024] p-2 rounded-lg font-bold"
+                          title="Download Player ID Pass"
+                          className="bg-red-50 hover:bg-red-100 text-[#E82024] px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 ml-auto cursor-pointer"
                         >
-                          ID Card
+                          <Download className="w-3.5 h-3.5" />
+                          <span>Player ID Card</span>
                         </button>
                       </td>
                     </tr>
