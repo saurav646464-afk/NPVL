@@ -102,7 +102,7 @@ export default function Media() {
 
   const socialPlatforms = [
     { platform: 'YOUTUBE', role: 'Full match replays, highlights and long-form features.' },
-    { platform: 'INSTAGRAM', role: 'Reels, player stories, match-day graphics and live updates.' },
+    { platform: 'INSTAGRAM', role: 'Reels, player stories, match-day graphics and live updates.', link: 'https://www.instagram.com/npvlofficial?psln=MW5tdTBza2o2b2ZnNg==' },
     { platform: 'FACEBOOK', role: 'Community groups, live streams and regional fan engagement.' },
     { platform: 'X', role: 'Real-time scores, match commentary and media updates.' },
     { platform: 'LINKEDIN', role: 'League news, partner announcements and business stories.' },
@@ -351,12 +351,33 @@ export default function Media() {
             ALWAYS-ON DIGITAL STORYTELLING PLATFORMS
           </h3>
           <MobileCarousel desktopClass="sm:grid-cols-2 lg:grid-cols-5">
-            {socialPlatforms.map((soc, idx) => (
-              <div key={idx} className="bg-white border border-gray-300 p-4 sm:p-5 rounded-xl space-y-2 shadow-2xs h-full">
-                <span className="font-montserrat font-black text-lg text-[#3854A4]">{soc.platform}</span>
-                <p className="text-xs text-gray-700 font-medium font-sans">{soc.role}</p>
-              </div>
-            ))}
+            {socialPlatforms.map((soc, idx) => {
+              const Content = (
+                <div className="bg-white border border-gray-300 hover:border-[#3854A4] p-4 sm:p-5 rounded-xl space-y-2 shadow-2xs h-full transition-all">
+                  <span className="font-montserrat font-black text-lg text-[#3854A4] flex items-center justify-between">
+                    {soc.platform}
+                    {soc.link && <span className="text-[10px] text-[#E82024] font-bold">VISIT ↗</span>}
+                  </span>
+                  <p className="text-xs text-gray-700 font-medium font-sans">{soc.role}</p>
+                </div>
+              );
+
+              return soc.link ? (
+                <a
+                  key={idx}
+                  href={soc.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block h-full group"
+                >
+                  {Content}
+                </a>
+              ) : (
+                <div key={idx} className="h-full">
+                  {Content}
+                </div>
+              );
+            })}
           </MobileCarousel>
         </section>
 

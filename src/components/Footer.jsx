@@ -50,7 +50,16 @@ export default function Footer({ setCurrentPage, onOpenContact }) {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-6 border-b border-gray-200">
           <div className="flex items-center gap-3 flex-wrap justify-center">
             <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Follow us:</span>
-            {['YouTube', 'Instagram', 'Facebook', 'X'].map((s) => (
+            <a
+              href="https://www.instagram.com/npvlofficial?psln=MW5tdTBza2o2b2ZnNg=="
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-bold text-[#E82024] hover:text-[#3854A4] transition-colors flex items-center gap-1"
+            >
+              Instagram
+            </a>
+            <span className="text-gray-300">•</span>
+            {['YouTube', 'Facebook', 'X'].map((s) => (
               <a
                 key={s}
                 href="#"
