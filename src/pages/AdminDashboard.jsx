@@ -359,7 +359,7 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
               <span className="text-[11px] font-mono text-gray-500">Live Database Connected</span>
             </div>
             <h1 className="font-bebas text-2xl sm:text-3xl lg:text-4xl text-gray-900 tracking-wider leading-tight">
-              SEASON 1 PLAYER REGISTRATIONS & FINANCIAL DASHBOARD
+              SEASON 1 PLAYER REGISTRATIONS DASHBOARD
             </h1>
           </div>
 
