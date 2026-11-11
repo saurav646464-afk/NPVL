@@ -6,13 +6,14 @@ import {
 import { supabase } from '../lib/supabase';
 import { generateIdCardPDF } from '../lib/pdfGenerator';
 
-export default function AdminDashboard({ setCurrentPage, initialAuthenticated = false }) {
+export default function AdminDashboard({ setCurrentPage, initialAuthenticated = false, setAdminLoggedIn }) {
   const [isAuthenticated, setIsAuthenticated] = useState(initialAuthenticated);
   const [viewMode, setViewMode] = useState(initialAuthenticated ? 'dashboard' : 'login'); // 'login' | 'forgot' | 'change' | 'dashboard'
 
   useEffect(() => {
     if (initialAuthenticated) {
       setIsAuthenticated(true);
+      setViewMode('dashboard');
       fetchRegistrations();
     }
   }, [initialAuthenticated]);
@@ -56,6 +57,8 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
     const cleanEmail = emailInput.trim().toLowerCase();
     if (cleanEmail === DEFAULT_EMAIL && passwordInput === currentAdminPassword) {
       setIsAuthenticated(true);
+      setViewMode('dashboard');
+      if (setAdminLoggedIn) setAdminLoggedIn(true);
       fetchRegistrations();
     } else {
       setLoginError('Invalid Administrator Email or Password. Please check credentials.');
@@ -392,6 +395,8 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
               onClick={() => {
                 setIsAuthenticated(false);
                 setViewMode('login');
+                if (setAdminLoggedIn) setAdminLoggedIn(false);
+                sessionStorage.removeItem('npvl_admin_logged_in');
               }}
               className="bg-gray-900 hover:bg-black text-white text-xs font-bold uppercase tracking-wider px-4 py-2.5 rounded-xl transition-all"
             >

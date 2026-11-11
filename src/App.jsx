@@ -27,12 +27,31 @@ import AdminDashboard from './pages/AdminDashboard';
 import LoginHub from './pages/LoginHub';
 
 export default function App() {
-  const [showIntro, setShowIntro] = useState(true);
-  const [currentPage, setCurrentPage] = useState('home');
-  const [adminLoggedIn, setAdminLoggedIn] = useState(false);
+  const [showIntro, setShowIntro] = useState(false);
+  const [currentPage, setCurrentPage] = useState(() => {
+    return sessionStorage.getItem('npvl_current_page') || 'home';
+  });
+  const [adminLoggedIn, setAdminLoggedIn] = useState(() => {
+    return sessionStorage.getItem('npvl_admin_logged_in') === 'true';
+  });
   const [selectedTeamId, setSelectedTeamId] = useState('up');
   const [contactModalOpen, setContactModalOpen] = useState(false);
   const [modalInterest, setModalInterest] = useState('General Enquiry');
+
+  // Sync state changes with sessionStorage so refresh preserves current page & session
+  const navigatePage = (page) => {
+    setCurrentPage(page);
+    sessionStorage.setItem('npvl_current_page', page);
+  };
+
+  const handleAdminLoginState = (isLoggedIn) => {
+    setAdminLoggedIn(isLoggedIn);
+    if (isLoggedIn) {
+      sessionStorage.setItem('npvl_admin_logged_in', 'true');
+    } else {
+      sessionStorage.removeItem('npvl_admin_logged_in');
+    }
+  };
 
   const openContactWithInterest = (interest = 'General Enquiry') => {
     setModalInterest(interest);
@@ -41,7 +60,7 @@ export default function App() {
 
   const handleSelectTeam = (teamId) => {
     setSelectedTeamId(teamId);
-    setCurrentPage('team-detail');
+    navigatePage('team-detail');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -55,7 +74,7 @@ export default function App() {
       case 'home':
         return (
           <Home
-            setCurrentPage={setCurrentPage}
+            setCurrentPage={navigatePage}
             onSelectTeam={handleSelectTeam}
             onOpenContact={() => openContactWithInterest('General Enquiry')}
           />
@@ -69,7 +88,7 @@ export default function App() {
       case 'teams':
         return (
           <Teams
-            setCurrentPage={setCurrentPage}
+            setCurrentPage={navigatePage}
             onSelectTeam={handleSelectTeam}
             onOpenContact={() => openContactWithInterest('Franchise')}
           />
@@ -78,7 +97,7 @@ export default function App() {
         return (
           <TeamDetail
             teamId={selectedTeamId}
-            setCurrentPage={setCurrentPage}
+            setCurrentPage={navigatePage}
             onSelectTeam={handleSelectTeam}
             onOpenContact={() => openContactWithInterest('Franchise')}
           />
@@ -96,13 +115,13 @@ export default function App() {
       case 'contact':
         return <Contact />;
       case 'register':
-        return <Register onOpenContact={() => openContactWithInterest('General Enquiry')} setCurrentPage={setCurrentPage} />;
+        return <Register onOpenContact={() => openContactWithInterest('General Enquiry')} setCurrentPage={navigatePage} />;
       case 'login-hub':
-        return <LoginHub setCurrentPage={setCurrentPage} setAdminLoggedIn={setAdminLoggedIn} />;
+        return <LoginHub setCurrentPage={navigatePage} setAdminLoggedIn={handleAdminLoginState} />;
       case 'player-login':
-        return <PlayerLogin setCurrentPage={setCurrentPage} />;
+        return <PlayerLogin setCurrentPage={navigatePage} />;
       case 'admin':
-        return <AdminDashboard setCurrentPage={setCurrentPage} initialAuthenticated={adminLoggedIn} />;
+        return <AdminDashboard setCurrentPage={navigatePage} initialAuthenticated={adminLoggedIn} setAdminLoggedIn={handleAdminLoginState} />;
       case 'terms':
         return <TermsAndConditions onOpenContact={() => openContactWithInterest('General Enquiry')} />;
       case 'privacy':
@@ -112,7 +131,7 @@ export default function App() {
       default:
         return (
           <Home
-            setCurrentPage={setCurrentPage}
+            setCurrentPage={navigatePage}
             onSelectTeam={handleSelectTeam}
             onOpenContact={() => openContactWithInterest('General Enquiry')}
           />
@@ -131,7 +150,7 @@ export default function App() {
       {/* Global Sticky Header */}
       <Header
         currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
+        setCurrentPage={navigatePage}
         onOpenContact={() => openContactWithInterest('General Enquiry')}
       />
 
@@ -142,7 +161,7 @@ export default function App() {
 
       {/* Global Footer */}
       <Footer
-        setCurrentPage={setCurrentPage}
+        setCurrentPage={navigatePage}
         onReplayIntro={handleReplayIntro}
         onOpenContact={() => openContactWithInterest('General Enquiry')}
       />

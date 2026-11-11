@@ -13,8 +13,17 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
   const [errorMsg, setErrorMsg] = useState('');
 
   // Mode: 'login' | 'forgot' | 'player_dashboard'
-  const [viewMode, setViewMode] = useState('login');
-  const [playerRecord, setPlayerRecord] = useState(null);
+  const [playerRecord, setPlayerRecord] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem('npvl_player_record');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [viewMode, setViewMode] = useState(() => {
+    return sessionStorage.getItem('npvl_player_record') ? 'player_dashboard' : 'login';
+  });
 
   // Forgot password states
   const [forgotInput, setForgotInput] = useState('');
@@ -77,11 +86,12 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
         const playerWithPhoto = { ...found, photo_data_url: photoFromDB };
 
         setPlayerRecord(playerWithPhoto);
+        sessionStorage.setItem('npvl_player_record', JSON.stringify(playerWithPhoto));
         setViewMode('player_dashboard');
       } else {
         // Fallback demo mock if test id
         if (identifier.trim().startsWith('NPVL') || identifier.trim().length === 10) {
-          setPlayerRecord({
+          const mockRecord = {
             full_name: 'REGISTERED PLAYER',
             registration_id: identifier.trim().toUpperCase(),
             dob: '2004-05-15',
@@ -94,7 +104,9 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
             jump_reach_cms: 290,
             payment_status: 'paid',
             created_at: new Date().toISOString(),
-          });
+          };
+          setPlayerRecord(mockRecord);
+          sessionStorage.setItem('npvl_player_record', JSON.stringify(mockRecord));
           setViewMode('player_dashboard');
         } else {
           setErrorMsg('No user account or registration found for this Email, Mobile, or Registration ID.');
@@ -194,6 +206,7 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
               <button
                 onClick={() => {
                   setPlayerRecord(null);
+                  sessionStorage.removeItem('npvl_player_record');
                   setViewMode('login');
                 }}
                 className="text-xs font-bold text-gray-500 hover:text-gray-900 underline uppercase tracking-wider"
