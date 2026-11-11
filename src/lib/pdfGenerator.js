@@ -161,17 +161,12 @@ export async function generateIdCardPDF(data) {
   // Left Details + Right QR Code layout for Rows 5 to 7
   // QR Code on right side: x=62, y=107, size=16mm
   try {
-    const qrData = `NPVL OFFICIAL ACCREDITATION PASS
-REG ID: ${data.registration_id || 'NPVL-2026-0001'}
-NAME: ${data.full_name || 'Candidate'}
-ROLE: ${isCoach ? 'OFFICIAL COACH' : 'PLAYER'}
-CATEGORY: ${data.player_category || 'Verified'}
-FEE STATUS: ₹500 PAID (VERIFIED)
-LEAGUE: North Premier Volleyball League Season 1`;
+    const cleanRegId = encodeURIComponent(data.registration_id || 'NPVL-2026-0001');
+    const verificationUrl = `https://npvlofficial.com/?id=${cleanRegId}`;
     
-    const qrDataUrl = await QRCode.toDataURL(qrData, {
+    const qrDataUrl = await QRCode.toDataURL(verificationUrl, {
       margin: 1,
-      width: 120,
+      width: 140,
       color: {
         dark: '#121C38',
         light: '#FFFFFF',

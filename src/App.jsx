@@ -25,10 +25,15 @@ import Register from './pages/Register';
 import PlayerLogin from './pages/PlayerLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import LoginHub from './pages/LoginHub';
+import VerifyAccreditation from './pages/VerifyAccreditation';
 
 export default function App() {
   const [showIntro, setShowIntro] = useState(false);
   const [currentPage, setCurrentPage] = useState(() => {
+    // If URL has /verify or ?id= (from QR scan), open verify page
+    if (window.location.search.includes('id=') || window.location.pathname.includes('verify')) {
+      return 'verify';
+    }
     return sessionStorage.getItem('npvl_current_page') || 'home';
   });
   const [adminLoggedIn, setAdminLoggedIn] = useState(() => {
@@ -128,6 +133,8 @@ export default function App() {
         return <PrivacyPolicy onOpenContact={() => openContactWithInterest('General Enquiry')} />;
       case 'refund':
         return <RefundPolicy onOpenContact={() => openContactWithInterest('General Enquiry')} />;
+      case 'verify':
+        return <VerifyAccreditation setCurrentPage={navigatePage} />;
       default:
         return (
           <Home
