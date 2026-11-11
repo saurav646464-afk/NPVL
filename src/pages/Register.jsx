@@ -19,8 +19,14 @@ export default function Register({ onOpenContact, setCurrentPage }) {
   const [submitting, setSubmitting] = useState(false);
   const [completedData, setCompletedData] = useState(null);
 
+  // Registration Type: 'player' | 'coach'
+  const [registrationType, setRegistrationType] = useState('player');
+
   // Form State
   const [formData, setFormData] = useState({
+    // Registration Type
+    registration_type: 'player',
+
     // Personal Information
     full_name: '',
     dob: '',
@@ -41,7 +47,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
     institution_name: '',
     account_password: '', // Candidate login password
 
-    // Volleyball Information
+    // Volleyball Information (Player)
     player_category: 'New Player',
     top_achievement: '',
     certificate_year_place: '',
@@ -50,6 +56,11 @@ export default function Register({ onOpenContact, setCurrentPage }) {
     weight_kgs: '',
     standing_reach_cms: '',
     jump_reach_cms: '',
+
+    // Coach Specific Fields
+    coach_specialization: 'Head Coach',
+    coaching_experience_years: '',
+    coaching_license: 'NIS / National Certified',
 
     // Agreements & Voluntary Payment Consent
     declaration_agreed: false,
@@ -140,6 +151,11 @@ export default function Register({ onOpenContact, setCurrentPage }) {
       return;
     }
 
+    if (registrationType === 'coach' && !formData.coaching_experience_years) {
+      alert('Please enter your coaching experience in years.');
+      return;
+    }
+
     if (!formData.declaration_agreed) {
       alert('Please agree to the official declaration and code of conduct before proceeding.');
       return;
@@ -153,9 +169,10 @@ export default function Register({ onOpenContact, setCurrentPage }) {
     setSubmitting(true);
 
     try {
-      // Generate unique registration id e.g. NPVL-2026-M1042
+      // Generate unique registration id e.g. NPVL-2026-M1042 or NPVL-2026-C1042
       const randomSuffix = Math.floor(1000 + Math.random() * 9000);
-      const regId = `NPVL-2026-M${randomSuffix}`;
+      const prefix = registrationType === 'coach' ? 'C' : 'M';
+      const regId = `NPVL-2026-${prefix}${randomSuffix}`;
 
       // Razorpay Checkout Options
       const options = {
@@ -163,7 +180,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
         amount: 500 * 100, // 500 INR in paise
         currency: 'INR',
         name: 'North Premier Volleyball League',
-        description: 'Season 1 Player Trial & Registration Fee',
+        description: `Season 1 ${registrationType === 'coach' ? 'Coach' : 'Player'} Trial & Registration Fee`,
         image: '/logo.png',
         handler: async function (response) {
           await finalizeRegistration(regId, response.razorpay_payment_id || `PAY_MOCK_${Date.now()}`);
@@ -188,7 +205,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
         rzp1.open();
       } else {
         const confirmSim = window.confirm(
-          `[NPVL Razorpay Payment Gateway]\n\nRegistration Fee: ₹500\nCandidate: ${formData.full_name}\n\nClick OK to simulate successful ₹500 payment and generate your official Player ID Card!`
+          `[NPVL Razorpay Payment Gateway]\n\nRegistration Fee: ₹500\nCategory: ${registrationType.toUpperCase()}\nCandidate: ${formData.full_name}\n\nClick OK to simulate successful ₹500 payment and generate your official ${registrationType === 'coach' ? 'Coach' : 'Player'} ID Card!`
         );
         if (confirmSim) {
           await finalizeRegistration(regId, `PAY_TEST_${Date.now()}`);
@@ -206,6 +223,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
   const finalizeRegistration = async (regId, paymentId) => {
     try {
       const payload = {
+        registration_type: registrationType,
         full_name: formData.full_name,
         dob: formData.dob,
         age: formData.age,
@@ -223,19 +241,23 @@ export default function Register({ onOpenContact, setCurrentPage }) {
         instagram_id: formData.instagram_id,
         employment_status: formData.employment_status,
         institution_name: formData.institution_name,
-        player_category: formData.player_category,
-        top_achievement: formData.top_achievement,
+        player_category: registrationType === 'coach' ? `Coach (${formData.coach_specialization})` : formData.player_category,
+        top_achievement: registrationType === 'coach' ? (formData.coaching_experience_years ? `${formData.coaching_experience_years} Years Experience` : formData.top_achievement) : formData.top_achievement,
         certificate_year_place: formData.certificate_year_place,
         current_team_dept: formData.current_team_dept,
-        height_cms: formData.height_cms,
-        weight_kgs: formData.weight_kgs,
-        standing_reach_cms: formData.standing_reach_cms,
-        jump_reach_cms: formData.jump_reach_cms,
+        height_cms: registrationType === 'coach' ? null : formData.height_cms,
+        weight_kgs: registrationType === 'coach' ? null : formData.weight_kgs,
+        standing_reach_cms: registrationType === 'coach' ? null : formData.standing_reach_cms,
+        jump_reach_cms: registrationType === 'coach' ? null : formData.jump_reach_cms,
         declaration_agreed: formData.declaration_agreed,
         medical_history: {
           account_password: formData.account_password || '123456',
           voluntary_payment_consent: formData.voluntary_payment_consent,
           photo_data_url: photoDataUrl || null,
+          registration_type: registrationType,
+          coach_specialization: formData.coach_specialization,
+          coaching_experience_years: formData.coaching_experience_years,
+          coaching_license: formData.coaching_license,
         },
         registration_id: regId,
         payment_status: 'paid',
@@ -475,10 +497,10 @@ export default function Register({ onOpenContact, setCurrentPage }) {
       <div className="max-w-4xl mx-auto space-y-10">
 
         {/* Top Header Card */}
-        <div className="bg-white border-2 border-[#3854A4]/30 rounded-3xl p-6 sm:p-10 shadow-sm space-y-4 text-center">
+        <div className="bg-white border-2 border-[#3854A4]/30 rounded-3xl p-6 sm:p-10 shadow-sm space-y-5 text-center">
           <div className="flex items-center justify-center gap-2">
             <span className="text-xs font-bold uppercase tracking-widest text-[#E82024] bg-[#E82024]/10 px-3 py-1 rounded-full border border-[#E82024]/30">
-              SEASON 1 OFFICIAL DRAFT ENTRY
+              SEASON 1 OFFICIAL ENTRY
             </span>
             <span className="text-xs font-bold uppercase tracking-widest text-[#3854A4] bg-[#3854A4]/10 px-3 py-1 rounded-full border border-[#3854A4]/30">
               FEE: ₹500
@@ -486,12 +508,48 @@ export default function Register({ onOpenContact, setCurrentPage }) {
           </div>
 
           <h1 className="font-bebas text-3xl sm:text-5xl md:text-6xl text-gray-900 tracking-wider uppercase leading-none">
-            PLAYER'S REGISTRATION FORM
+            {registrationType === 'coach' ? "COACH REGISTRATION FORM" : "PLAYER'S REGISTRATION FORM"}
           </h1>
           <p className="text-xs sm:text-sm text-gray-600 max-w-2xl mx-auto">
             Please fill out all details accurately as per your official government identification records. Note: Incomplete forms or those without proper fee submission will not be processed.
           </p>
 
+          {/* Role Switcher: Register as Player or Coach */}
+          <div className="pt-2 max-w-md mx-auto">
+            <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
+              Select Registration Role:
+            </label>
+            <div className="grid grid-cols-2 p-1.5 bg-gray-100 rounded-2xl border border-gray-200">
+              <button
+                type="button"
+                onClick={() => {
+                  setRegistrationType('player');
+                  setFormData(prev => ({ ...prev, registration_type: 'player' }));
+                }}
+                className={`py-3 px-4 rounded-xl text-xs sm:text-sm font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${
+                  registrationType === 'player'
+                    ? 'bg-[#3854A4] text-white shadow-md'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <span>🏐 Register as Player</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setRegistrationType('coach');
+                  setFormData(prev => ({ ...prev, registration_type: 'coach' }));
+                }}
+                className={`py-3 px-4 rounded-xl text-xs sm:text-sm font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${
+                  registrationType === 'coach'
+                    ? 'bg-[#E82024] text-white shadow-md'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <span>📋 Register as Coach</span>
+              </button>
+            </div>
+          </div>
 
         </div>
 
@@ -820,71 +878,127 @@ export default function Register({ onOpenContact, setCurrentPage }) {
             </div>
           </div>
 
-          {/* SECTION 2: VOLLEYBALL INFORMATION */}
+          {/* SECTION 2: VOLLEYBALL OR COACHING INFORMATION */}
           <div className="bg-white border-2 border-gray-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
-            <div className="border-b border-gray-200 pb-4">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#3854A4] block">SECTION 02</span>
-              <h2 className="font-bebas text-2xl sm:text-3xl text-gray-900 tracking-wider">
-                VOLLEYBALL INFORMATION & STATS
-              </h2>
+            <div className="border-b border-gray-200 pb-4 flex items-center justify-between">
+              <div>
+                <span className="text-xs font-bold uppercase tracking-wider text-[#3854A4] block">SECTION 02</span>
+                <h2 className="font-bebas text-2xl sm:text-3xl text-gray-900 tracking-wider">
+                  {registrationType === 'coach' ? 'COACHING PROFILE & CREDENTIALS' : 'VOLLEYBALL INFORMATION & STATS'}
+                </h2>
+              </div>
+              <span className={`text-xs font-bold uppercase px-3 py-1 rounded-full border ${
+                registrationType === 'coach'
+                  ? 'bg-red-50 text-[#E82024] border-red-200'
+                  : 'bg-blue-50 text-[#3854A4] border-blue-200'
+              }`}>
+                {registrationType === 'coach' ? 'Coach Mode' : 'Player Mode'}
+              </span>
             </div>
 
-            <div className="space-y-4">
-              {/* Player Category Radio Grid */}
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-2">
-                  Player Category * (Select Only 1)
-                </label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {[
-                    'International Player',
-                    'National Player',
-                    'State/ University Level Player',
-                    'Under 21 Player',
-                    'New Player',
-                  ].map((cat) => (
-                    <label
-                      key={cat}
-                      className={`flex items-center gap-2.5 p-3 rounded-xl border-2 cursor-pointer transition-all ${
-                        formData.player_category === cat
-                          ? 'bg-blue-50 border-[#3854A4] text-[#3854A4] font-bold'
-                          : 'bg-gray-50 border-gray-200 text-gray-700 hover:border-gray-300'
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="player_category"
-                        value={cat}
-                        checked={formData.player_category === cat}
-                        onChange={handleInputChange}
-                        className="text-[#3854A4] focus:ring-[#3854A4]"
-                      />
-                      <span className="text-xs">{cat}</span>
-                    </label>
-                  ))}
+            {registrationType === 'coach' ? (
+              /* COACH FIELDS */
+              <div className="space-y-4">
+                {/* Coach Role Specialization */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-2">
+                    Coaching Designation / Role * (Select 1)
+                  </label>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {[
+                      'Head Coach',
+                      'Assistant Coach',
+                      'Technical / Tactical Coach',
+                      'Fitness & Conditioning Coach',
+                    ].map((role) => (
+                      <label
+                        key={role}
+                        className={`flex items-center gap-2 p-3 rounded-xl border-2 cursor-pointer transition-all ${
+                          formData.coach_specialization === role
+                            ? 'bg-red-50 border-[#E82024] text-[#E82024] font-bold'
+                            : 'bg-gray-50 border-gray-200 text-gray-700 hover:border-gray-300'
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="coach_specialization"
+                          value={role}
+                          checked={formData.coach_specialization === role}
+                          onChange={handleInputChange}
+                          className="text-[#E82024] focus:ring-[#E82024]"
+                        />
+                        <span className="text-xs">{role}</span>
+                      </label>
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              {/* Top Achievement */}
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
-                  Top Achievement <span className="text-gray-400 font-normal">(Optional)</span>
-                </label>
-                <input
-                  type="text"
-                  name="top_achievement"
-                  value={formData.top_achievement}
-                  onChange={handleInputChange}
-                  placeholder="e.g. Gold Medal in State Championship 2024 / Best Spiker"
-                  className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] focus:ring-1 focus:ring-[#3854A4] rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none"
-                />
-              </div>
+                {/* Experience & License */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
+                      Years of Coaching Experience *
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      name="coaching_experience_years"
+                      value={formData.coaching_experience_years}
+                      onChange={handleInputChange}
+                      placeholder="e.g. 5 (in years)"
+                      className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none"
+                    />
+                  </div>
 
-              {/* Certificate Upload + Details */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
+                      Coaching License / Certification <span className="text-gray-400 font-normal">(Optional)</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="coaching_license"
+                      value={formData.coaching_license}
+                      onChange={handleInputChange}
+                      placeholder="e.g. NIS Certified, FIVB Level 1/2"
+                      className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Current Team or Academy */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
-                    Participation or Merit Certificate (Upload) <span className="text-gray-400 font-normal">(Optional)</span>
+                    Current Team / Sports Club / Academy Affiliation
+                  </label>
+                  <input
+                    type="text"
+                    name="current_team_dept"
+                    value={formData.current_team_dept}
+                    onChange={handleInputChange}
+                    placeholder="e.g. Haryana State Sports Academy or Independent Coach"
+                    className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none"
+                  />
+                </div>
+
+                {/* Top Coaching Achievements */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
+                    Major Coaching Highlights & Achievements <span className="text-gray-400 font-normal">(Optional)</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="top_achievement"
+                    value={formData.top_achievement}
+                    onChange={handleInputChange}
+                    placeholder="e.g. Mentored State Champions 2023, National Level Coach"
+                    className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none"
+                  />
+                </div>
+
+                {/* Coaching Certificate Upload (Optional) */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
+                    Upload Coaching Certificate / Resume <span className="text-gray-400 font-normal">(Optional)</span>
                   </label>
                   <p className="text-[11px] text-gray-500 mb-1.5">Format: PDF, PNG, JPG • Max 5MB</p>
                   <input
@@ -894,101 +1008,170 @@ export default function Register({ onOpenContact, setCurrentPage }) {
                     className="block w-full text-xs text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#3854A4] file:text-white hover:file:bg-[#2A4080]"
                   />
                 </div>
+              </div>
+            ) : (
+              /* PLAYER FIELDS */
+              <div className="space-y-4">
+                {/* Player Category Radio Grid */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-2">
+                    Player Category * (Select Only 1)
+                  </label>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {[
+                      'International Player',
+                      'National Player',
+                      'State/ University Level Player',
+                      'Under 21 Player',
+                      'New Player',
+                    ].map((cat) => (
+                      <label
+                        key={cat}
+                        className={`flex items-center gap-2.5 p-3 rounded-xl border-2 cursor-pointer transition-all ${
+                          formData.player_category === cat
+                            ? 'bg-blue-50 border-[#3854A4] text-[#3854A4] font-bold'
+                            : 'bg-gray-50 border-gray-200 text-gray-700 hover:border-gray-300'
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="player_category"
+                          value={cat}
+                          checked={formData.player_category === cat}
+                          onChange={handleInputChange}
+                          className="text-[#3854A4] focus:ring-[#3854A4]"
+                        />
+                        <span className="text-xs">{cat}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
 
+                {/* Top Achievement */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
-                    Certificate Year & Place / Merit <span className="text-gray-400 font-normal">(Optional)</span>
+                    Top Achievement <span className="text-gray-400 font-normal">(Optional)</span>
                   </label>
                   <input
                     type="text"
-                    name="certificate_year_place"
-                    value={formData.certificate_year_place}
+                    name="top_achievement"
+                    value={formData.top_achievement}
                     onChange={handleInputChange}
-                    placeholder="e.g. 2024, Varanasi - 1st Position"
+                    placeholder="e.g. Gold Medal in State Championship 2024 / Best Spiker"
                     className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] focus:ring-1 focus:ring-[#3854A4] rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none"
                   />
                 </div>
+
+                {/* Certificate Upload + Details */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
+                      Participation or Merit Certificate (Upload) <span className="text-gray-400 font-normal">(Optional)</span>
+                    </label>
+                    <p className="text-[11px] text-gray-500 mb-1.5">Format: PDF, PNG, JPG • Max 5MB</p>
+                    <input
+                      type="file"
+                      accept=".pdf,image/*"
+                      onChange={(e) => setCertificateFile(e.target.files[0])}
+                      className="block w-full text-xs text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#3854A4] file:text-white hover:file:bg-[#2A4080]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
+                      Certificate Year & Place / Merit <span className="text-gray-400 font-normal">(Optional)</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="certificate_year_place"
+                      value={formData.certificate_year_place}
+                      onChange={handleInputChange}
+                      placeholder="e.g. 2024, Varanasi - 1st Position"
+                      className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] focus:ring-1 focus:ring-[#3854A4] rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Current Team / Club */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
+                    Name of Current Department / University / Club Team
+                  </label>
+                  <input
+                    type="text"
+                    name="current_team_dept"
+                    value={formData.current_team_dept}
+                    onChange={handleInputChange}
+                    placeholder="Current active team or academy (if any)"
+                    className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] focus:ring-1 focus:ring-[#3854A4] rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none"
+                  />
+                </div>
+
+                {/* Athletic Dimensions Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-700 mb-1">
+                      Height (cms) *
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      name="height_cms"
+                      value={formData.height_cms}
+                      onChange={handleInputChange}
+                      placeholder="e.g. 175"
+                      className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] rounded-xl p-3 text-sm text-gray-900 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-700 mb-1">
+                      Weight (kgs) *
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      name="weight_kgs"
+                      value={formData.weight_kgs}
+                      onChange={handleInputChange}
+                      placeholder="e.g. 64"
+                      className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] rounded-xl p-3 text-sm text-gray-900 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-700 mb-1">
+                      Standing Reach (cms) *
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      name="standing_reach_cms"
+                      value={formData.standing_reach_cms}
+                      onChange={handleInputChange}
+                      placeholder="e.g. 225"
+                      className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] rounded-xl p-3 text-sm text-gray-900 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-700 mb-1">
+                      Jump Reach (cms) *
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      name="jump_reach_cms"
+                      value={formData.jump_reach_cms}
+                      onChange={handleInputChange}
+                      placeholder="e.g. 290"
+                      className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] rounded-xl p-3 text-sm text-gray-900 focus:outline-none"
+                    />
+                  </div>
+                </div>
+
               </div>
-
-              {/* Current Team / Club */}
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
-                  Name of Current Department / University / Club Team
-                </label>
-                <input
-                  type="text"
-                  name="current_team_dept"
-                  value={formData.current_team_dept}
-                  onChange={handleInputChange}
-                  placeholder="Current active team or academy (if any)"
-                  className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] focus:ring-1 focus:ring-[#3854A4] rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none"
-                />
-              </div>
-
-              {/* Athletic Dimensions Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-700 mb-1">
-                    Height (cms) *
-                  </label>
-                  <input
-                    type="number"
-                    required
-                    name="height_cms"
-                    value={formData.height_cms}
-                    onChange={handleInputChange}
-                    placeholder="e.g. 175"
-                    className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] rounded-xl p-3 text-sm text-gray-900 focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-700 mb-1">
-                    Weight (kgs) *
-                  </label>
-                  <input
-                    type="number"
-                    required
-                    name="weight_kgs"
-                    value={formData.weight_kgs}
-                    onChange={handleInputChange}
-                    placeholder="e.g. 64"
-                    className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] rounded-xl p-3 text-sm text-gray-900 focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-700 mb-1">
-                    Standing Reach (cms) *
-                  </label>
-                  <input
-                    type="number"
-                    required
-                    name="standing_reach_cms"
-                    value={formData.standing_reach_cms}
-                    onChange={handleInputChange}
-                    placeholder="e.g. 225"
-                    className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] rounded-xl p-3 text-sm text-gray-900 focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-700 mb-1">
-                    Jump Reach (cms) *
-                  </label>
-                  <input
-                    type="number"
-                    required
-                    name="jump_reach_cms"
-                    value={formData.jump_reach_cms}
-                    onChange={handleInputChange}
-                    placeholder="e.g. 290"
-                    className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] rounded-xl p-3 text-sm text-gray-900 focus:outline-none"
-                  />
-                </div>
-              </div>
-
-            </div>
+            )}
           </div>
 
           {/* SECTION 3: DECLARATION & VOLUNTARY PAYMENT CONSENT (REPLACES OLD MEDICAL & STAMP PAPER) */}
