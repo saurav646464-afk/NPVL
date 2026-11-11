@@ -223,7 +223,6 @@ export default function Register({ onOpenContact, setCurrentPage }) {
   const finalizeRegistration = async (regId, paymentId) => {
     try {
       const payload = {
-        registration_type: registrationType,
         full_name: formData.full_name,
         dob: formData.dob,
         age: formData.age,
@@ -239,16 +238,16 @@ export default function Register({ onOpenContact, setCurrentPage }) {
         state: formData.state,
         country: formData.country,
         instagram_id: formData.instagram_id,
-        employment_status: formData.employment_status,
-        institution_name: formData.institution_name,
+        employment_status: formData.employment_status || (registrationType === 'coach' ? 'Coach' : 'Pursuing Studies'),
+        institution_name: formData.institution_name || (registrationType === 'coach' ? (formData.current_team_dept || 'Independent') : '-'),
         player_category: registrationType === 'coach' ? `Coach (${formData.coach_specialization})` : formData.player_category,
         top_achievement: registrationType === 'coach' ? (formData.coaching_experience_years ? `${formData.coaching_experience_years} Years Experience` : formData.top_achievement) : formData.top_achievement,
         certificate_year_place: formData.certificate_year_place,
         current_team_dept: formData.current_team_dept,
-        height_cms: registrationType === 'coach' ? null : formData.height_cms,
-        weight_kgs: registrationType === 'coach' ? null : formData.weight_kgs,
-        standing_reach_cms: registrationType === 'coach' ? null : formData.standing_reach_cms,
-        jump_reach_cms: registrationType === 'coach' ? null : formData.jump_reach_cms,
+        height_cms: registrationType === 'coach' ? 0 : (formData.height_cms ? Number(formData.height_cms) : null),
+        weight_kgs: registrationType === 'coach' ? 0 : (formData.weight_kgs ? Number(formData.weight_kgs) : null),
+        standing_reach_cms: registrationType === 'coach' ? 0 : (formData.standing_reach_cms ? Number(formData.standing_reach_cms) : null),
+        jump_reach_cms: registrationType === 'coach' ? 0 : (formData.jump_reach_cms ? Number(formData.jump_reach_cms) : null),
         declaration_agreed: formData.declaration_agreed,
         medical_history: {
           account_password: formData.account_password || '123456',
@@ -267,9 +266,12 @@ export default function Register({ onOpenContact, setCurrentPage }) {
         id_card_generated: true,
       };
 
-      const { error } = await supabase.from('player_registrations').insert([payload]);
+      const { data: insertedData, error } = await supabase.from('player_registrations').insert([payload]).select();
       if (error) {
-        console.warn('Supabase insert note:', error.message);
+        console.error('Supabase insert error details:', error);
+        alert(`Database notice: ${error.message}`);
+      } else {
+        console.log('Successfully saved to Supabase:', insertedData);
       }
 
       setCompletedData({
