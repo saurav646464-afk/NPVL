@@ -284,14 +284,14 @@ export default function Register({ onOpenContact, setCurrentPage }) {
               <CheckCircle2 className="w-10 h-10" />
             </div>
 
-            <div className="space-y-2">
-              <span className="text-xs font-bold uppercase tracking-widest text-green-700 bg-green-100 px-3 py-1 rounded-full border border-green-300">
+            <div className="space-y-3">
+              <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-green-700 bg-green-100 px-3.5 py-1.5 rounded-full border border-green-300 inline-block">
                 REGISTRATION CONFIRMED • PAYMENT VERIFIED
               </span>
-              <h1 className="font-bebas text-3xl sm:text-5xl text-gray-900 tracking-wider break-words leading-tight px-2">
-                CONGRATULATIONS,<br />{completedData.full_name.toUpperCase()}!
+              <h1 className="font-bebas text-2xl sm:text-4xl md:text-5xl text-gray-900 tracking-wider leading-tight px-1 whitespace-nowrap">
+                CONGRATULATIONS, {completedData.full_name.toUpperCase()}!
               </h1>
-              <p className="text-sm text-gray-600 max-w-xl mx-auto">
+              <p className="text-xs sm:text-sm text-gray-600 max-w-xl mx-auto leading-relaxed">
                 Your application for <strong>North Premier Volleyball League (NPVL) Season 1</strong> has been successfully registered. Your official Player ID Card is generated below.
               </p>
             </div>
@@ -380,30 +380,30 @@ export default function Register({ onOpenContact, setCurrentPage }) {
                 OFFICIAL COUNTDOWN TO LAUNCH
               </span>
 
-              <div className="grid grid-cols-4 gap-3 sm:gap-6 max-w-xl mx-auto font-mono">
-                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-white/10">
-                  <span className="font-bebas text-4xl sm:text-7xl text-white font-black block leading-none">
+              <div className="grid grid-cols-4 gap-2 sm:gap-4 max-w-xl mx-auto font-mono">
+                <div className="bg-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl py-3 px-1.5 sm:p-5 border border-white/10 flex flex-col items-center justify-center">
+                  <span className="font-bebas text-3xl sm:text-6xl text-white font-black block leading-none">
                     {String(timeLeft.days).padStart(2, '0')}
                   </span>
-                  <span className="text-[10px] sm:text-xs uppercase tracking-wider text-gray-400 mt-2 block">Days</span>
+                  <span className="text-[9px] sm:text-xs uppercase tracking-wider text-gray-400 mt-1.5 block">Days</span>
                 </div>
-                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-white/10">
-                  <span className="font-bebas text-4xl sm:text-7xl text-white font-black block leading-none">
+                <div className="bg-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl py-3 px-1.5 sm:p-5 border border-white/10 flex flex-col items-center justify-center">
+                  <span className="font-bebas text-3xl sm:text-6xl text-white font-black block leading-none">
                     {String(timeLeft.hours).padStart(2, '0')}
                   </span>
-                  <span className="text-[10px] sm:text-xs uppercase tracking-wider text-gray-400 mt-2 block">Hours</span>
+                  <span className="text-[9px] sm:text-xs uppercase tracking-wider text-gray-400 mt-1.5 block">Hours</span>
                 </div>
-                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-white/10">
-                  <span className="font-bebas text-4xl sm:text-7xl text-white font-black block leading-none">
+                <div className="bg-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl py-3 px-1.5 sm:p-5 border border-white/10 flex flex-col items-center justify-center">
+                  <span className="font-bebas text-3xl sm:text-6xl text-white font-black block leading-none">
                     {String(timeLeft.minutes).padStart(2, '0')}
                   </span>
-                  <span className="text-[10px] sm:text-xs uppercase tracking-wider text-gray-400 mt-2 block">Minutes</span>
+                  <span className="text-[9px] sm:text-xs uppercase tracking-wider text-gray-400 mt-1.5 block">Minutes</span>
                 </div>
-                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-[#E82024]/40">
-                  <span className="font-bebas text-4xl sm:text-7xl text-[#E82024] font-black block leading-none">
+                <div className="bg-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl py-3 px-1.5 sm:p-5 border border-[#E82024]/40 flex flex-col items-center justify-center">
+                  <span className="font-bebas text-3xl sm:text-6xl text-[#E82024] font-black block leading-none">
                     {String(timeLeft.seconds).padStart(2, '0')}
                   </span>
-                  <span className="text-[10px] sm:text-xs uppercase tracking-wider text-[#E82024] mt-2 block">Seconds</span>
+                  <span className="text-[9px] sm:text-xs uppercase tracking-wider text-[#E82024] mt-1.5 block">Seconds</span>
                 </div>
               </div>
 

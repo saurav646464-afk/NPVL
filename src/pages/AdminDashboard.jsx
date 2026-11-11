@@ -350,20 +350,20 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
       <div className="max-w-7xl mx-auto space-y-8">
 
         {/* Top Navbar */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-gray-200 shadow-sm">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold uppercase tracking-widest text-[#E82024] bg-[#E82024]/10 px-2.5 py-0.5 rounded-full border border-[#E82024]/30">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 bg-white p-5 sm:p-6 rounded-3xl border border-gray-200 shadow-sm">
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#E82024] bg-[#E82024]/10 px-2.5 py-0.5 rounded-full border border-[#E82024]/30 inline-block break-all">
                 AUTHENTICATED AS: {DEFAULT_EMAIL}
               </span>
-              <span className="text-xs font-mono text-gray-500">Live Database Connected</span>
+              <span className="text-[11px] font-mono text-gray-500">Live Database Connected</span>
             </div>
-            <h1 className="font-bebas text-3xl sm:text-4xl text-gray-900 tracking-wider mt-1">
+            <h1 className="font-bebas text-2xl sm:text-3xl lg:text-4xl text-gray-900 tracking-wider leading-tight">
               SEASON 1 PLAYER REGISTRATIONS & FINANCIAL DASHBOARD
             </h1>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap w-full sm:w-auto">
             <button
               onClick={() => setViewMode(viewMode === 'change' ? 'dashboard' : 'change')}
               className="bg-blue-50 border border-blue-200 hover:bg-blue-100 text-[#3854A4] text-xs font-bold px-3.5 py-2.5 rounded-xl flex items-center gap-1.5 transition-all"
