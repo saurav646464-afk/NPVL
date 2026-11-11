@@ -140,11 +140,6 @@ export default function Register({ onOpenContact, setCurrentPage }) {
       return;
     }
 
-    if (!certificateFile) {
-      alert('Participation or Merit Certificate is mandatory. Please upload your sports certificate.');
-      return;
-    }
-
     if (!formData.declaration_agreed) {
       alert('Please agree to the official declaration and code of conduct before proceeding.');
       return;
@@ -293,8 +288,8 @@ export default function Register({ onOpenContact, setCurrentPage }) {
               <span className="text-xs font-bold uppercase tracking-widest text-green-700 bg-green-100 px-3 py-1 rounded-full border border-green-300">
                 REGISTRATION CONFIRMED • PAYMENT VERIFIED
               </span>
-              <h1 className="font-bebas text-4xl sm:text-6xl text-gray-900 tracking-wider">
-                CONGRATULATIONS, {completedData.full_name.toUpperCase()}!
+              <h1 className="font-bebas text-3xl sm:text-5xl text-gray-900 tracking-wider break-words leading-tight px-2">
+                CONGRATULATIONS,<br />{completedData.full_name.toUpperCase()}!
               </h1>
               <p className="text-sm text-gray-600 max-w-xl mx-auto">
                 Your application for <strong>North Premier Volleyball League (NPVL) Season 1</strong> has been successfully registered. Your official Player ID Card is generated below.
@@ -439,7 +434,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
               <ul className="text-xs text-gray-600 space-y-1.5 list-disc pl-4">
                 <li>Aadhaar Card (front & back)</li>
                 <li>Passport size photograph (Max 2MB)</li>
-                <li>Participation / Merit sports certificate</li>
+                <li>Participation / Merit sports certificate (optional)</li>
                 <li>Online self-consent verification</li>
               </ul>
             </div>
@@ -845,7 +840,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
                     'International Player',
                     'National Player',
                     'State/ University Level Player',
-                    'Under -19 Player',
+                    'Under 21 Player',
                     'New Player',
                   ].map((cat) => (
                     <label
@@ -873,11 +868,10 @@ export default function Register({ onOpenContact, setCurrentPage }) {
               {/* Top Achievement */}
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
-                  Top Achievement *
+                  Top Achievement <span className="text-gray-400 font-normal">(Optional)</span>
                 </label>
                 <input
                   type="text"
-                  required
                   name="top_achievement"
                   value={formData.top_achievement}
                   onChange={handleInputChange}
@@ -890,12 +884,11 @@ export default function Register({ onOpenContact, setCurrentPage }) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
-                    Participation or Merit Certificate (Upload) *
+                    Participation or Merit Certificate (Upload) <span className="text-gray-400 font-normal">(Optional)</span>
                   </label>
                   <p className="text-[11px] text-gray-500 mb-1.5">Format: PDF, PNG, JPG • Max 5MB</p>
                   <input
                     type="file"
-                    required
                     accept=".pdf,image/*"
                     onChange={(e) => setCertificateFile(e.target.files[0])}
                     className="block w-full text-xs text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#3854A4] file:text-white hover:file:bg-[#2A4080]"
@@ -904,11 +897,10 @@ export default function Register({ onOpenContact, setCurrentPage }) {
 
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
-                    Certificate Year & Place / Merit *
+                    Certificate Year & Place / Merit <span className="text-gray-400 font-normal">(Optional)</span>
                   </label>
                   <input
                     type="text"
-                    required
                     name="certificate_year_place"
                     value={formData.certificate_year_place}
                     onChange={handleInputChange}
@@ -1055,11 +1047,11 @@ export default function Register({ onOpenContact, setCurrentPage }) {
           </div>
 
           {/* SUBMISSION & RAZORPAY TRIGGER BOX */}
-          <div className="bg-[#121C38] border-2 border-[#3854A4] rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="bg-[#121C38] border-2 border-[#3854A4] rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col items-center gap-5 sm:flex-row sm:justify-between">
             <div className="space-y-1 text-center sm:text-left">
               <span className="text-xs font-bold uppercase tracking-wider text-[#E82024]">STEP 4 OF 4</span>
-              <h3 className="font-bebas text-3xl sm:text-4xl tracking-wider text-white">
-                FEE PAYMENT & GENERATE PLAYER ID CARD
+              <h3 className="font-bebas text-2xl sm:text-4xl tracking-wider text-white leading-tight">
+                FEE PAYMENT &<br className="sm:hidden" /> GENERATE PLAYER ID CARD
               </h3>
               <p className="text-xs text-gray-300">
                 Total Payable: <strong className="text-white text-base">₹500 INR</strong> (Includes Draft Evaluation & Official Player ID Pass)
@@ -1069,10 +1061,12 @@ export default function Register({ onOpenContact, setCurrentPage }) {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full sm:w-auto red-sweep-btn bg-[#E82024] hover:bg-[#C71216] disabled:opacity-50 text-white font-bebas text-xl sm:text-2xl tracking-wider px-8 py-4 rounded-2xl shadow-xl flex items-center justify-center gap-3 transition-all whitespace-nowrap cursor-pointer"
+              className="w-full sm:w-auto red-sweep-btn bg-[#E82024] hover:bg-[#C71216] disabled:opacity-50 text-white font-bebas text-lg sm:text-xl tracking-wider px-6 py-4 rounded-2xl shadow-xl flex items-center justify-center gap-2 transition-all cursor-pointer"
             >
-              <span>{submitting ? 'PROCESSING...' : 'PAY ₹500 & SUBMIT FORM'}</span>
-              <ArrowRight className="w-5 h-5" />
+              <span className="text-center leading-tight">
+                {submitting ? 'PROCESSING...' : 'PAY ₹500 &\nSUBMIT FORM'}
+              </span>
+              <ArrowRight className="w-5 h-5 shrink-0" />
             </button>
           </div>
 

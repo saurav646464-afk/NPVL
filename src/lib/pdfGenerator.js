@@ -35,7 +35,7 @@ export async function generateIdCardPDF(playerData) {
 
   doc.setFontSize(7);
   doc.setTextColor(255, 255, 255);
-  doc.text('SEASON 1 • OFFICIAL ATHLETE TRIAL ACCREDITATION', width / 2, 19, { align: 'center' });
+  doc.text('SEASON 1 • OFFICIAL ATHLETE REGISTRATION ACCREDITATION', width / 2, 19, { align: 'center' });
 
   // 3. Candidate Photo Area (or uploaded image)
   const photoX = width / 2 - 18;
@@ -181,7 +181,7 @@ export async function generateIdCardPDF(playerData) {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(5);
   doc.setTextColor(203, 213, 225);
-  doc.text('OFFICIAL TRIAL ARENA ENTRY PASS • PRESENT ORIGINAL AADHAAR AT VENUE', width / 2, 137, { align: 'center' });
+  doc.text('OFFICIAL REGISTRATION ENTRY PASS • PRESENT ORIGINAL AADHAAR AT VENUE', width / 2, 137, { align: 'center' });
 
   // Save PDF
   doc.save(`NPVL_ID_Card_${playerData.registration_id || 'Candidate'}.pdf`);

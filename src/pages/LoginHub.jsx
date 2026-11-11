@@ -131,20 +131,21 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
   // -------------------------------------------------------------
   if (viewMode === 'player_dashboard' && playerRecord) {
     return (
-      <div className="min-h-screen bg-gray-50 text-gray-900 pt-28 pb-20 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gray-50 text-gray-900 pt-24 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl mx-auto space-y-6">
-          <div className="bg-white border-2 border-green-500 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
-            
-            <div className="flex items-center justify-between border-b pb-4">
-              <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-green-700 bg-green-100 px-3 py-1 rounded-full border border-green-300">
+          <div className="bg-white border-2 border-green-500 rounded-3xl p-5 sm:p-8 shadow-sm space-y-5">
+
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b pb-4">
+              <div className="min-w-0">
+                <span className="text-xs font-bold uppercase tracking-wider text-green-700 bg-green-100 px-3 py-1 rounded-full border border-green-300 inline-block">
                   LOGIN SUCCESSFUL • VERIFIED CANDIDATE
                 </span>
-                <h1 className="font-bebas text-3xl sm:text-4xl text-gray-900 tracking-wider mt-2">
-                  WELCOME, {playerRecord.full_name.toUpperCase()}
+                <h1 className="font-bebas text-2xl sm:text-4xl text-gray-900 tracking-wider mt-2 break-words leading-tight">
+                  WELCOME,<br className="sm:hidden" /> {playerRecord.full_name.toUpperCase()}
                 </h1>
               </div>
-              <div className="text-right">
+              <div className="sm:text-right shrink-0">
                 <span className="text-[10px] text-gray-500 font-bold block uppercase">REG ID</span>
                 <span className="font-mono font-bold text-sm text-[#E82024]">{playerRecord.registration_id}</span>
               </div>
@@ -154,15 +155,15 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 bg-gray-50 p-4 rounded-2xl border border-gray-200 text-xs">
               <div>
                 <span className="text-gray-500 block">Category:</span>
-                <strong className="text-gray-900">{playerRecord.player_category}</strong>
+                <strong className="text-gray-900 break-words">{playerRecord.player_category}</strong>
               </div>
               <div>
                 <span className="text-gray-500 block">Location:</span>
-                <strong className="text-gray-900">{playerRecord.city}, {playerRecord.state}</strong>
+                <strong className="text-gray-900 break-words">{playerRecord.city}, {playerRecord.state}</strong>
               </div>
               <div>
-                <span className="text-gray-500 block">Payment Status:</span>
-                <strong className="text-green-600">₹500 PAID (Verified)</strong>
+                <span className="text-gray-500 block">Payment:</span>
+                <strong className="text-green-600">₹500 PAID ✓</strong>
               </div>
               <div>
                 <span className="text-gray-500 block">DOB / Age:</span>
@@ -178,18 +179,18 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
               </div>
             </div>
 
-            {/* Download Buttons */}
-            <div className="flex justify-center pt-2">
+            {/* Download Button */}
+            <div className="flex justify-center pt-1">
               <button
                 onClick={() => generateIdCardPDF(playerRecord)}
-                className="w-full bg-[#E82024] hover:bg-[#C71216] text-white font-bebas text-xl tracking-wider py-4 px-6 rounded-2xl shadow-lg flex items-center justify-center gap-2 transition-all cursor-pointer"
+                className="w-full bg-[#E82024] hover:bg-[#C71216] text-white font-bebas text-lg sm:text-xl tracking-wider py-4 px-6 rounded-2xl shadow-lg flex items-center justify-center gap-2 transition-all cursor-pointer"
               >
-                <Download className="w-6 h-6" />
-                <span>DOWNLOAD OFFICIAL PLAYER ID CARD (PDF)</span>
+                <Download className="w-5 h-5 shrink-0" />
+                <span className="text-center leading-tight">DOWNLOAD OFFICIAL PLAYER ID CARD (PDF)</span>
               </button>
             </div>
 
-            <div className="text-center pt-2">
+            <div className="text-center pt-1">
               <button
                 onClick={() => {
                   setPlayerRecord(null);
