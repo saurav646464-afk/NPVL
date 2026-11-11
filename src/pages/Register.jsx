@@ -14,7 +14,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
   const [isLive, setIsLive] = useState(false);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
-  // Mode: 'form' | 'success' | 'bypass_preview'
+  // STRICT LOCK MODE: Form submission is strictly off until 16 Nov 2026
   const [previewMode, setPreviewMode] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [completedData, setCompletedData] = useState(null);
@@ -135,6 +135,12 @@ export default function Register({ onOpenContact, setCurrentPage }) {
   // Razorpay Checkout & Submission Handler
   const handleSubmitAndPay = async (e) => {
     e.preventDefault();
+
+    // STRICT LOCK CHECK: Disallow submission before 16 Nov
+    if (!isLive) {
+      alert('Registrations will officially open on Monday, 16 November 2026. Submissions are currently closed.');
+      return;
+    }
 
     if (!formData.full_name || !formData.dob || !formData.mobile_no || !formData.email || !formData.aadhar_no) {
       alert('Please fill out all personal details (Full Name, DOB, Mobile, Email, Aadhaar Number).');
@@ -438,16 +444,10 @@ export default function Register({ onOpenContact, setCurrentPage }) {
               {/* Action buttons */}
               <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
                 <button
-                  onClick={() => setPreviewMode(true)}
-                  className="bg-white/15 hover:bg-white/25 text-white border border-white/20 text-xs font-bold uppercase tracking-wider px-6 py-3 rounded-xl transition-all"
-                >
-                  PREVIEW REGISTRATION FORM & GUIDELINES
-                </button>
-                <button
                   onClick={() => setCurrentPage('login-hub')}
-                  className="bg-[#3854A4] hover:bg-[#2A4080] text-white text-xs font-bold uppercase tracking-wider px-6 py-3 rounded-xl shadow-md transition-all"
+                  className="bg-[#3854A4] hover:bg-[#2A4080] text-white text-xs font-bold uppercase tracking-wider px-8 py-3.5 rounded-xl shadow-md transition-all flex items-center gap-2"
                 >
-                  ALREADY REGISTERED? DOWNLOAD ID CARD
+                  <span>ALREADY REGISTERED? DOWNLOAD ID CARD</span>
                 </button>
               </div>
 
