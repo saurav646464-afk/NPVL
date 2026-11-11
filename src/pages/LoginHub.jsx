@@ -142,8 +142,12 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
   // VIEW: REGISTERED PLAYER DASHBOARD (AFTER SUCCESSFUL PLAYER LOGIN)
   // -------------------------------------------------------------
   if (viewMode === 'player_dashboard' && playerRecord) {
+    const isCoachRecord = (playerRecord.registration_type || '').toLowerCase() === 'coach' ||
+                          (playerRecord.player_category || '').toLowerCase().includes('coach');
+    const roleTitle = isCoachRecord ? 'Coach' : 'Player';
+
     return (
-      <div className="min-h-screen bg-gray-50 text-gray-900 pt-24 pb-20 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gray-50 text-gray-900 pt-24 pb-20 px-3 sm:px-6 lg:px-8">
         <div className="max-w-2xl mx-auto space-y-6">
           <div className="bg-white border-2 border-green-500 rounded-3xl p-5 sm:p-8 shadow-sm space-y-5">
 
@@ -151,7 +155,7 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b pb-4">
               <div className="min-w-0">
                 <span className="text-xs font-bold uppercase tracking-wider text-green-700 bg-green-100 px-3 py-1 rounded-full border border-green-300 inline-block">
-                  LOGIN SUCCESSFUL • VERIFIED CANDIDATE
+                  LOGIN SUCCESSFUL • VERIFIED {roleTitle.toUpperCase()}
                 </span>
                 <h1 className="font-bebas text-2xl sm:text-4xl text-gray-900 tracking-wider mt-2 break-words leading-tight">
                   WELCOME,<br className="sm:hidden" /> {playerRecord.full_name.toUpperCase()}
@@ -181,14 +185,29 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
                 <span className="text-gray-500 block">DOB / Age:</span>
                 <strong className="text-gray-900">{playerRecord.dob || '-'} ({playerRecord.age || '-'} Yrs)</strong>
               </div>
-              <div>
-                <span className="text-gray-500 block">Height:</span>
-                <strong className="text-gray-900">{playerRecord.height_cms ? `${playerRecord.height_cms} cm` : '-'}</strong>
-              </div>
-              <div>
-                <span className="text-gray-500 block">Jump Reach:</span>
-                <strong className="text-gray-900">{playerRecord.jump_reach_cms ? `${playerRecord.jump_reach_cms} cm` : '-'}</strong>
-              </div>
+              {isCoachRecord ? (
+                <>
+                  <div>
+                    <span className="text-gray-500 block">Role:</span>
+                    <strong className="text-gray-900">Official Coach</strong>
+                  </div>
+                  <div>
+                    <span className="text-gray-500 block">Status:</span>
+                    <strong className="text-blue-600">Accredited</strong>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div>
+                    <span className="text-gray-500 block">Height:</span>
+                    <strong className="text-gray-900">{playerRecord.height_cms ? `${playerRecord.height_cms} cm` : '-'}</strong>
+                  </div>
+                  <div>
+                    <span className="text-gray-500 block">Jump Reach:</span>
+                    <strong className="text-gray-900">{playerRecord.jump_reach_cms ? `${playerRecord.jump_reach_cms} cm` : '-'}</strong>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Download Button */}
@@ -198,7 +217,7 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
                 className="w-full bg-[#E82024] hover:bg-[#C71216] text-white font-bebas text-lg sm:text-xl tracking-wider py-4 px-6 rounded-2xl shadow-lg flex items-center justify-center gap-2 transition-all cursor-pointer"
               >
                 <Download className="w-5 h-5 shrink-0" />
-                <span className="text-center leading-tight">DOWNLOAD OFFICIAL PLAYER ID CARD (PDF)</span>
+                <span className="text-center leading-tight">DOWNLOAD OFFICIAL {roleTitle.toUpperCase()} ID CARD (PDF)</span>
               </button>
             </div>
 

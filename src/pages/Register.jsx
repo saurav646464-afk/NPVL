@@ -294,67 +294,71 @@ export default function Register({ onOpenContact, setCurrentPage }) {
   };
 
   // -------------------------------------------------------------
-  // VIEW: REGISTRATION SUCCESS & DIGITAL PLAYER ID CARD SCREEN
+  // VIEW: REGISTRATION SUCCESS & DIGITAL ID CARD SCREEN
   // -------------------------------------------------------------
   if (completedData) {
+    const isCoachSuccess = (completedData.registration_type || '').toLowerCase() === 'coach' || 
+                          (completedData.player_category || '').toLowerCase().includes('coach');
+    const roleLabel = isCoachSuccess ? 'Coach' : 'Player';
+
     return (
-      <div className="min-h-screen bg-gray-50 text-gray-900 pt-28 pb-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-2xl mx-auto space-y-8">
+      <div className="min-h-screen bg-gray-50 text-gray-900 pt-24 pb-20 px-3 sm:px-6 lg:px-8">
+        <div className="max-w-2xl mx-auto space-y-6">
           
-          <div className="bg-white border-2 border-green-500 rounded-3xl p-6 sm:p-10 text-center shadow-xl space-y-6">
-            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto text-green-600 shadow-md">
-              <CheckCircle2 className="w-10 h-10" />
+          <div className="bg-white border-2 border-green-500 rounded-3xl p-5 sm:p-10 text-center shadow-xl space-y-5">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto text-green-600 shadow-md">
+              <CheckCircle2 className="w-8 h-8 sm:w-10 sm:h-10" />
             </div>
 
-            <div className="space-y-3">
-              <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-green-700 bg-green-100 px-3.5 py-1.5 rounded-full border border-green-300 inline-block">
+            <div className="space-y-2">
+              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-green-700 bg-green-100 px-3 py-1 rounded-full border border-green-300 inline-block">
                 REGISTRATION CONFIRMED • PAYMENT VERIFIED
               </span>
-              <h1 className="font-bebas text-2xl sm:text-4xl md:text-5xl text-gray-900 tracking-wider leading-tight px-1 whitespace-nowrap">
+              <h1 className="font-bebas text-2xl sm:text-4xl text-gray-900 tracking-wider leading-tight px-1 break-words">
                 CONGRATULATIONS, {completedData.full_name.toUpperCase()}!
               </h1>
               <p className="text-xs sm:text-sm text-gray-600 max-w-xl mx-auto leading-relaxed">
-                Your application for <strong>North Premier Volleyball League (NPVL) Season 1</strong> has been successfully registered. Your official Player ID Card is generated below.
+                Your application for <strong>North Premier Volleyball League (NPVL) Season 1</strong> has been successfully registered. Your official {roleLabel} ID Card is generated below.
               </p>
             </div>
 
             {/* Quick Details Badge */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-gray-50 p-4 rounded-2xl border border-gray-200 text-left">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-gray-50 p-4 rounded-2xl border border-gray-200 text-left">
               <div>
                 <span className="text-[10px] text-gray-500 font-bold uppercase block">REG ID</span>
-                <span className="font-mono font-bold text-sm text-[#E82024]">{completedData.registration_id}</span>
+                <span className="font-mono font-bold text-xs sm:text-sm text-[#E82024] break-all">{completedData.registration_id}</span>
               </div>
               <div>
                 <span className="text-[10px] text-gray-500 font-bold uppercase block">CATEGORY</span>
-                <span className="font-bold text-sm text-gray-900">{completedData.player_category}</span>
+                <span className="font-bold text-xs sm:text-sm text-gray-900 break-words">{completedData.player_category}</span>
               </div>
               <div>
                 <span className="text-[10px] text-gray-500 font-bold uppercase block">AMOUNT</span>
-                <span className="font-bold text-sm text-green-600">₹500 PAID</span>
+                <span className="font-bold text-xs sm:text-sm text-green-600">₹500 PAID</span>
               </div>
               <div>
                 <span className="text-[10px] text-gray-500 font-bold uppercase block">STATUS</span>
-                <span className="font-bold text-sm text-[#3854A4]">VERIFIED</span>
+                <span className="font-bold text-xs sm:text-sm text-[#3854A4]">VERIFIED</span>
               </div>
             </div>
 
             {/* ID Card Download Action */}
-            <div className="pt-4 border-t border-gray-200 space-y-4">
+            <div className="pt-3 border-t border-gray-200 space-y-3">
               <p className="text-xs text-gray-500">
-                Please download and keep your official Player Trial ID Card. You can also re-download it anytime using your Mobile / Email & Password from the Login page.
+                Please download and keep your official {roleLabel} ID Card. You can also re-download it anytime using your Mobile / Email & Password from the Login page.
               </p>
               
               <div className="flex justify-center">
                 <button
                   onClick={() => generateIdCardPDF(completedData)}
-                  className="w-full sm:w-auto bg-[#E82024] hover:bg-[#C71216] text-white font-bebas text-xl tracking-wider px-8 py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all cursor-pointer"
+                  className="w-full sm:w-auto bg-[#E82024] hover:bg-[#C71216] text-white font-bebas text-lg sm:text-xl tracking-wider px-6 py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all cursor-pointer"
                 >
-                  <Download className="w-6 h-6" />
-                  <span>DOWNLOAD PLAYER ID CARD (PDF)</span>
+                  <Download className="w-5 h-5 shrink-0" />
+                  <span>DOWNLOAD {roleLabel.toUpperCase()} ID CARD (PDF)</span>
                 </button>
               </div>
 
-              <div className="pt-2">
+              <div className="pt-1">
                 <button
                   onClick={() => setCurrentPage('home')}
                   className="text-xs text-gray-500 hover:text-gray-900 font-bold uppercase tracking-wider underline"
