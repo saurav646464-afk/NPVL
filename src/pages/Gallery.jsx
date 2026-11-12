@@ -14,25 +14,8 @@ export default function Gallery() {
 
   const fetchGalleryPhotos = async () => {
     setLoading(true);
-    let combined = [];
 
-    // 1. Load custom photos added by Admin from localStorage
-    try {
-      const localAdminPhotos = JSON.parse(localStorage.getItem('npvl_custom_gallery') || '[]');
-      if (Array.isArray(localAdminPhotos)) {
-        // Strip out any previous stock/dummy images with 'def-' IDs
-        const userPhotos = localAdminPhotos.filter(p => !p.id?.startsWith('def-'));
-        combined = [...userPhotos];
-        // Clean localStorage if it had old def- photos
-        if (userPhotos.length !== localAdminPhotos.length) {
-          localStorage.setItem('npvl_custom_gallery', JSON.stringify(userPhotos));
-        }
-      }
-    } catch (e) {
-      console.warn('Local gallery read error:', e);
-    }
-
-    // 2. Try fetching from Supabase table if it exists
+    // PRIMARY: Fetch from Supabase (cross-device sync)
     try {
       const { data, error } = await supabase
         .from('gallery_photos')
@@ -40,15 +23,19 @@ export default function Gallery() {
         .order('created_at', { ascending: false });
 
       if (!error && data && data.length > 0) {
-        // Filter out any default stock photos that might have been pushed
-        const nonStock = data.filter(p => !p.id?.startsWith('def-'));
-        combined = [...nonStock, ...combined];
+        setPhotos(data);
+        setLoading(false);
+        return;
       }
     } catch (_) {}
 
-    // Deduplicate by id
-    const unique = Array.from(new Map(combined.map(p => [p.id || p.image_url, p])).values());
-    setPhotos(unique);
+    // FALLBACK: localStorage cache (offline or Supabase unavailable)
+    try {
+      const local = JSON.parse(localStorage.getItem('npvl_custom_gallery') || '[]');
+      setPhotos(Array.isArray(local) ? local.filter(p => !p.id?.startsWith('def-')) : []);
+    } catch {
+      setPhotos([]);
+    }
     setLoading(false);
   };
 

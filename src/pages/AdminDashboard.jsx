@@ -56,14 +56,38 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
   const [filterCategory, setFilterCategory] = useState('ALL');
 
   // Gallery Manager State (Bulk Upload & Optional Titles)
-  const [galleryPhotos, setGalleryPhotos] = useState(() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem('npvl_custom_gallery') || '[]');
-      return Array.isArray(saved) ? saved.filter(p => !p.id?.startsWith('def-')) : [];
-    } catch {
-      return [];
+  const [galleryPhotos, setGalleryPhotos] = useState([]);
+  const [galleryLoading, setGalleryLoading] = useState(false);
+
+  // Fetch gallery photos from Supabase on mount
+  useEffect(() => {
+    const isAuthed = initialAuthenticated || sessionStorage.getItem('npvl_admin_logged_in') === 'true';
+    if (isAuthed) {
+      fetchGalleryFromSupabase();
     }
-  });
+  }, []);
+
+  const fetchGalleryFromSupabase = async () => {
+    setGalleryLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('gallery_photos')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (!error && data) {
+        setGalleryPhotos(data);
+      } else {
+        // Fallback to localStorage
+        const local = JSON.parse(localStorage.getItem('npvl_custom_gallery') || '[]');
+        setGalleryPhotos(Array.isArray(local) ? local.filter(p => !p.id?.startsWith('def-')) : []);
+      }
+    } catch {
+      const local = JSON.parse(localStorage.getItem('npvl_custom_gallery') || '[]');
+      setGalleryPhotos(Array.isArray(local) ? local.filter(p => !p.id?.startsWith('def-')) : []);
+    } finally {
+      setGalleryLoading(false);
+    }
+  };
   const [photoForm, setPhotoForm] = useState({
     globalTitle: '', // Optional batch title
     event_name: 'Season 1 Launch Event',
@@ -184,8 +208,8 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
     setStagedPhotos(prev => prev.map(p => p.id === id ? { ...p, title: newTitle } : p));
   };
 
-  // Publish all staged photos + optional URL photo to gallery
-  const handlePublishBulkPhotos = (e) => {
+  // Publish all staged photos + optional URL photo to gallery → Supabase Storage + DB
+  const handlePublishBulkPhotos = async (e) => {
     e.preventDefault();
 
     if (stagedPhotos.length === 0 && !photoForm.image_url) {
@@ -193,48 +217,99 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
       return;
     }
 
-    const finalEvent = photoForm.event_name === 'OTHER_CUSTOM' 
+    const finalEvent = photoForm.event_name === 'OTHER_CUSTOM'
       ? (customEventName.trim() || 'General Photos')
       : photoForm.event_name;
 
-    const newPhotosToPublish = [];
+    setIsProcessingFiles(true);
+    setProcessingStatus('Uploading photos to server...');
+    setPhotoUploadSuccess('');
 
-    // 1. Process all staged files
-    stagedPhotos.forEach((item, index) => {
-      newPhotosToPublish.push({
-        id: `photo-${Date.now()}-${index}-${Math.random().toString(36).substr(2, 6)}`,
-        title: item.title.trim() || photoForm.globalTitle.trim() || '', // 100% Optional
-        event_name: finalEvent,
-        image_url: item.dataUrl,
-        caption: photoForm.caption.trim() || '',
-        date: photoForm.date,
-        created_at: new Date().toISOString(),
-      });
-    });
+    // Helper: base64 dataUrl → Blob
+    const base64ToBlob = (dataUrl) => {
+      const [header, base64] = dataUrl.split(',');
+      const mime = (header.match(/:(.*?);/) || [])[1] || 'image/jpeg';
+      const binary = atob(base64);
+      const array = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) array[i] = binary.charCodeAt(i);
+      return new Blob([array], { type: mime });
+    };
 
-    // 2. If single URL provided, add it too
+    const publishedPhotos = [];
+    let failCount = 0;
+
+    // 1. Upload each staged file to Supabase Storage
+    for (let i = 0; i < stagedPhotos.length; i++) {
+      const item = stagedPhotos[i];
+      const photoId = `photo-${Date.now()}-${i}-${Math.random().toString(36).substr(2, 6)}`;
+      const safeEvent = finalEvent.replace(/[^a-zA-Z0-9_-]/g, '_');
+      const storagePath = `events/${safeEvent}/${photoId}.jpg`;
+
+      setProcessingStatus(`Uploading photo ${i + 1} of ${stagedPhotos.length}...`);
+
+      try {
+        const blob = base64ToBlob(item.dataUrl);
+        const { error: uploadError } = await supabase.storage
+          .from('gallery')
+          .upload(storagePath, blob, { contentType: 'image/jpeg', upsert: false });
+
+        if (uploadError) {
+          console.error('Storage upload error:', uploadError.message);
+          failCount++;
+          continue;
+        }
+
+        const { data: urlData } = supabase.storage.from('gallery').getPublicUrl(storagePath);
+        const publicUrl = urlData?.publicUrl || '';
+
+        const photoRecord = {
+          id: photoId,
+          title: item.title.trim() || photoForm.globalTitle.trim() || '',
+          event_name: finalEvent,
+          image_url: publicUrl,
+          storage_path: storagePath,
+          caption: photoForm.caption.trim() || '',
+          date: photoForm.date,
+        };
+
+        const { error: insertError } = await supabase.from('gallery_photos').insert(photoRecord);
+        if (insertError) {
+          console.error('DB insert error:', insertError.message);
+          failCount++;
+        } else {
+          publishedPhotos.push(photoRecord);
+        }
+      } catch (err) {
+        console.error('Upload exception:', err);
+        failCount++;
+      }
+    }
+
+    // 2. URL-only photo → insert directly into DB (no storage upload needed)
     if (photoForm.image_url.trim()) {
-      newPhotosToPublish.push({
-        id: `photo-${Date.now()}-url`,
+      const urlPhotoId = `photo-${Date.now()}-url`;
+      const urlRecord = {
+        id: urlPhotoId,
         title: photoForm.globalTitle.trim() || '',
         event_name: finalEvent,
         image_url: photoForm.image_url.trim(),
+        storage_path: null,
         caption: photoForm.caption.trim() || '',
         date: photoForm.date,
-        created_at: new Date().toISOString(),
-      });
+      };
+      try {
+        const { error: urlInsertError } = await supabase.from('gallery_photos').insert(urlRecord);
+        if (!urlInsertError) {
+          publishedPhotos.push(urlRecord);
+        }
+      } catch (_) {}
     }
 
-    const updated = [...newPhotosToPublish, ...galleryPhotos];
-    setGalleryPhotos(updated);
-    localStorage.setItem('npvl_custom_gallery', JSON.stringify(updated));
+    // 3. Refresh gallery list from Supabase
+    await fetchGalleryFromSupabase();
 
-    // Also attempt saving to Supabase if table exists
-    try {
-      supabase.from('gallery_photos').insert(newPhotosToPublish).then(() => {});
-    } catch (_) {}
-
-    setPhotoUploadSuccess(`Successfully published ${newPhotosToPublish.length} photo(s) to the Official Website Gallery!`);
+    setIsProcessingFiles(false);
+    setProcessingStatus('');
     setStagedPhotos([]);
     setPhotoForm({
       globalTitle: '',
@@ -244,27 +319,56 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
       date: new Date().toISOString().split('T')[0],
     });
     setCustomEventName('');
-    setTimeout(() => setPhotoUploadSuccess(''), 5000);
+
+    if (publishedPhotos.length > 0) {
+      setPhotoUploadSuccess(
+        `✅ Successfully uploaded ${publishedPhotos.length} photo(s) to the website gallery! Now visible on ALL devices.${failCount > 0 ? ` (${failCount} failed)` : ''}`
+      );
+    } else {
+      setPhotoUploadSuccess(`❌ Upload failed. Check your internet connection and try again.`);
+    }
+    setTimeout(() => setPhotoUploadSuccess(''), 7000);
   };
 
-  const handleDeletePhoto = (photoId) => {
+  const handleDeletePhoto = async (photoId) => {
     if (window.confirm('Are you sure you want to delete this photo from the gallery?')) {
-      const updated = galleryPhotos.filter(p => p.id !== photoId);
-      setGalleryPhotos(updated);
-      localStorage.setItem('npvl_custom_gallery', JSON.stringify(updated));
+      // Find storage_path for deletion from storage bucket
+      const photo = galleryPhotos.find(p => p.id === photoId);
+      if (photo?.storage_path) {
+        try {
+          await supabase.storage.from('gallery').remove([photo.storage_path]);
+        } catch (_) {}
+      }
       try {
-        supabase.from('gallery_photos').delete().eq('id', photoId).then(() => {});
+        await supabase.from('gallery_photos').delete().eq('id', photoId);
       } catch (_) {}
+      // Refresh from Supabase
+      await fetchGalleryFromSupabase();
     }
   };
 
-  const handleDeleteAllPhotos = () => {
-    if (window.confirm('Are you sure you want to delete ALL custom photos from the gallery?')) {
-      setGalleryPhotos([]);
-      localStorage.removeItem('npvl_custom_gallery');
+  const handleDeleteAllPhotos = async () => {
+    if (window.confirm('Are you sure you want to delete ALL photos from the gallery? This cannot be undone!')) {
+      // Delete all files from storage bucket
       try {
-        supabase.from('gallery_photos').delete().neq('id', '___none___').then(() => {});
+        const { data: fileList } = await supabase.storage.from('gallery').list('events', { limit: 1000 });
+        if (fileList && fileList.length > 0) {
+          // List subfolders and delete files within
+          for (const folder of fileList) {
+            const { data: subFiles } = await supabase.storage.from('gallery').list(`events/${folder.name}`, { limit: 1000 });
+            if (subFiles && subFiles.length > 0) {
+              const paths = subFiles.map(f => `events/${folder.name}/${f.name}`);
+              await supabase.storage.from('gallery').remove(paths);
+            }
+          }
+        }
       } catch (_) {}
+      // Delete all rows from table
+      try {
+        await supabase.from('gallery_photos').delete().neq('id', '___none___');
+      } catch (_) {}
+      localStorage.removeItem('npvl_custom_gallery');
+      setGalleryPhotos([]);
     }
   };
 
