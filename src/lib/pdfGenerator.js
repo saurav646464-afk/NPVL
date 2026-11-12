@@ -3,7 +3,7 @@ import QRCode from 'qrcode';
 import { NPVL_CREST_LOGO } from './logoBase64';
 
 /**
- * Generates an official, highly detailed Player / Coach Accreditation ID Card (Badge Pass) PDF
+ * Generates an official, highly detailed Player Accreditation ID Card (Badge Pass) PDF
  * Dimensions: 85.6mm x 140mm (High-profile Official Accreditation Badge)
  */
 export async function generateIdCardPDF(data) {
@@ -15,8 +15,6 @@ export async function generateIdCardPDF(data) {
 
   const width = 85.6;
   const height = 140;
-  const isCoach = (data.registration_type || '').toLowerCase() === 'coach' || 
-                  (data.player_category || '').toLowerCase().includes('coach');
 
   // 1. Dark Background (Midnight Navy)
   doc.setFillColor(18, 28, 56);
@@ -54,10 +52,7 @@ export async function generateIdCardPDF(data) {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(5.8);
   doc.setTextColor(255, 255, 255);
-  const subtitle = isCoach
-    ? 'SEASON 1 • OFFICIAL COACH ACCREDITATION & ENTRY PASS'
-    : 'SEASON 1 • OFFICIAL ATHLETE REGISTRATION ACCREDITATION';
-  doc.text(subtitle, width / 2, 26.2, { align: 'center' });
+  doc.text('SEASON 1 • OFFICIAL ATHLETE REGISTRATION ACCREDITATION', width / 2, 26.2, { align: 'center' });
 
   // 3. Photo Area
   const photoX = width / 2 - 16;
@@ -93,19 +88,15 @@ export async function generateIdCardPDF(data) {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
   doc.setTextColor(255, 255, 255);
-  const candidateName = (data.full_name || 'OFFICIAL CANDIDATE').toUpperCase();
+  const candidateName = (data.full_name || 'OFFICIAL ATHLETE').toUpperCase();
   doc.text(candidateName, width / 2, 70, { align: 'center' });
 
-  // 5. Category Badge Pill (Red for Coach, Royal Cobalt for Player)
-  const roleColor = isCoach ? [232, 32, 36] : [56, 84, 164];
-  doc.setFillColor(roleColor[0], roleColor[1], roleColor[2]);
+  // 5. Category Badge Pill (Royal Cobalt)
+  doc.setFillColor(56, 84, 164);
   doc.roundedRect(width / 2 - 28, 72.5, 56, 6, 3, 3, 'F');
   doc.setFontSize(6.8);
   doc.setTextColor(255, 255, 255);
-  const badgeText = isCoach 
-    ? `OFFICIAL COACH • ${((data.coach_specialization || data.player_category) || 'HEAD COACH').toUpperCase()}`
-    : (data.player_category || 'CANDIDATE PLAYER').toUpperCase();
-  doc.text(badgeText, width / 2, 76.7, { align: 'center' });
+  doc.text((data.player_category || 'CANDIDATE PLAYER').toUpperCase(), width / 2, 76.7, { align: 'center' });
 
   // 6. Comprehensive Details Box (White Container)
   doc.setFillColor(255, 255, 255);
@@ -121,7 +112,7 @@ export async function generateIdCardPDF(data) {
   // Row 1: REG ID (left) + FEE PAID (right)
   doc.text('REG ID:', 8, 86.5);
   doc.setTextColor(232, 32, 36);
-  doc.text(`${data.registration_id || 'NPVL-2026-0001'}`, 24, 86.5);
+  doc.text(`${data.registration_id || 'NPVL-2026-M0001'}`, 24, 86.5);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(18, 28, 56);
   doc.text('FEE:', 53, 86.5);
@@ -159,9 +150,9 @@ export async function generateIdCardPDF(data) {
   doc.text((data.state || '-').slice(0, 14), 61, 103);
 
   // Left Details + Right QR Code layout for Rows 5 to 7
-  // QR Code on right side: x=62, y=107, size=16mm
+  // QR Code on right side: x=61, y=106.5, size=17mm
   try {
-    const cleanRegId = encodeURIComponent(data.registration_id || 'NPVL-2026-0001');
+    const cleanRegId = encodeURIComponent(data.registration_id || 'NPVL-2026-M0001');
     const verificationUrl = `https://npvlofficial.com/?id=${cleanRegId}`;
     
     const qrDataUrl = await QRCode.toDataURL(verificationUrl, {
@@ -182,52 +173,27 @@ export async function generateIdCardPDF(data) {
     console.warn('QR generation note:', qrErr);
   }
 
-  if (isCoach) {
-    // COACH SPECIFIC DETAILS (Left column up to x=58)
-    // Row 5: COACH EXP
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(6.5);
-    doc.setTextColor(18, 28, 56);
-    doc.text('EXP:', 8, 108.5);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`${data.coaching_experience_years || data.top_achievement || '5+'} Years`, 18, 108.5);
+  // PLAYER DETAILS (Left column up to x=58)
+  // Row 5: HEIGHT & WEIGHT
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(6.5);
+  doc.setTextColor(18, 28, 56);
+  doc.text('HT/WT:', 8, 108.5);
+  doc.setFont('helvetica', 'normal');
+  doc.text(`${data.height_cms || '-'}cm / ${data.weight_kgs || '-'}kg`, 20, 108.5);
 
-    // Row 6: LICENSE
-    doc.setFont('helvetica', 'bold');
-    doc.text('LICENSE:', 8, 114);
-    doc.setFont('helvetica', 'normal');
-    const license = (data.coaching_license || 'FIVB/NIS Certified').slice(0, 18);
-    doc.text(license, 23, 114);
+  // Row 6: STAND & JUMP REACH
+  doc.setFont('helvetica', 'bold');
+  doc.text('REACH:', 8, 114);
+  doc.setFont('helvetica', 'normal');
+  doc.text(`Std: ${data.standing_reach_cms || '-'}cm | Jmp: ${data.jump_reach_cms || '-'}cm`, 20, 114);
 
-    // Row 7: CURRENT ACADEMY / TEAM
-    doc.setFont('helvetica', 'bold');
-    doc.text('TEAM:', 8, 119.5);
-    doc.setFont('helvetica', 'normal');
-    const team = (data.current_team_dept || 'Official NPVL Coach Pool').slice(0, 18);
-    doc.text(team, 19, 119.5);
-  } else {
-    // PLAYER SPECIFIC DETAILS (Left column up to x=58)
-    // Row 5: HEIGHT & WEIGHT
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(6.5);
-    doc.setTextColor(18, 28, 56);
-    doc.text('HT/WT:', 8, 108.5);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`${data.height_cms || '-'}cm / ${data.weight_kgs || '-'}kg`, 20, 108.5);
-
-    // Row 6: STAND & JUMP REACH
-    doc.setFont('helvetica', 'bold');
-    doc.text('REACH:', 8, 114);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`Std: ${data.standing_reach_cms || '-'}cm | Jmp: ${data.jump_reach_cms || '-'}cm`, 20, 114);
-
-    // Row 7: ACHIEVEMENT
-    doc.setFont('helvetica', 'bold');
-    doc.text('ACHIEVE:', 8, 119.5);
-    doc.setFont('helvetica', 'normal');
-    const ach = (data.top_achievement || 'Registered Athlete').slice(0, 20);
-    doc.text(ach, 22, 119.5);
-  }
+  // Row 7: ACHIEVEMENT
+  doc.setFont('helvetica', 'bold');
+  doc.text('ACHIEVE:', 8, 119.5);
+  doc.setFont('helvetica', 'normal');
+  const ach = (data.top_achievement || 'Registered Athlete').slice(0, 20);
+  doc.text(ach, 22, 119.5);
 
   // Row 8: Official Verification & Date
   doc.setFont('helvetica', 'bold');
@@ -257,11 +223,8 @@ export async function generateIdCardPDF(data) {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(4.8);
   doc.setTextColor(203, 213, 225);
-  const passNote = isCoach
-    ? 'OFFICIAL COACH ARENA PASS • PRESENT ORIGINAL AADHAAR AT VENUE'
-    : 'OFFICIAL REGISTRATION ENTRY PASS • PRESENT ORIGINAL AADHAAR AT VENUE';
-  doc.text(passNote, width / 2, 138, { align: 'center' });
+  doc.text('OFFICIAL REGISTRATION ENTRY PASS • PRESENT ORIGINAL AADHAAR AT VENUE', width / 2, 138, { align: 'center' });
 
   // Save PDF
-  doc.save(`NPVL_${isCoach ? 'Coach' : 'Player'}_ID_${data.registration_id || 'Pass'}.pdf`);
+  doc.save(`NPVL_Player_ID_${data.registration_id || 'Pass'}.pdf`);
 }
