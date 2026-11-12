@@ -7,11 +7,16 @@ import { supabase } from '../lib/supabase';
 import { generateIdCardPDF } from '../lib/pdfGenerator';
 
 export default function AdminDashboard({ setCurrentPage, initialAuthenticated = false, setAdminLoggedIn }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(initialAuthenticated);
-  const [viewMode, setViewMode] = useState(initialAuthenticated ? 'dashboard' : 'login'); // 'login' | 'forgot' | 'change' | 'dashboard'
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return initialAuthenticated || sessionStorage.getItem('npvl_admin_logged_in') === 'true';
+  });
+  const [viewMode, setViewMode] = useState(() => {
+    return (initialAuthenticated || sessionStorage.getItem('npvl_admin_logged_in') === 'true') ? 'dashboard' : 'login';
+  });
 
   useEffect(() => {
-    if (initialAuthenticated) {
+    const isAuthed = initialAuthenticated || sessionStorage.getItem('npvl_admin_logged_in') === 'true';
+    if (isAuthed) {
       setIsAuthenticated(true);
       setViewMode('dashboard');
       fetchRegistrations();

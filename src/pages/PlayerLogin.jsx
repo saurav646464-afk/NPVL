@@ -6,8 +6,24 @@ import { generateIdCardPDF } from '../lib/pdfGenerator';
 export default function PlayerLogin({ setCurrentPage }) {
   const [identifier, setIdentifier] = useState(''); // Mobile No or Registration ID
   const [loading, setLoading] = useState(false);
-  const [playerRecord, setPlayerRecord] = useState(null);
+  const [playerRecord, setPlayerRecord] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem('npvl_player_record');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
   const [errorMessage, setErrorMessage] = useState('');
+
+  const savePlayerRecord = (record) => {
+    setPlayerRecord(record);
+    if (record) {
+      sessionStorage.setItem('npvl_player_record', JSON.stringify(record));
+    } else {
+      sessionStorage.removeItem('npvl_player_record');
+    }
+  };
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -15,7 +31,7 @@ export default function PlayerLogin({ setCurrentPage }) {
 
     setLoading(true);
     setErrorMessage('');
-    setPlayerRecord(null);
+    savePlayerRecord(null);
 
     try {
       const cleanInput = identifier.trim();
@@ -32,11 +48,11 @@ export default function PlayerLogin({ setCurrentPage }) {
       }
 
       if (data && data.length > 0) {
-        setPlayerRecord(data[0]);
+        savePlayerRecord(data[0]);
       } else {
         // Fallback for demo mock
         if (cleanInput.startsWith('NPVL') || cleanInput.length === 10) {
-          setPlayerRecord({
+          savePlayerRecord({
             full_name: 'DEMO ATHLETE',
             registration_id: cleanInput,
             dob: '2004-05-15',
@@ -176,13 +192,22 @@ export default function PlayerLogin({ setCurrentPage }) {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex justify-center pt-2">
+              <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
                 <button
                   onClick={() => generateIdCardPDF(playerRecord)}
-                  className="w-full bg-[#E82024] hover:bg-[#C71216] text-white font-bebas text-lg tracking-wider py-3.5 px-6 rounded-xl shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
+                  className="flex-1 w-full bg-[#E82024] hover:bg-[#C71216] text-white font-bebas text-lg tracking-wider py-3.5 px-6 rounded-xl shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
                 >
                   <Download className="w-5 h-5" />
                   <span>DOWNLOAD PLAYER ID CARD (PDF)</span>
+                </button>
+                <button
+                  onClick={() => {
+                    savePlayerRecord(null);
+                    setIdentifier('');
+                  }}
+                  className="w-full sm:w-auto px-4 py-3 text-xs font-bold text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all cursor-pointer"
+                >
+                  Search Another
                 </button>
               </div>
 

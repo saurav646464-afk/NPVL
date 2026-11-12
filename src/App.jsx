@@ -29,7 +29,7 @@ import VerifyAccreditation from './pages/VerifyAccreditation';
 import Gallery from './pages/Gallery';
 
 export default function App() {
-  const [showIntro, setShowIntro] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
   const [currentPage, setCurrentPage] = useState(() => {
     // If URL has /verify or ?id= (from QR scan), open verify page
     if (window.location.search.includes('id=') || window.location.pathname.includes('verify')) {

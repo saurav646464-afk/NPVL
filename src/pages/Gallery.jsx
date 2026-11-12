@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Image as ImageIcon, X, Filter, Calendar, ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
+import { Image as ImageIcon, X, Filter, Calendar, ChevronLeft, ChevronRight, ZoomIn, Sparkles } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 export default function Gallery() {
