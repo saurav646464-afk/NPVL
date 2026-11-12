@@ -50,6 +50,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
     weight_kgs: '',
     standing_reach_cms: '',
     jump_reach_cms: '',
+    tshirt_size: '',
 
     // Agreements & Voluntary Payment Consent
     declaration_agreed: false,
@@ -237,6 +238,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
         weight_kgs: formData.weight_kgs ? Number(formData.weight_kgs) : null,
         standing_reach_cms: formData.standing_reach_cms ? Number(formData.standing_reach_cms) : null,
         jump_reach_cms: formData.jump_reach_cms ? Number(formData.jump_reach_cms) : null,
+        tshirt_size: formData.tshirt_size,
         declaration_agreed: formData.declaration_agreed,
         medical_history: {
           account_password: formData.account_password || '123456',
@@ -987,6 +989,39 @@ export default function Register({ onOpenContact, setCurrentPage }) {
                     className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] rounded-xl p-3 text-sm text-gray-900 focus:outline-none"
                   />
                 </div>
+              </div>
+
+              {/* T-Shirt Size */}
+              <div className="pt-2">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-700 mb-2">
+                  T-Shirt Size <span className="text-[#E82024]">*</span>
+                </label>
+                <div className="flex flex-wrap gap-3">
+                  {['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'].map((size) => (
+                    <label
+                      key={size}
+                      className={`flex items-center justify-center w-14 h-12 rounded-xl border-2 font-bold text-sm cursor-pointer transition-all select-none ${
+                        formData.tshirt_size === size
+                          ? 'bg-[#3854A4] border-[#3854A4] text-white shadow-md'
+                          : 'bg-gray-50 border-gray-300 text-gray-700 hover:border-[#3854A4] hover:text-[#3854A4]'
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="tshirt_size"
+                        value={size}
+                        required
+                        checked={formData.tshirt_size === size}
+                        onChange={handleInputChange}
+                        className="sr-only"
+                      />
+                      {size}
+                    </label>
+                  ))}
+                </div>
+                {!formData.tshirt_size && (
+                  <p className="text-[11px] text-gray-400 mt-1.5">Please select your T-shirt size to proceed.</p>
+                )}
               </div>
 
             </div>
