@@ -26,6 +26,7 @@ import PlayerLogin from './pages/PlayerLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import LoginHub from './pages/LoginHub';
 import VerifyAccreditation from './pages/VerifyAccreditation';
+import Gallery from './pages/Gallery';
 
 export default function App() {
   const [showIntro, setShowIntro] = useState(false);
@@ -109,6 +110,8 @@ export default function App() {
         );
       case 'media':
         return <Media />;
+      case 'gallery':
+        return <Gallery />;
       case 'partners':
         return <Partners onOpenContact={() => openContactWithInterest('Partnership')} />;
       case 'franchise':

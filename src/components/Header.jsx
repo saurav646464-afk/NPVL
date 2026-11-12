@@ -20,6 +20,7 @@ export default function Header({ currentPage, setCurrentPage, onOpenContact }) {
     { id: 'league', label: 'THE LEAGUE' },
     { id: 'season1', label: 'SEASON 1', badge: 'SOON' },
     { id: 'teams', label: 'TEAMS' },
+    { id: 'gallery', label: 'GALLERY' },
     { id: 'media', label: 'MEDIA' },
     { id: 'partners', label: 'PARTNERS' },
     { id: 'franchise', label: 'FRANCHISE' },

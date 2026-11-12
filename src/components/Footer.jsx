@@ -4,6 +4,7 @@ export default function Footer({ setCurrentPage, onOpenContact }) {
   const quickLinks = [
     { id: 'home',     label: 'Home' },
     { id: 'teams',    label: 'Teams' },
+    { id: 'gallery',  label: 'Gallery' },
     { id: 'media',    label: 'Media' },
     { id: 'partners', label: 'Partners' },
     { id: 'contact',  label: 'Contact' },
