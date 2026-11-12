@@ -74,43 +74,103 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
   const [customEventName, setCustomEventName] = useState('');
   const [stagedPhotos, setStagedPhotos] = useState([]); // Selected bulk files
   const [isProcessingFiles, setIsProcessingFiles] = useState(false);
+  const [processingStatus, setProcessingStatus] = useState('');
   const [photoUploadSuccess, setPhotoUploadSuccess] = useState('');
 
-  // Handle multiple bulk file selection
-  const handleBulkFilesSelected = (e) => {
-    const files = Array.from(e.target.files || []);
-    if (files.length === 0) return;
-
-    setIsProcessingFiles(true);
-    let loadedCount = 0;
-    const newItems = [];
-
-    files.forEach((file, idx) => {
-      if (file.size > 5 * 1024 * 1024) {
-        alert(`File "${file.name}" is over 5MB. Skipping this large file.`);
-        loadedCount++;
-        if (loadedCount === files.length) setIsProcessingFiles(false);
+  // Auto-compress high-resolution camera photos (e.g. 8MB-25MB) into crisp Full HD web JPEGs (~300KB-600KB)
+  const compressImageFile = (file, maxWidth = 1920, maxHeight = 1920, quality = 0.82) => {
+    return new Promise((resolve) => {
+      if (!file.type.startsWith('image/') || file.type.includes('svg')) {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve({ dataUrl: e.target.result });
+        reader.onerror = () => resolve({ dataUrl: '' });
+        reader.readAsDataURL(file);
         return;
       }
 
       const reader = new FileReader();
-      reader.onload = (uploadEvent) => {
-        newItems.push({
-          id: `staged-${Date.now()}-${idx}-${Math.random().toString(36).substr(2, 5)}`,
-          dataUrl: uploadEvent.target.result,
-          title: '', // Optional individual title
-          fileName: file.name,
-        });
+      reader.onerror = () => resolve({ dataUrl: '' });
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onerror = () => resolve({ dataUrl: e.target.result });
+        img.onload = () => {
+          try {
+            let width = img.width;
+            let height = img.height;
 
-        loadedCount++;
-        if (loadedCount === files.length) {
-          setStagedPhotos(prev => [...prev, ...newItems]);
-          setIsProcessingFiles(false);
-        }
+            // Scale down proportionally if larger than maxWidth / maxHeight (Full HD standard)
+            if (width > maxWidth || height > maxHeight) {
+              if (width > height) {
+                height = Math.round((height * maxWidth) / width);
+                width = maxWidth;
+              } else {
+                width = Math.round((width * maxHeight) / height);
+                height = maxHeight;
+              }
+            }
+
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(img, 0, 0, width, height);
+
+            const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+            resolve({ dataUrl: compressedDataUrl });
+          } catch (err) {
+            console.warn('Canvas compression fallback:', err);
+            resolve({ dataUrl: e.target.result });
+          }
+        };
+        img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     });
+  };
 
+  // Handle multiple bulk file selection with auto HD camera photo compression
+  const handleBulkFilesSelected = async (e) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    setIsProcessingFiles(true);
+    setProcessingStatus(`Optimizing ${files.length} photo(s)...`);
+
+    const newItems = [];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      // Supports camera photos up to 25MB each!
+      if (file.size > 25 * 1024 * 1024) {
+        alert(`File "${file.name}" is over 25MB. Skipping this file.`);
+        continue;
+      }
+
+      const mbSize = (file.size / (1024 * 1024)).toFixed(1);
+      setProcessingStatus(`Optimizing photo ${i + 1} of ${files.length} (${mbSize} MB Camera Shot)...`);
+
+      try {
+        const { dataUrl } = await compressImageFile(file);
+        if (dataUrl) {
+          newItems.push({
+            id: `staged-${Date.now()}-${i}-${Math.random().toString(36).substr(2, 5)}`,
+            dataUrl,
+            title: '', // Optional
+            fileName: file.name,
+            origMb: mbSize,
+          });
+        }
+      } catch (err) {
+        console.error('File compression error:', err);
+      }
+    }
+
+    setStagedPhotos(prev => [...prev, ...newItems]);
+    setIsProcessingFiles(false);
+    setProcessingStatus('');
     e.target.value = '';
   };
 
@@ -695,25 +755,32 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
                 </span>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* Bulk File Input */}
+                  {/* Bulk File Input with Auto HD Compression */}
                   <div className="bg-white p-4 rounded-2xl border-2 border-dashed border-purple-300 hover:border-purple-500 transition-colors">
-                    <label className="block text-xs font-bold text-purple-900 mb-1">
-                      📸 Choose Multiple Images From Device
-                    </label>
-                    <p className="text-[11px] text-gray-500 mb-2.5">
-                      You can select multiple photos at once (bulk upload). Max 5MB per image.
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="block text-xs font-bold text-purple-900">
+                        📸 Choose Photos From Device / Camera
+                      </label>
+                      <span className="text-[10px] font-bold bg-green-100 text-green-800 px-2 py-0.5 rounded-full border border-green-200">
+                        Up to 25MB Each
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-gray-500 mb-2.5 leading-snug">
+                      High-res camera photos (even 8MB–15MB) are automatically optimized to crisp Full HD web quality instantly!
                     </p>
                     <input
                       type="file"
                       multiple
                       accept="image/*"
                       onChange={handleBulkFilesSelected}
-                      className="block w-full text-xs text-gray-700 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-purple-600 file:text-white hover:file:bg-purple-700 cursor-pointer"
+                      disabled={isProcessingFiles}
+                      className="block w-full text-xs text-gray-700 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-purple-600 file:text-white hover:file:bg-purple-700 cursor-pointer disabled:opacity-50"
                     />
                     {isProcessingFiles && (
-                      <p className="text-xs text-purple-700 font-bold mt-2 animate-pulse">
-                        Loading selected files...
-                      </p>
+                      <div className="mt-2.5 p-2 bg-purple-50 border border-purple-200 rounded-xl flex items-center gap-2 text-xs text-purple-800 font-bold animate-pulse">
+                        <RefreshCw className="w-3.5 h-3.5 animate-spin text-purple-600" />
+                        <span>{processingStatus || 'Optimizing camera photos...'}</span>
+                      </div>
                     )}
                   </div>
 
@@ -765,6 +832,11 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
                             alt="Preview"
                             className="w-full h-full object-cover"
                           />
+                          {item.origMb && (
+                            <span className="absolute bottom-1 left-1 bg-black/75 text-[9px] text-white px-1.5 py-0.5 rounded font-mono">
+                              {item.origMb}MB ⚡
+                            </span>
+                          )}
                           <button
                             type="button"
                             onClick={() => removeStagedPhoto(item.id)}
