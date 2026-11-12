@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Users, DollarSign, CheckCircle2, Clock, 
-  Search, Filter, Download, ArrowLeft, RefreshCw, Eye, ShieldAlert, Lock, Mail, KeyRound, AlertCircle, Image as ImageIcon, Trash2, PlusCircle, UploadCloud
+  Search, Filter, Download, ArrowLeft, RefreshCw, Eye, ShieldAlert, Lock, Mail, KeyRound, AlertCircle, Image as ImageIcon, Trash2, PlusCircle, UploadCloud, X, Layers
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { generateIdCardPDF } from '../lib/pdfGenerator';
@@ -50,43 +50,81 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('ALL');
 
-  // Gallery Manager State
+  // Gallery Manager State (Bulk Upload & Optional Titles)
   const [galleryPhotos, setGalleryPhotos] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem('npvl_custom_gallery') || '[]');
+      const saved = JSON.parse(localStorage.getItem('npvl_custom_gallery') || '[]');
+      return Array.isArray(saved) ? saved.filter(p => !p.id?.startsWith('def-')) : [];
     } catch {
       return [];
     }
   });
   const [photoForm, setPhotoForm] = useState({
-    title: '',
+    globalTitle: '', // Optional batch title
     event_name: 'Season 1 Launch Event',
-    image_url: '',
-    caption: '',
+    image_url: '', // Optional URL
+    caption: '', // Optional caption
     date: new Date().toISOString().split('T')[0],
   });
-  const [photoUploadSuccess, setPhotoUploadSuccess] = useState('');
   const [customEventName, setCustomEventName] = useState('');
+  const [stagedPhotos, setStagedPhotos] = useState([]); // Selected bulk files
+  const [isProcessingFiles, setIsProcessingFiles] = useState(false);
+  const [photoUploadSuccess, setPhotoUploadSuccess] = useState('');
 
-  const handlePhotoFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (file.size > 3 * 1024 * 1024) {
-        alert('File size is larger than 3MB. Please upload an image under 3MB.');
+  // Handle multiple bulk file selection
+  const handleBulkFilesSelected = (e) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    setIsProcessingFiles(true);
+    let loadedCount = 0;
+    const newItems = [];
+
+    files.forEach((file, idx) => {
+      if (file.size > 5 * 1024 * 1024) {
+        alert(`File "${file.name}" is over 5MB. Skipping this large file.`);
+        loadedCount++;
+        if (loadedCount === files.length) setIsProcessingFiles(false);
         return;
       }
+
       const reader = new FileReader();
       reader.onload = (uploadEvent) => {
-        setPhotoForm(prev => ({ ...prev, image_url: uploadEvent.target.result }));
+        newItems.push({
+          id: `staged-${Date.now()}-${idx}-${Math.random().toString(36).substr(2, 5)}`,
+          dataUrl: uploadEvent.target.result,
+          title: '', // Optional individual title
+          fileName: file.name,
+        });
+
+        loadedCount++;
+        if (loadedCount === files.length) {
+          setStagedPhotos(prev => [...prev, ...newItems]);
+          setIsProcessingFiles(false);
+        }
       };
       reader.readAsDataURL(file);
-    }
+    });
+
+    e.target.value = '';
   };
 
-  const handleAddPhoto = (e) => {
+  // Remove photo from staging
+  const removeStagedPhoto = (id) => {
+    setStagedPhotos(prev => prev.filter(p => p.id !== id));
+  };
+
+  // Update individual title for a staged photo
+  const updateStagedPhotoTitle = (id, newTitle) => {
+    setStagedPhotos(prev => prev.map(p => p.id === id ? { ...p, title: newTitle } : p));
+  };
+
+  // Publish all staged photos + optional URL photo to gallery
+  const handlePublishBulkPhotos = (e) => {
     e.preventDefault();
-    if (!photoForm.image_url) {
-      alert('Please upload an image file or provide an image link.');
+
+    if (stagedPhotos.length === 0 && !photoForm.image_url) {
+      alert('Please select one or more photos to upload, or provide an image link.');
       return;
     }
 
@@ -94,35 +132,54 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
       ? (customEventName.trim() || 'General Photos')
       : photoForm.event_name;
 
-    const newPhoto = {
-      id: `photo-${Date.now()}`,
-      title: photoForm.title || `${finalEvent} Photo`,
-      event_name: finalEvent,
-      image_url: photoForm.image_url,
-      caption: photoForm.caption,
-      date: photoForm.date,
-      created_at: new Date().toISOString(),
-    };
+    const newPhotosToPublish = [];
 
-    const updated = [newPhoto, ...galleryPhotos];
+    // 1. Process all staged files
+    stagedPhotos.forEach((item, index) => {
+      newPhotosToPublish.push({
+        id: `photo-${Date.now()}-${index}-${Math.random().toString(36).substr(2, 6)}`,
+        title: item.title.trim() || photoForm.globalTitle.trim() || '', // 100% Optional
+        event_name: finalEvent,
+        image_url: item.dataUrl,
+        caption: photoForm.caption.trim() || '',
+        date: photoForm.date,
+        created_at: new Date().toISOString(),
+      });
+    });
+
+    // 2. If single URL provided, add it too
+    if (photoForm.image_url.trim()) {
+      newPhotosToPublish.push({
+        id: `photo-${Date.now()}-url`,
+        title: photoForm.globalTitle.trim() || '',
+        event_name: finalEvent,
+        image_url: photoForm.image_url.trim(),
+        caption: photoForm.caption.trim() || '',
+        date: photoForm.date,
+        created_at: new Date().toISOString(),
+      });
+    }
+
+    const updated = [...newPhotosToPublish, ...galleryPhotos];
     setGalleryPhotos(updated);
     localStorage.setItem('npvl_custom_gallery', JSON.stringify(updated));
 
     // Also attempt saving to Supabase if table exists
     try {
-      supabase.from('gallery_photos').insert([newPhoto]).then(() => {});
+      supabase.from('gallery_photos').insert(newPhotosToPublish).then(() => {});
     } catch (_) {}
 
-    setPhotoUploadSuccess('Photo successfully published to Official Website Gallery!');
+    setPhotoUploadSuccess(`Successfully published ${newPhotosToPublish.length} photo(s) to the Official Website Gallery!`);
+    setStagedPhotos([]);
     setPhotoForm({
-      title: '',
+      globalTitle: '',
       event_name: finalEvent,
       image_url: '',
       caption: '',
       date: new Date().toISOString().split('T')[0],
     });
     setCustomEventName('');
-    setTimeout(() => setPhotoUploadSuccess(''), 4000);
+    setTimeout(() => setPhotoUploadSuccess(''), 5000);
   };
 
   const handleDeletePhoto = (photoId) => {
@@ -132,6 +189,16 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
       localStorage.setItem('npvl_custom_gallery', JSON.stringify(updated));
       try {
         supabase.from('gallery_photos').delete().eq('id', photoId).then(() => {});
+      } catch (_) {}
+    }
+  };
+
+  const handleDeleteAllPhotos = () => {
+    if (window.confirm('Are you sure you want to delete ALL custom photos from the gallery?')) {
+      setGalleryPhotos([]);
+      localStorage.removeItem('npvl_custom_gallery');
+      try {
+        supabase.from('gallery_photos').delete().neq('id', '___none___').then(() => {});
       } catch (_) {}
     }
   };
@@ -499,34 +566,40 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
           </div>
         </div>
 
-        {/* GALLERY MANAGER PANEL (COLLAPSIBLE) */}
+        {/* GALLERY MANAGER PANEL (COLLAPSIBLE - SUPPORTS BULK UPLOAD) */}
         {viewMode === 'gallery' && (
           <div className="bg-white p-6 sm:p-8 rounded-3xl border-2 border-purple-400 shadow-md space-y-6">
             <div className="flex items-center justify-between border-b pb-4">
-              <div className="flex items-center gap-2">
-                <ImageIcon className="w-6 h-6 text-purple-600" />
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center text-purple-700">
+                  <ImageIcon className="w-6 h-6" />
+                </div>
                 <div>
                   <h3 className="font-bebas text-2xl sm:text-3xl text-gray-900 tracking-wider">
                     OFFICIAL WEBSITE GALLERY MANAGER
                   </h3>
                   <p className="text-xs text-gray-500">
-                    Upload new event photos directly to the official website photo gallery with event tags.
+                    Upload photos in bulk (multiple at once) with event album tags. Image titles are completely optional!
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setViewMode('dashboard')}
-                className="text-xs font-bold text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg"
+                className="text-xs font-bold text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-3.5 py-2 rounded-xl transition-all cursor-pointer"
               >
                 ✕ Close Panel
               </button>
             </div>
 
-            {/* Upload Form */}
-            <form onSubmit={handleAddPhoto} className="bg-purple-50/50 border border-purple-200 p-5 rounded-2xl space-y-4">
-              <span className="text-xs font-bold uppercase tracking-wider text-purple-700 block">
-                UPLOAD NEW PHOTO TO EVENT ALBUM
-              </span>
+            {/* Bulk Upload Form */}
+            <form onSubmit={handlePublishBulkPhotos} className="bg-purple-50/50 border border-purple-200 p-5 sm:p-6 rounded-2xl space-y-5">
+              <div className="flex items-center justify-between border-b border-purple-200/60 pb-3">
+                <span className="text-xs font-bold uppercase tracking-wider text-purple-800 flex items-center gap-2">
+                  <Layers className="w-4 h-4 text-purple-600" />
+                  <span>STEP 1: SELECT EVENT ALBUM & DETAILS</span>
+                </span>
+                <span className="text-[11px] text-purple-600 font-medium">All titles & captions are optional</span>
+              </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {/* Event Name Selection / Input */}
@@ -565,17 +638,17 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
                   </div>
                 )}
 
-                {/* Photo Title */}
+                {/* Common/Batch Title (Optional) */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
-                    Photo Title *
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1 flex items-center justify-between">
+                    <span>Title (Optional)</span>
+                    <span className="text-[10px] text-gray-400 font-normal">Optional</span>
                   </label>
                   <input
                     type="text"
-                    required
-                    value={photoForm.title}
-                    onChange={(e) => setPhotoForm({ ...photoForm, title: e.target.value })}
-                    placeholder="e.g. Spikers reach test session"
+                    value={photoForm.globalTitle}
+                    onChange={(e) => setPhotoForm({ ...photoForm, globalTitle: e.target.value })}
+                    placeholder="Leave blank or enter title"
                     className="w-full bg-white border border-gray-300 rounded-xl px-3 py-2.5 text-xs text-gray-900 focus:outline-none focus:border-purple-500"
                   />
                 </div>
@@ -583,7 +656,7 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
                 {/* Photo Date */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
-                    Date of Event
+                    Date of Event (Optional)
                   </label>
                   <input
                     type="date"
@@ -594,85 +667,163 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
                 </div>
               </div>
 
-              {/* Image Upload Input or URL */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
-                    Option A: Upload Image File (Max 3MB)
-                  </label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handlePhotoFileUpload}
-                    className="block w-full text-xs text-gray-700 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-purple-600 file:text-white hover:file:bg-purple-700 cursor-pointer"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
-                    Option B: Or Paste Image URL Link
-                  </label>
-                  <input
-                    type="url"
-                    value={photoForm.image_url.startsWith('data:') ? '' : photoForm.image_url}
-                    onChange={(e) => setPhotoForm({ ...photoForm, image_url: e.target.value })}
-                    placeholder="https://example.com/photo.jpg"
-                    className="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-xs text-gray-900 focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              {/* Caption */}
+              {/* Caption (Optional) */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
-                  Caption / Description (Optional)
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1 flex items-center justify-between">
+                  <span>Caption / Description (Optional)</span>
+                  <span className="text-[10px] text-gray-400 font-normal">Optional</span>
                 </label>
                 <input
                   type="text"
                   value={photoForm.caption}
                   onChange={(e) => setPhotoForm({ ...photoForm, caption: e.target.value })}
-                  placeholder="Short note about the photo to show in gallery view..."
+                  placeholder="Short note about these photos (shown in gallery and lightbox)..."
                   className="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-xs text-gray-900 focus:outline-none"
                 />
               </div>
 
-              {/* Preview if uploaded */}
-              {photoForm.image_url && (
-                <div className="flex items-center gap-4 bg-white p-3 rounded-xl border border-gray-200">
-                  <img
-                    src={photoForm.image_url}
-                    alt="Preview"
-                    className="h-16 w-24 object-cover rounded-lg border border-gray-300"
-                  />
-                  <span className="text-xs font-bold text-green-700">Image ready for publishing!</span>
+              {/* STEP 2: File Upload (Multiple / Bulk Support) */}
+              <div className="border-t border-purple-200/60 pt-4 space-y-3">
+                <span className="text-xs font-bold uppercase tracking-wider text-purple-800 flex items-center gap-2">
+                  <UploadCloud className="w-4 h-4 text-purple-600" />
+                  <span>STEP 2: CHOOSE PHOTOS (SELECT MULTIPLE FILES AT ONCE)</span>
+                </span>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Bulk File Input */}
+                  <div className="bg-white p-4 rounded-2xl border-2 border-dashed border-purple-300 hover:border-purple-500 transition-colors">
+                    <label className="block text-xs font-bold text-purple-900 mb-1">
+                      📸 Choose Multiple Images From Device
+                    </label>
+                    <p className="text-[11px] text-gray-500 mb-2.5">
+                      You can select multiple photos at once (bulk upload). Max 5MB per image.
+                    </p>
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      onChange={handleBulkFilesSelected}
+                      className="block w-full text-xs text-gray-700 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-purple-600 file:text-white hover:file:bg-purple-700 cursor-pointer"
+                    />
+                    {isProcessingFiles && (
+                      <p className="text-xs text-purple-700 font-bold mt-2 animate-pulse">
+                        Loading selected files...
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Or Single URL */}
+                  <div className="bg-white p-4 rounded-2xl border border-gray-200">
+                    <label className="block text-xs font-bold text-gray-800 mb-1">
+                      🔗 Or Paste Web Image URL Link
+                    </label>
+                    <p className="text-[11px] text-gray-500 mb-2.5">
+                      Optional: Paste a direct image link if hosted online.
+                    </p>
+                    <input
+                      type="url"
+                      value={photoForm.image_url.startsWith('data:') ? '' : photoForm.image_url}
+                      onChange={(e) => setPhotoForm({ ...photoForm, image_url: e.target.value })}
+                      placeholder="https://example.com/event-photo.jpg"
+                      className="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs text-gray-900 focus:outline-none"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* STEP 3: Staged Photos Preview (Bulk Grid) */}
+              {stagedPhotos.length > 0 && (
+                <div className="bg-white p-4 rounded-2xl border border-purple-200 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold uppercase tracking-wider text-purple-800">
+                      SELECTED PHOTOS READY TO UPLOAD ({stagedPhotos.length})
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setStagedPhotos([])}
+                      className="text-xs font-bold text-red-600 hover:text-red-800 cursor-pointer"
+                    >
+                      Clear All Selected
+                    </button>
+                  </div>
+
+                  <p className="text-[11px] text-gray-500">
+                    Titles are optional. You can give individual titles below or leave them blank. Click (✕) to remove any photo.
+                  </p>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 max-h-72 overflow-y-auto p-1">
+                    {stagedPhotos.map((item) => (
+                      <div key={item.id} className="relative group bg-gray-50 rounded-xl border border-gray-200 p-1.5 space-y-1.5 shadow-2xs">
+                        <div className="relative aspect-square overflow-hidden rounded-lg bg-black/10">
+                          <img
+                            src={item.dataUrl}
+                            alt="Preview"
+                            className="w-full h-full object-cover"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removeStagedPhoto(item.id)}
+                            className="absolute top-1 right-1 p-1 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-md cursor-pointer"
+                            title="Remove photo"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+                        <input
+                          type="text"
+                          value={item.title}
+                          onChange={(e) => updateStagedPhotoTitle(item.id, e.target.value)}
+                          placeholder="Title (Optional)"
+                          className="w-full bg-white border border-gray-300 rounded-md px-1.5 py-1 text-[10px] text-gray-800 focus:outline-none focus:border-purple-500"
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
 
               {photoUploadSuccess && (
-                <div className="p-3 bg-green-50 border border-green-200 rounded-xl text-xs text-green-800 font-bold flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-green-600" />
+                <div className="p-3.5 bg-green-50 border border-green-200 rounded-xl text-xs text-green-800 font-bold flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0" />
                   <span>{photoUploadSuccess}</span>
                 </div>
               )}
 
+              {/* Submit Button */}
               <button
                 type="submit"
-                className="bg-purple-600 hover:bg-purple-700 text-white font-bebas text-lg tracking-wider px-6 py-2.5 rounded-xl shadow-md transition-all flex items-center gap-2 cursor-pointer"
+                disabled={isProcessingFiles}
+                className="w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white font-bebas text-lg tracking-wider px-8 py-3 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
               >
                 <UploadCloud className="w-5 h-5" />
-                <span>PUBLISH TO WEBSITE GALLERY</span>
+                <span>
+                  {stagedPhotos.length > 0 
+                    ? `PUBLISH ALL (${stagedPhotos.length}) PHOTOS TO WEBSITE GALLERY` 
+                    : 'PUBLISH TO WEBSITE GALLERY'}
+                </span>
               </button>
             </form>
 
             {/* Current Photos List in Dashboard */}
-            <div className="space-y-3">
-              <h4 className="font-bebas text-xl text-gray-900 tracking-wider">
-                CURRENTLY PUBLISHED CUSTOM PHOTOS ({galleryPhotos.length})
-              </h4>
+            <div className="space-y-4 pt-2">
+              <div className="flex items-center justify-between border-b pb-2 flex-wrap gap-2">
+                <h4 className="font-bebas text-xl sm:text-2xl text-gray-900 tracking-wider">
+                  CURRENTLY PUBLISHED CUSTOM PHOTOS ({galleryPhotos.length})
+                </h4>
+                {galleryPhotos.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={handleDeleteAllPhotos}
+                    className="text-xs font-bold text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg border border-red-200 transition-colors cursor-pointer"
+                  >
+                    Delete All Uploaded Photos
+                  </button>
+                )}
+              </div>
 
               {galleryPhotos.length === 0 ? (
-                <p className="text-xs text-gray-500 italic p-4 bg-gray-50 rounded-xl border border-gray-200">
-                  No custom photos uploaded yet. Use the form above to add your official event photos!
+                <p className="text-xs text-gray-500 italic p-6 bg-gray-50 rounded-2xl border border-dashed border-gray-300 text-center">
+                  No photos uploaded yet. Select and upload your official event photos in bulk using the form above!
                 </p>
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
@@ -680,7 +831,7 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
                     <div key={photo.id} className="relative group bg-gray-50 rounded-xl border border-gray-200 overflow-hidden shadow-2xs">
                       <img
                         src={photo.image_url}
-                        alt={photo.title}
+                        alt={photo.title || photo.event_name}
                         className="h-24 w-full object-cover"
                       />
                       <div className="p-2 space-y-0.5">
@@ -688,7 +839,7 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
                           {photo.event_name}
                         </span>
                         <p className="text-[10px] font-bold text-gray-900 truncate">
-                          {photo.title}
+                          {photo.title || <span className="text-gray-400 italic font-normal">No title (Optional)</span>}
                         </p>
                       </div>
                       <button

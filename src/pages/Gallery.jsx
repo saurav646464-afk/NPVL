@@ -1,58 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Image as ImageIcon, X, Filter, Calendar, Sparkles, ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
+import { Image as ImageIcon, X, Filter, Calendar, ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-
-// Default initial high-impact gallery photos
-const DEFAULT_GALLERY = [
-  {
-    id: 'def-1',
-    title: 'Season 1 Grand Unveiling & Press Conference',
-    event_name: 'Season 1 Launch Event',
-    image_url: 'https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?auto=format&fit=crop&w=1200&q=80',
-    caption: 'Official launch ceremony of North Premier Volleyball League in New Delhi with dignitaries and state volleyball federations.',
-    date: '2026-10-15',
-  },
-  {
-    id: 'def-2',
-    title: 'Trial Camp & Athlete Registration Drive',
-    event_name: 'Player Trials 2026',
-    image_url: 'https://images.unsplash.com/photo-1592656094267-764a45160876?auto=format&fit=crop&w=1200&q=80',
-    caption: 'Athletes participating in reach, smash, and fitness assessment drills during the preliminary evaluation camp.',
-    date: '2026-10-28',
-  },
-  {
-    id: 'def-3',
-    title: 'Official Trophy & Team Crest Reveal',
-    event_name: 'Season 1 Launch Event',
-    image_url: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=1200&q=80',
-    caption: 'The official championship silverware presented to team representatives from across 7 North Indian states.',
-    date: '2026-11-02',
-  },
-  {
-    id: 'def-4',
-    title: 'Match Arena Indoor Lighting & Court Prep',
-    event_name: 'Arena & Stadium Prep',
-    image_url: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1200&q=80',
-    caption: 'State-of-the-art maplewood court and broadcast lighting system inspected prior to Season 1 opening matches.',
-    date: '2026-11-05',
-  },
-  {
-    id: 'def-5',
-    title: 'High-Performance Spiking & Net Practice',
-    event_name: 'Player Trials 2026',
-    image_url: 'https://images.unsplash.com/photo-1587280501635-68a0e82cd5ff?auto=format&fit=crop&w=1200&q=80',
-    caption: 'National-level spikers testing vertical reach and attack power at the indoor practice facility.',
-    date: '2026-11-08',
-  },
-  {
-    id: 'def-6',
-    title: 'Official Team Jersey Showcase',
-    event_name: 'General Photos',
-    image_url: 'https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&fit=crop&w=1200&q=80',
-    caption: 'Franchise kit reveal featuring Chandigarh Heroes, Delhi Warriors, UP Dominator and all participating franchises.',
-    date: '2026-11-10',
-  },
-];
 
 export default function Gallery() {
   const [photos, setPhotos] = useState([]);
@@ -72,7 +20,13 @@ export default function Gallery() {
     try {
       const localAdminPhotos = JSON.parse(localStorage.getItem('npvl_custom_gallery') || '[]');
       if (Array.isArray(localAdminPhotos)) {
-        combined = [...localAdminPhotos];
+        // Strip out any previous stock/dummy images with 'def-' IDs
+        const userPhotos = localAdminPhotos.filter(p => !p.id?.startsWith('def-'));
+        combined = [...userPhotos];
+        // Clean localStorage if it had old def- photos
+        if (userPhotos.length !== localAdminPhotos.length) {
+          localStorage.setItem('npvl_custom_gallery', JSON.stringify(userPhotos));
+        }
       }
     } catch (e) {
       console.warn('Local gallery read error:', e);
@@ -86,17 +40,11 @@ export default function Gallery() {
         .order('created_at', { ascending: false });
 
       if (!error && data && data.length > 0) {
-        combined = [...data, ...combined];
+        // Filter out any default stock photos that might have been pushed
+        const nonStock = data.filter(p => !p.id?.startsWith('def-'));
+        combined = [...nonStock, ...combined];
       }
     } catch (_) {}
-
-    // 3. Fallback to default high-res curated photos if empty
-    if (combined.length === 0) {
-      combined = DEFAULT_GALLERY;
-    } else {
-      // Append default photos at the bottom for richness
-      combined = [...combined, ...DEFAULT_GALLERY];
-    }
 
     // Deduplicate by id
     const unique = Array.from(new Map(combined.map(p => [p.id || p.image_url, p])).values());
@@ -153,35 +101,52 @@ export default function Gallery() {
           </p>
         </div>
 
-        {/* Filter Navigation Bar */}
-        <div className="bg-white p-2.5 sm:p-3 rounded-2xl border border-gray-200 shadow-xs flex items-center gap-2 overflow-x-auto scrollbar-none">
-          <div className="flex items-center gap-1.5 px-3 py-2 text-gray-500 font-bold text-xs uppercase shrink-0">
-            <Filter className="w-4 h-4 text-[#3854A4]" />
-            <span className="hidden sm:inline">Filter By Event:</span>
-          </div>
+        {/* Filter Navigation Bar (shown when photos exist) */}
+        {photos.length > 0 && (
+          <div className="bg-white p-2.5 sm:p-3 rounded-2xl border border-gray-200 shadow-xs flex items-center gap-2 overflow-x-auto scrollbar-none">
+            <div className="flex items-center gap-1.5 px-3 py-2 text-gray-500 font-bold text-xs uppercase shrink-0">
+              <Filter className="w-4 h-4 text-[#3854A4]" />
+              <span className="hidden sm:inline">Filter By Event:</span>
+            </div>
 
-          <div className="flex items-center gap-2 flex-nowrap">
-            {eventNames.map((name) => (
-              <button
-                key={name}
-                onClick={() => setSelectedEvent(name)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap cursor-pointer ${
-                  selectedEvent === name
-                    ? 'bg-[#3854A4] text-white shadow-md'
-                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-                }`}
-              >
-                {name === 'ALL' ? 'All Events & Photos' : name}
-              </button>
-            ))}
+            <div className="flex items-center gap-2 flex-nowrap">
+              {eventNames.map((name) => (
+                <button
+                  key={name}
+                  onClick={() => setSelectedEvent(name)}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap cursor-pointer ${
+                    selectedEvent === name
+                      ? 'bg-[#3854A4] text-white shadow-md'
+                      : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                  }`}
+                >
+                  {name === 'ALL' ? 'All Events & Photos' : name}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Gallery Content Area */}
         {loading ? (
           <div className="py-24 text-center space-y-4">
             <div className="w-12 h-12 border-4 border-[#3854A4] border-t-transparent rounded-full animate-spin mx-auto" />
             <p className="text-xs font-bold uppercase tracking-wider text-gray-500">Loading Official Photo Gallery...</p>
+          </div>
+        ) : photos.length === 0 ? (
+          <div className="py-20 text-center bg-white rounded-3xl border border-dashed border-gray-300 max-w-2xl mx-auto p-8 sm:p-12 space-y-4 shadow-sm">
+            <div className="w-16 h-16 bg-[#3854A4]/10 text-[#3854A4] rounded-full flex items-center justify-center mx-auto">
+              <ImageIcon className="w-8 h-8" />
+            </div>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-[#E82024] bg-[#E82024]/10 px-3 py-1 rounded-full border border-[#E82024]/30 inline-block">
+              COMING SOON
+            </span>
+            <h3 className="font-bebas text-3xl sm:text-4xl text-gray-900 tracking-wider">
+              OFFICIAL GALLERY UPDATES COMING SOON
+            </h3>
+            <p className="text-xs sm:text-sm text-gray-600 max-w-md mx-auto leading-relaxed">
+              Official photos from North Premier Volleyball League Season 1 events, press conferences, and player trials will be published here by the administration.
+            </p>
           </div>
         ) : selectedEvent !== 'ALL' ? (
           /* Single Event View */
@@ -208,7 +173,7 @@ export default function Gallery() {
                   <div className="relative aspect-4/3 overflow-hidden bg-gray-100">
                     <img
                       src={photo.image_url}
-                      alt={photo.title || 'NPVL Event Photo'}
+                      alt={photo.title || photo.event_name || 'NPVL Event Photo'}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"
                     />
@@ -221,9 +186,15 @@ export default function Gallery() {
 
                   <div className="p-4 flex-1 flex flex-col justify-between space-y-2">
                     <div>
-                      <h3 className="font-bold text-sm text-gray-900 line-clamp-1 group-hover:text-[#3854A4] transition-colors">
-                        {photo.title || 'Official Event Photo'}
-                      </h3>
+                      {photo.title ? (
+                        <h3 className="font-bold text-sm text-gray-900 line-clamp-1 group-hover:text-[#3854A4] transition-colors">
+                          {photo.title}
+                        </h3>
+                      ) : (
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-[#3854A4] bg-blue-50 px-2 py-0.5 rounded-md inline-block">
+                          {photo.event_name || 'Event Photo'}
+                        </span>
+                      )}
                       {photo.caption && (
                         <p className="text-xs text-gray-500 line-clamp-2 mt-1 leading-snug">
                           {photo.caption}
@@ -277,7 +248,7 @@ export default function Gallery() {
                       <div className="relative aspect-4/3 overflow-hidden bg-gray-100">
                         <img
                           src={photo.image_url}
-                          alt={photo.title || 'NPVL Event Photo'}
+                          alt={photo.title || photo.event_name || 'NPVL Event Photo'}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           loading="lazy"
                         />
@@ -290,9 +261,15 @@ export default function Gallery() {
 
                       <div className="p-4 flex-1 flex flex-col justify-between space-y-2">
                         <div>
-                          <h3 className="font-bold text-sm text-gray-900 line-clamp-1 group-hover:text-[#3854A4] transition-colors">
-                            {photo.title || 'Official Event Photo'}
-                          </h3>
+                          {photo.title ? (
+                            <h3 className="font-bold text-sm text-gray-900 line-clamp-1 group-hover:text-[#3854A4] transition-colors">
+                              {photo.title}
+                            </h3>
+                          ) : (
+                            <span className="text-[11px] font-bold uppercase tracking-wider text-[#3854A4] bg-blue-50 px-2 py-0.5 rounded-md inline-block">
+                              {photo.event_name || 'Event Photo'}
+                            </span>
+                          )}
                           {photo.caption && (
                             <p className="text-xs text-gray-500 line-clamp-2 mt-1 leading-snug">
                               {photo.caption}
@@ -372,9 +349,11 @@ export default function Gallery() {
                 )}
               </div>
 
-              <h2 className="font-bebas text-2xl sm:text-3xl tracking-wide text-white">
-                {activePhoto.title}
-              </h2>
+              {activePhoto.title && (
+                <h2 className="font-bebas text-2xl sm:text-3xl tracking-wide text-white">
+                  {activePhoto.title}
+                </h2>
+              )}
 
               {activePhoto.caption && (
                 <p className="text-xs sm:text-sm text-gray-300 leading-relaxed font-sans">
