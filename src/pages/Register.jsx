@@ -166,7 +166,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
 
       // Razorpay Checkout Options
       const options = {
-        key: 'rzp_test_mock_keys_active',
+        key: 'rzp_live_TzthqYP8HlZXKw',
         amount: 500 * 100, // 500 INR in paise
         currency: 'INR',
         name: 'North Premier Volleyball League',
