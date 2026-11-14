@@ -11,7 +11,7 @@ import confetti from 'canvas-confetti';
 export default function Register({ onOpenContact, setCurrentPage }) {
   // Launch target: 16 Nov 2026 00:00:00 IST
   const targetDate = new Date('2026-11-16T00:00:00+05:30').getTime();
-  const [isLive, setIsLive] = useState(true); // TEMP: enabled for payment testing
+  const [isLive, setIsLive] = useState(false);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   // STRICT LOCK MODE: Form submission is strictly off until 16 Nov 2026
@@ -70,7 +70,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
       if (diff <= 0) {
         setIsLive(true);
       } else {
-        // setIsLive(false); // TEMP DISABLED: manual override active for testing
+        setIsLive(false);
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60)) / (1000 * 60));
