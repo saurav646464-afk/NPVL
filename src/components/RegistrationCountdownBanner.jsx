@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Timer, ArrowRight, Bell, Sparkles, CheckCircle2 } from 'lucide-react';
 
 export default function RegistrationCountdownBanner({ onNavigateRegister }) {
-  // Target: Monday 16/11/2026 00:00:00 IST
-  const targetDate = new Date('2026-11-16T00:00:00+05:30').getTime();
+  // Target: Monday 16/11/2026 07:00:00 IST (7 AM)
+  const targetDate = new Date('2026-11-16T07:00:00+05:30').getTime();
 
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
