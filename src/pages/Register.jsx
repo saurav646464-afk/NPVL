@@ -9,8 +9,8 @@ import { generateIdCardPDF } from '../lib/pdfGenerator';
 import confetti from 'canvas-confetti';
 
 export default function Register({ onOpenContact, setCurrentPage }) {
-  // Launch target: 16 Nov 2026 00:00:00 IST
-  const targetDate = new Date('2026-11-16T00:00:00+05:30').getTime();
+  // Launch target: 16 Nov 2026 07:00:00 IST (7 AM)
+  const targetDate = new Date('2026-11-16T07:00:00+05:30').getTime();
   const [isLive, setIsLive] = useState(false);
   const [adminOverride, setAdminOverride] = useState(false); // Controlled from Admin Panel via Supabase
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -84,17 +84,24 @@ export default function Register({ onOpenContact, setCurrentPage }) {
     return () => clearInterval(interval);
   }, [targetDate]);
 
-  // Fetch admin registration toggle from Supabase
+  // When timer expires → auto-open registration in Supabase
+  useEffect(() => {
+    if (isLive) {
+      supabase.from('site_settings')
+        .upsert({ key: 'registration_open', value: 'true' })
+        .then(() => setAdminOverride(true));
+    }
+  }, [isLive]);
+
+  // Poll Supabase every 30s for admin toggle changes
   useEffect(() => {
     const checkRegStatus = async () => {
       try {
         const { data } = await supabase.from('site_settings').select('value').eq('key', 'registration_open').single();
-        if (data?.value === 'true') setAdminOverride(true);
-        else setAdminOverride(false);
+        if (data) setAdminOverride(data.value === 'true');
       } catch (_) {}
     };
     checkRegStatus();
-    // Poll every 30 seconds to catch admin changes
     const interval = setInterval(checkRegStatus, 30000);
     return () => clearInterval(interval);
   }, []);
@@ -379,6 +386,45 @@ export default function Register({ onOpenContact, setCurrentPage }) {
   // -------------------------------------------------------------
   // VIEW: COUNTDOWN LOCKED BANNER (Before 16/11/2026)
   // -------------------------------------------------------------
+  // After 7 AM launch: admin closed registration
+  if (isLive && !adminOverride) {
+    return (
+      <div className="min-h-screen bg-white text-gray-900 pt-28 pb-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto text-center space-y-8">
+          <div className="space-y-4">
+            <span className="text-xs font-bold uppercase tracking-widest text-[#E82024] bg-[#E82024]/10 px-3.5 py-1 rounded-full border border-[#E82024]/30">
+              OFFICIAL REGISTRATION PORTAL
+            </span>
+            <h1 className="font-bebas text-5xl sm:text-7xl text-gray-900 tracking-wider uppercase leading-none">
+              PLAYER REGISTRATION <br />
+              <span className="text-[#E82024]">CURRENTLY CLOSED</span>
+            </h1>
+            <p className="text-sm text-gray-600 font-medium max-w-xl mx-auto leading-relaxed">
+              Player registrations for NPVL Season 1 are temporarily closed by the administration. Please check back soon or contact us for more information.
+            </p>
+          </div>
+          <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-3xl p-10 space-y-4">
+            <div className="w-16 h-16 bg-[#E82024]/10 rounded-full flex items-center justify-center mx-auto">
+              <svg className="w-8 h-8 text-[#E82024]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+            </div>
+            <p className="text-xs font-bold uppercase tracking-widest text-gray-500">Registration Status</p>
+            <div className="flex items-center justify-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-[#E82024]" />
+              <span className="font-bebas text-2xl text-[#E82024] tracking-wider">REGISTRATION IS CURRENTLY CLOSED</span>
+            </div>
+            <p className="text-xs text-gray-500">Our administrative team will announce the reopening date soon.</p>
+          </div>
+          <button
+            onClick={() => setCurrentPage('contact')}
+            className="bg-[#3854A4] hover:bg-[#2A4080] text-white font-bold uppercase tracking-wider px-8 py-3.5 rounded-xl shadow-md transition-all text-xs"
+          >
+            Contact NPVL Administration
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (!isLive && !adminOverride && !previewMode) {
     return (
       <div className="min-h-screen bg-white text-gray-900 pt-28 pb-20 px-4 sm:px-6 lg:px-8">
@@ -727,15 +773,48 @@ export default function Register({ onOpenContact, setCurrentPage }) {
                   onChange={handleInputChange}
                   className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] focus:ring-1 focus:ring-[#3854A4] rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none"
                 >
-                  <option value="">Select State</option>
-                  <option value="Uttar Pradesh">Uttar Pradesh</option>
-                  <option value="Punjab">Punjab</option>
+                  <option value="">Select State / UT</option>
+                  <optgroup label="── States ──────────────">
+                  <option value="Andhra Pradesh">Andhra Pradesh</option>
+                  <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                  <option value="Assam">Assam</option>
+                  <option value="Bihar">Bihar</option>
+                  <option value="Chhattisgarh">Chhattisgarh</option>
+                  <option value="Goa">Goa</option>
+                  <option value="Gujarat">Gujarat</option>
                   <option value="Haryana">Haryana</option>
-                  <option value="Delhi NCR">Delhi NCR</option>
-                  <option value="Rajasthan">Rajasthan</option>
-                  <option value="Uttarakhand">Uttarakhand</option>
                   <option value="Himachal Pradesh">Himachal Pradesh</option>
-                  <option value="Other">Other State</option>
+                  <option value="Jharkhand">Jharkhand</option>
+                  <option value="Karnataka">Karnataka</option>
+                  <option value="Kerala">Kerala</option>
+                  <option value="Madhya Pradesh">Madhya Pradesh</option>
+                  <option value="Maharashtra">Maharashtra</option>
+                  <option value="Manipur">Manipur</option>
+                  <option value="Meghalaya">Meghalaya</option>
+                  <option value="Mizoram">Mizoram</option>
+                  <option value="Nagaland">Nagaland</option>
+                  <option value="Odisha">Odisha</option>
+                  <option value="Punjab">Punjab</option>
+                  <option value="Rajasthan">Rajasthan</option>
+                  <option value="Sikkim">Sikkim</option>
+                  <option value="Tamil Nadu">Tamil Nadu</option>
+                  <option value="Telangana">Telangana</option>
+                  <option value="Tripura">Tripura</option>
+                  <option value="Uttar Pradesh">Uttar Pradesh</option>
+                  <option value="Uttarakhand">Uttarakhand</option>
+                  <option value="West Bengal">West Bengal</option>
+                  </optgroup>
+                  <optgroup label="── Union Territories ───">
+                  <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                  <option value="Chandigarh">Chandigarh</option>
+                  <option value="Dadra and Nagar Haveli">Dadra and Nagar Haveli</option>
+                  <option value="Daman and Diu">Daman and Diu</option>
+                  <option value="Delhi (NCT)">Delhi (NCT)</option>
+                  <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                  <option value="Ladakh">Ladakh</option>
+                  <option value="Lakshadweep">Lakshadweep</option>
+                  <option value="Puducherry">Puducherry</option>
+                  </optgroup>
                 </select>
               </div>
 
@@ -884,19 +963,34 @@ export default function Register({ onOpenContact, setCurrentPage }) {
                 </div>
               </div>
 
-              {/* Top Achievement */}
+              {/* Top Achievement — MANDATORY */}
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
-                  Top Achievement <span className="text-gray-400 font-normal">(Optional)</span>
+                  Top Achievement <span className="text-[#E82024]">*</span>
                 </label>
-                <input
-                  type="text"
+                <p className="text-[11px] text-gray-500 mb-2">Select your best volleyball achievement. If none, choose the first option.</p>
+                <select
+                  required
                   name="top_achievement"
                   value={formData.top_achievement}
                   onChange={handleInputChange}
-                  placeholder="e.g. Gold Medal in State Championship 2024 / Best Spiker"
                   className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] focus:ring-1 focus:ring-[#3854A4] rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none"
-                />
+                >
+                  <option value="">Select Achievement</option>
+                  <option value="No Special Achievement">No Special Achievement</option>
+                  <option value="District Level Participation">District Level Participation</option>
+                  <option value="District Level Medal">District Level Medal (Bronze / Silver / Gold)</option>
+                  <option value="State Level Participation">State Level Participation</option>
+                  <option value="State Level Medal">State Level Medal (Bronze / Silver / Gold)</option>
+                  <option value="National Level Participation">National Level Participation</option>
+                  <option value="National Level Medal">National Level Medal (Bronze / Silver / Gold)</option>
+                  <option value="University / College Champion">University / College Champion</option>
+                  <option value="Inter-School Champion">Inter-School Champion</option>
+                  <option value="Club / Academy Level">Club / Academy Level Achievement</option>
+                  <option value="Best Player / Best Spiker / Best Setter Award">Best Player / Best Spiker / Best Setter Award</option>
+                  <option value="International Level">International Level (Junior / Senior)</option>
+                  <option value="Other Achievement">Other Achievement</option>
+                </select>
               </div>
 
               {/* Certificate Upload + Details */}
