@@ -12,6 +12,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
   // Launch target: 16 Nov 2026 00:00:00 IST
   const targetDate = new Date('2026-11-16T00:00:00+05:30').getTime();
   const [isLive, setIsLive] = useState(false);
+  const [adminOverride, setAdminOverride] = useState(false); // Controlled from Admin Panel via Supabase
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   // STRICT LOCK MODE: Form submission is strictly off until 16 Nov 2026
@@ -83,6 +84,21 @@ export default function Register({ onOpenContact, setCurrentPage }) {
     return () => clearInterval(interval);
   }, [targetDate]);
 
+  // Fetch admin registration toggle from Supabase
+  useEffect(() => {
+    const checkRegStatus = async () => {
+      try {
+        const { data } = await supabase.from('site_settings').select('value').eq('key', 'registration_open').single();
+        if (data?.value === 'true') setAdminOverride(true);
+        else setAdminOverride(false);
+      } catch (_) {}
+    };
+    checkRegStatus();
+    // Poll every 30 seconds to catch admin changes
+    const interval = setInterval(checkRegStatus, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
   // Handle photo upload and convert to base64 for ID card preview/pdf
   const handlePhotoUpload = (e) => {
     const file = e.target.files[0];
@@ -127,7 +143,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
     e.preventDefault();
 
     // STRICT LOCK CHECK: Disallow submission before 16 Nov
-    if (!isLive) {
+    if (!isLive && !adminOverride) {
       alert('Registrations will officially open on Monday, 16 November 2026. Submissions are currently closed.');
       return;
     }
@@ -363,7 +379,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
   // -------------------------------------------------------------
   // VIEW: COUNTDOWN LOCKED BANNER (Before 16/11/2026)
   // -------------------------------------------------------------
-  if (!isLive && !previewMode) {
+  if (!isLive && !adminOverride && !previewMode) {
     return (
       <div className="min-h-screen bg-white text-gray-900 pt-28 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto space-y-12">

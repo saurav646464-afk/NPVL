@@ -55,6 +55,34 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('ALL');
 
+  // Registration Open/Close Toggle
+  const [registrationOpen, setRegistrationOpen] = useState(false);
+  const [regToggleLoading, setRegToggleLoading] = useState(false);
+
+  // Fetch registration status from Supabase
+  useEffect(() => {
+    const fetchRegStatus = async () => {
+      try {
+        const { data } = await supabase.from('site_settings').select('value').eq('key', 'registration_open').single();
+        if (data) setRegistrationOpen(data.value === 'true');
+      } catch (_) {}
+    };
+    fetchRegStatus();
+  }, []);
+
+  const handleToggleRegistration = async () => {
+    setRegToggleLoading(true);
+    const newVal = !registrationOpen;
+    try {
+      await supabase.from('site_settings').upsert({ key: 'registration_open', value: String(newVal) });
+      setRegistrationOpen(newVal);
+    } catch (_) {
+      alert('Failed to update registration status. Try again.');
+    } finally {
+      setRegToggleLoading(false);
+    }
+  };
+
   // Gallery Manager State (Bulk Upload & Optional Titles)
   const [galleryPhotos, setGalleryPhotos] = useState([]);
   const [galleryLoading, setGalleryLoading] = useState(false);
@@ -689,6 +717,21 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3 flex-wrap w-full sm:w-auto">
+
+            {/* Registration Toggle Button */}
+            <button
+              onClick={handleToggleRegistration}
+              disabled={regToggleLoading}
+              className={`text-xs font-bold px-3.5 py-2.5 rounded-xl flex items-center gap-2 transition-all border ${
+                registrationOpen
+                  ? 'bg-green-50 border-green-300 text-green-700 hover:bg-green-100'
+                  : 'bg-red-50 border-red-300 text-red-700 hover:bg-red-100'
+              } ${regToggleLoading ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+            >
+              <span className={`w-2.5 h-2.5 rounded-full ${registrationOpen ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
+              <span>{regToggleLoading ? 'Updating...' : registrationOpen ? 'Registration: OPEN' : 'Registration: CLOSED'}</span>
+            </button>
+
             <button
               onClick={() => setViewMode(viewMode === 'gallery' ? 'dashboard' : 'gallery')}
               className="bg-purple-50 border border-purple-200 hover:bg-purple-100 text-purple-700 text-xs font-bold px-3.5 py-2.5 rounded-xl flex items-center gap-1.5 transition-all"
