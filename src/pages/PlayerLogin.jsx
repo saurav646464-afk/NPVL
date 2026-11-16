@@ -19,7 +19,17 @@ export default function PlayerLogin({ setCurrentPage }) {
   const savePlayerRecord = (record) => {
     setPlayerRecord(record);
     if (record) {
-      sessionStorage.setItem('npvl_player_record', JSON.stringify(record));
+      try {
+        const safeRecord = { ...record };
+        if (safeRecord.medical_history) {
+          safeRecord.medical_history = { ...safeRecord.medical_history };
+          delete safeRecord.medical_history.photo_data_url;
+          delete safeRecord.medical_history.photo_base64;
+        }
+        sessionStorage.setItem('npvl_player_record', JSON.stringify(safeRecord));
+      } catch (e) {
+        console.warn('sessionStorage quota exceeded, continuing without local storage', e);
+      }
     } else {
       sessionStorage.removeItem('npvl_player_record');
     }

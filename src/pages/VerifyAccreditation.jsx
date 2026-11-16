@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, CheckCircle2, User, Award, Calendar, MapPin, AlertCircle, ArrowLeft } from 'lucide-react';
+import { ShieldCheck, CheckCircle2, User, Award, Calendar, MapPin, AlertCircle, ArrowLeft, Download } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { generateIdCardPDF } from '../lib/pdfGenerator';
 
 export default function VerifyAccreditation({ setCurrentPage }) {
   const [regId, setRegId] = useState('');
   const [candidate, setCandidate] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [downloading, setDownloading] = useState(false);
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -56,6 +58,23 @@ export default function VerifyAccreditation({ setCurrentPage }) {
       setError(true);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDownloadPdf = async () => {
+    if (!candidate) return;
+    setDownloading(true);
+    try {
+      const payload = { ...candidate };
+      if (!payload.photo_data_url && payload.medical_history?.photo_data_url) {
+        payload.photo_data_url = payload.medical_history.photo_data_url;
+      }
+      await generateIdCardPDF(payload);
+    } catch (err) {
+      console.error('Download error:', err);
+      alert('Could not generate ID card. Please try again.');
+    } finally {
+      setDownloading(false);
     }
   };
 
@@ -134,6 +153,18 @@ export default function VerifyAccreditation({ setCurrentPage }) {
                 <p className="text-[11px] text-gray-600 leading-relaxed">
                   This official accreditation pass is validated by North Premier Volleyball League Commissionerate. Candidate is authorized for trial venue access with original photo ID.
                 </p>
+              </div>
+
+              {/* Instant Download Official ID Pass Button */}
+              <div className="pt-1">
+                <button
+                  onClick={handleDownloadPdf}
+                  disabled={downloading}
+                  className="w-full bg-[#E82024] hover:bg-[#d0191c] text-white font-bebas text-xl sm:text-2xl tracking-wider py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all active:scale-98 flex items-center justify-center gap-3 cursor-pointer"
+                >
+                  <Download className="w-6 h-6" />
+                  <span>{downloading ? 'GENERATING OFFICIAL ID PASS...' : 'DOWNLOAD OFFICIAL ID PASS (PDF)'}</span>
+                </button>
               </div>
 
             </div>

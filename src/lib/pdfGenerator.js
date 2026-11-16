@@ -66,9 +66,12 @@ export async function generateIdCardPDF(data) {
   doc.setLineWidth(0.8);
   doc.roundedRect(photoX, photoY, photoW, photoH, 2, 2, 'D');
 
-  if (data.photo_data_url || data.photo_url) {
+  const photoSource = data.photo_data_url || data.photo_url || data.medical_history?.photo_data_url || data.medical_history?.photo_base64;
+
+  if (photoSource) {
     try {
-      doc.addImage(data.photo_data_url || data.photo_url, 'JPEG', photoX + 0.8, photoY + 0.8, photoW - 1.6, photoH - 1.6);
+      const format = (typeof photoSource === 'string' && photoSource.startsWith('data:image/png')) ? 'PNG' : 'JPEG';
+      doc.addImage(photoSource, format, photoX + 0.8, photoY + 0.8, photoW - 1.6, photoH - 1.6);
     } catch (_) {
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(8);
