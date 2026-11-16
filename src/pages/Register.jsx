@@ -48,6 +48,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
 
     // Volleyball Information
     player_category: 'New Player',
+    playing_position: 'Attacker', // 1- Attacker, 2- Blocker, 3- Universal, 4- Setter, 5- Libero
     top_achievement: '',
     certificate_year_place: '',
     current_team_dept: '',
@@ -235,7 +236,9 @@ export default function Register({ onOpenContact, setCurrentPage }) {
         player_category: formData.player_category,
         top_achievement: formData.top_achievement,
         certificate_year_place: formData.certificate_year_place,
-        current_team_dept: formData.current_team_dept,
+        current_team_dept: formData.current_team_dept
+          ? `Position: ${formData.playing_position || 'Attacker'} | ${formData.current_team_dept}`
+          : `Position: ${formData.playing_position || 'Attacker'}`,
         height_cms: formData.height_cms ? Number(formData.height_cms) : null,
         weight_kgs: formData.weight_kgs ? Number(formData.weight_kgs) : null,
         standing_reach_cms: formData.standing_reach_cms ? Number(formData.standing_reach_cms) : null,
@@ -246,6 +249,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
           account_password: formData.account_password || '123456',
           voluntary_payment_consent: formData.voluntary_payment_consent,
           photo_data_url: photoDataUrl || null,
+          playing_position: formData.playing_position || 'Attacker',
         },
         registration_id: regId,
         payment_status: 'pending', // NOT ACTIVE UNTIL PAYMENT CONFIRMED
@@ -285,6 +289,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
           city: formData.city || '',
           state: formData.state || '',
           player_category: formData.player_category || 'Player',
+          playing_position: formData.playing_position || 'Attacker',
           tshirt_size: formData.tshirt_size || 'M',
           aadhar_no: formData.aadhar_no || '',
           dob: formData.dob || '',
@@ -1026,7 +1031,47 @@ export default function Register({ onOpenContact, setCurrentPage }) {
               </h2>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-6">
+              {/* Playing Position Radio Grid */}
+              <div className="bg-blue-50/60 border border-blue-200 p-4 sm:p-5 rounded-2xl">
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#3854A4] mb-1">
+                  Playing Position <span className="text-[#E82024]">*</span> (Select Your Primary Role)
+                </label>
+                <p className="text-[11px] text-gray-500 mb-3">
+                  Apna main court playing position select karein (Attacker, Blocker, Universal, Setter, Libero).
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+                  {[
+                    { id: 'Attacker', label: 'Attacker / Spiker', icon: '⚡' },
+                    { id: 'Blocker', label: 'Middle Blocker', icon: '🛡️' },
+                    { id: 'Universal', label: 'Universal / Opposite', icon: '⭐' },
+                    { id: 'Setter', label: 'Setter', icon: '🎯' },
+                    { id: 'Libero', label: 'Libero', icon: '🔄' },
+                  ].map((pos) => (
+                    <label
+                      key={pos.id}
+                      className={`flex flex-col items-center justify-center p-3 rounded-xl border-2 cursor-pointer text-center transition-all ${
+                        formData.playing_position === pos.id
+                          ? 'bg-white border-[#3854A4] shadow-md ring-2 ring-[#3854A4]/20 text-[#3854A4] font-bold'
+                          : 'bg-white/80 border-gray-200 text-gray-700 hover:border-gray-300'
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="playing_position"
+                        value={pos.id}
+                        checked={formData.playing_position === pos.id}
+                        onChange={handleInputChange}
+                        className="sr-only"
+                      />
+                      <span className="text-xl mb-1">{pos.icon}</span>
+                      <span className="text-xs font-bold">{pos.id}</span>
+                      <span className="text-[10px] text-gray-500 line-clamp-1">{pos.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
               {/* Player Category Radio Grid */}
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-2">

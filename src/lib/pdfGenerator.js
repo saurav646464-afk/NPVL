@@ -136,11 +136,20 @@ export async function generateIdCardPDF(data) {
   doc.setFont('helvetica', 'normal');
   doc.text(`${data.dob || '-'} (${data.age || '-'}Y)`, 63, 92);
 
-  // Row 3: MOBILE
+  // Row 3: MOBILE (left) + ROLE/POSITION (right)
   doc.setFont('helvetica', 'bold');
   doc.text('MOBILE:', 8, 97.5);
   doc.setFont('helvetica', 'normal');
   doc.text(`${data.mobile_no || '-'}`, 24, 97.5);
+  const position = data.playing_position || data.medical_history?.playing_position || (data.current_team_dept?.match(/Position:\s*([^|]+)/)?.[1]?.trim());
+  if (position) {
+    doc.setFont('helvetica', 'bold');
+    doc.text('ROLE:', 50, 97.5);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(232, 32, 36);
+    doc.text(String(position).toUpperCase(), 61, 97.5);
+    doc.setTextColor(18, 28, 56);
+  }
 
   // Row 4: CITY (left) + STATE (right)
   doc.setFont('helvetica', 'bold');

@@ -562,28 +562,32 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
 
     const headers = [
       'Registration ID', 'Full Name', 'DOB', 'Age', 'Gender', 'Aadhaar',
-      'Mobile', 'Email', 'City', 'State', 'Category', 'Height (cm)', 'Jump Reach (cm)',
+      'Mobile', 'Email', 'City', 'State', 'Category', 'Position', 'Height (cm)', 'Jump Reach (cm)',
       'Payment Status', 'Amount', 'Date'
     ];
 
-    const rows = filteredList.map(p => [
-      p.registration_id || '',
-      `"${p.full_name || ''}"`,
-      p.dob || '',
-      p.age || '',
-      p.gender || '',
-      `"${p.aadhar_no || ''}"`,
-      `"${p.mobile_no || ''}"`,
-      p.email || '',
-      `"${p.city || ''}"`,
-      `"${p.state || ''}"`,
-      `"${p.player_category || ''}"`,
-      p.height_cms || '',
-      p.jump_reach_cms || '',
-      p.payment_status || '',
-      p.amount || 500,
-      p.created_at || ''
-    ]);
+    const rows = filteredList.map(p => {
+      const pos = p.playing_position || p.medical_history?.playing_position || (p.current_team_dept?.match(/Position:\s*([^|]+)/)?.[1]?.trim()) || '-';
+      return [
+        p.registration_id || '',
+        `"${p.full_name || ''}"`,
+        p.dob || '',
+        p.age || '',
+        p.gender || '',
+        `"${p.aadhar_no || ''}"`,
+        `"${p.mobile_no || ''}"`,
+        p.email || '',
+        `"${p.city || ''}"`,
+        `"${p.state || ''}"`,
+        `"${p.player_category || ''}"`,
+        `"${pos}"`,
+        p.height_cms || '',
+        p.jump_reach_cms || '',
+        p.payment_status || '',
+        p.amount || 500,
+        p.created_at ? new Date(p.created_at).toISOString() : ''
+      ];
+    });
 
     const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
     const encodedUri = encodeURI(csvContent);
@@ -1352,6 +1356,14 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
                         <span className="bg-blue-50 text-[#3854A4] border border-blue-200 px-2 py-0.5 rounded-full font-bold text-[10px]">
                           {player.player_category}
                         </span>
+                        {(() => {
+                          const pos = player.playing_position || player.medical_history?.playing_position || (player.current_team_dept?.match(/Position:\s*([^|]+)/)?.[1]?.trim());
+                          return pos ? (
+                            <span className="block mt-1 bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-full font-bold text-[9px] w-fit">
+                              🏐 {pos}
+                            </span>
+                          ) : null;
+                        })()}
                       </td>
                       <td className="p-4 text-gray-700">
                         {player.city}, {player.state}
