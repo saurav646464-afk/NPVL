@@ -45,12 +45,31 @@ export default function PlayerLogin({ setCurrentPage }) {
 
     try {
       const cleanInput = identifier.trim();
+      const digitsOnly = cleanInput.replace(/\D/g, '');
+      const last10 = digitsOnly.length >= 10 ? digitsOnly.slice(-10) : digitsOnly;
+      const cleanRegId = cleanInput.replace(/[^a-zA-Z0-9-]/g, '');
 
-      // Query Supabase by registration_id OR mobile_no OR aadhar_no
+      const queryParts = [
+        `email.ilike.${cleanInput}`,
+      ];
+
+      if (cleanRegId.length > 3) {
+        queryParts.push(`registration_id.ilike.%${cleanRegId}%`);
+      }
+
+      if (last10.length === 10) {
+        queryParts.push(`mobile_no.eq.${last10}`);
+        queryParts.push(`mobile_no.eq.+91${last10}`);
+        queryParts.push(`whatsapp_no.eq.${last10}`);
+      } else if (cleanInput.length > 0) {
+        queryParts.push(`mobile_no.eq.${cleanInput}`);
+      }
+
+      // Query Supabase by registration_id OR mobile_no OR email
       const { data, error } = await supabase
         .from('player_registrations')
         .select('*')
-        .or(`registration_id.eq.${cleanInput},mobile_no.eq.${cleanInput},aadhar_no.eq.${cleanInput}`)
+        .or(queryParts.join(','))
         .limit(1);
 
       if (error) {
