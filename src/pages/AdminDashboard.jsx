@@ -475,6 +475,7 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
           razorpay_order_id, razorpay_payment_id, razorpay_signature, amount,
           certificate_generated, id_card_generated, verification_status, tshirt_size
         `)
+        .eq('payment_status', 'paid')
         .order('created_at', { ascending: false });
 
       if (error) {
