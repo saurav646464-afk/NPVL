@@ -756,7 +756,10 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
   // -------------------------------------------------------------
   // AUTHENTICATED DASHBOARD VIEW
   // -------------------------------------------------------------
-  const totalRevenue = registrations.filter(r => r.payment_status === 'paid').length * 500;
+  const totalPaidCount = registrations.filter(r => r.payment_status === 'paid').length;
+  // 1 duplicate payment (Deepanshu - pay_U0hJGKDcNcsLhd) was refunded on Razorpay (-₹500)
+  const totalRefundAmount = 500;
+  const netRevenue = Math.max(0, (totalPaidCount * 500) - totalRefundAmount);
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 pt-24 pb-20 px-4 sm:px-6 lg:px-8">
@@ -1234,11 +1237,11 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
 
           <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm space-y-1">
             <div className="flex items-center justify-between text-gray-500">
-              <span className="text-xs font-bold uppercase tracking-wider">TOTAL REVENUE COLLECTED</span>
+              <span className="text-xs font-bold uppercase tracking-wider">NET REVENUE COLLECTED</span>
               <DollarSign className="w-5 h-5 text-green-600" />
             </div>
-            <div className="font-bebas text-4xl text-green-600">₹{totalRevenue.toLocaleString('en-IN')}</div>
-            <p className="text-[11px] text-gray-500">Verified via Razorpay (₹500/head)</p>
+            <div className="font-bebas text-4xl text-green-600">₹{netRevenue.toLocaleString('en-IN')}</div>
+            <p className="text-[11px] text-gray-500">Verified Razorpay Net (₹500 refund adjusted)</p>
           </div>
 
           <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm space-y-1">
