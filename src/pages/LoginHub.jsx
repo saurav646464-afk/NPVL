@@ -16,13 +16,27 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
   const [playerRecord, setPlayerRecord] = useState(() => {
     try {
       const saved = sessionStorage.getItem('npvl_player_record');
-      return saved ? JSON.parse(saved) : null;
+      const parsed = saved ? JSON.parse(saved) : null;
+      if (parsed && (parsed.full_name === 'REGISTERED PLAYER' || parsed.full_name === 'DEMO ATHLETE')) {
+        sessionStorage.removeItem('npvl_player_record');
+        return null;
+      }
+      return parsed;
     } catch {
       return null;
     }
   });
   const [viewMode, setViewMode] = useState(() => {
-    return sessionStorage.getItem('npvl_player_record') ? 'player_dashboard' : 'login';
+    try {
+      const saved = sessionStorage.getItem('npvl_player_record');
+      if (!saved || saved.includes('REGISTERED PLAYER') || saved.includes('DEMO ATHLETE')) {
+        sessionStorage.removeItem('npvl_player_record');
+        return 'login';
+      }
+      return 'player_dashboard';
+    } catch {
+      return 'login';
+    }
   });
 
   // Forgot password states
@@ -95,19 +109,33 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
           }
         }
 
-        // Extract photo from medical_history JSONB (where it's stored during registration)
+        // Extract photo from medical_history JSONB
         const photoFromDB = found.medical_history?.photo_data_url || found.photo_data_url || null;
-        const playerWithPhoto = { ...found, photo_data_url: photoFromDB };
+        
+        // Strip duplicate heavy medical_history from player record
+        const { medical_history, ...cleanRecord } = found;
+        const playerWithPhoto = { ...cleanRecord, photo_data_url: photoFromDB };
 
         setPlayerRecord(playerWithPhoto);
-        sessionStorage.setItem('npvl_player_record', JSON.stringify(playerWithPhoto));
+
+        // Safely set sessionStorage without crashing on large photos (>2MB browser quota)
+        try {
+          sessionStorage.setItem('npvl_player_record', JSON.stringify(playerWithPhoto));
+        } catch (storageErr) {
+          console.warn('Quota exceeded for photo, storing record without heavy base64 string:', storageErr);
+          try {
+            const { photo_data_url, ...storageOnly } = playerWithPhoto;
+            sessionStorage.setItem('npvl_player_record', JSON.stringify(storageOnly));
+          } catch (_) {}
+        }
+
         setViewMode('player_dashboard');
       } else {
         setErrorMsg('No player registration record found for this Mobile Number, Registration ID, or Email. Please check your details.');
       }
     } catch (err) {
       console.error('Login error:', err);
-      setErrorMsg('Network error. Please verify your connection.');
+      setErrorMsg(err.message || 'Error logging in. Please check your details.');
     } finally {
       setLoading(false);
     }
