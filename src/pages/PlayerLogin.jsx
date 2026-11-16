@@ -50,25 +50,7 @@ export default function PlayerLogin({ setCurrentPage }) {
       if (data && data.length > 0) {
         savePlayerRecord(data[0]);
       } else {
-        // Fallback for demo mock
-        if (cleanInput.startsWith('NPVL') || cleanInput.length === 10) {
-          savePlayerRecord({
-            full_name: 'DEMO ATHLETE',
-            registration_id: cleanInput,
-            dob: '2004-05-15',
-            age: '22',
-            player_category: 'National Player',
-            city: 'Varanasi',
-            state: 'Uttar Pradesh',
-            aadhar_no: 'XXXXXXXX1234',
-            height_cms: 178,
-            jump_reach_cms: 285,
-            payment_status: 'paid',
-            created_at: new Date().toISOString(),
-          });
-        } else {
-          setErrorMessage('No registration record found matching this Mobile Number or Registration ID. Please verify your details.');
-        }
+        setErrorMessage('No registration record found matching this Mobile Number or Registration ID. Please verify your details.');
       }
     } catch (err) {
       console.error('Login query error:', err);

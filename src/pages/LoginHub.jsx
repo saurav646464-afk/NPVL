@@ -58,10 +58,24 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
 
     // 2. Otherwise: Check PLAYER / CANDIDATE in Supabase Database
     try {
+      const cleanInput = identifier.trim();
+      const digitsOnly = cleanInput.replace(/\D/g, '');
+      const queryParts = [
+        `registration_id.ilike.${cleanInput}`,
+        `email.ilike.${cleanInput}`,
+      ];
+
+      if (digitsOnly.length === 10) {
+        queryParts.push(`mobile_no.eq.${digitsOnly}`);
+        queryParts.push(`mobile_no.eq.+91${digitsOnly}`);
+      } else if (digitsOnly.length > 0) {
+        queryParts.push(`mobile_no.eq.${cleanInput}`);
+      }
+
       const { data, error } = await supabase
         .from('player_registrations')
         .select('*')
-        .or(`registration_id.eq.${identifier.trim()},mobile_no.eq.${identifier.trim()},email.eq.${identifier.trim()}`)
+        .or(queryParts.join(','))
         .limit(1);
 
       if (error) {
@@ -74,9 +88,9 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
 
         // If candidate has a set password, verify it
         if (savedPassword) {
-          if (password !== savedPassword) {
+          if (password.trim() !== savedPassword.trim()) {
             setLoading(false);
-            setErrorMsg('Incorrect password. Please verify your password or click Forgot Password.');
+            setErrorMsg('Incorrect password. Please verify your password or contact NPVL administration.');
             return;
           }
         }
@@ -89,28 +103,7 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
         sessionStorage.setItem('npvl_player_record', JSON.stringify(playerWithPhoto));
         setViewMode('player_dashboard');
       } else {
-        // Fallback demo mock if test id
-        if (identifier.trim().startsWith('NPVL') || identifier.trim().length === 10) {
-          const mockRecord = {
-            full_name: 'REGISTERED PLAYER',
-            registration_id: identifier.trim().toUpperCase(),
-            dob: '2004-05-15',
-            age: '22',
-            player_category: 'National Player',
-            city: 'Lucknow',
-            state: 'Uttar Pradesh',
-            aadhar_no: 'XXXXXXXX1234',
-            height_cms: 180,
-            jump_reach_cms: 290,
-            payment_status: 'paid',
-            created_at: new Date().toISOString(),
-          };
-          setPlayerRecord(mockRecord);
-          sessionStorage.setItem('npvl_player_record', JSON.stringify(mockRecord));
-          setViewMode('player_dashboard');
-        } else {
-          setErrorMsg('No user account or registration found for this Email, Mobile, or Registration ID.');
-        }
+        setErrorMsg('No player registration record found for this Mobile Number, Registration ID, or Email. Please check your details.');
       }
     } catch (err) {
       console.error('Login error:', err);
