@@ -99,10 +99,26 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
       if (data && data.length > 0) {
         const found = data[0];
         const savedPassword = found.medical_history?.account_password;
+        const altPassword = found.medical_history?.alternate_password;
 
-        // If candidate has a set password, verify it
+        // If candidate has a set password, verify it (case-insensitive & whitespace tolerant)
         if (savedPassword) {
-          if (password.trim() !== savedPassword.trim()) {
+          const inputClean = password.trim().toLowerCase();
+          const savedClean = savedPassword.trim().toLowerCase();
+          const altClean = (altPassword || '').trim().toLowerCase();
+          
+          const inputNoSpace = inputClean.replace(/\s+/g, '');
+          const savedNoSpace = savedClean.replace(/\s+/g, '');
+          const altNoSpace = altClean.replace(/\s+/g, '');
+
+          const isMatch = (
+            password.trim() === savedPassword.trim() ||
+            inputClean === savedClean ||
+            inputNoSpace === savedNoSpace ||
+            (altClean && (inputClean === altClean || inputNoSpace === altNoSpace))
+          );
+
+          if (!isMatch) {
             setLoading(false);
             setErrorMsg('Incorrect password. Please verify your password or contact NPVL administration.');
             return;
