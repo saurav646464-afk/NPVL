@@ -109,6 +109,7 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
         const altPassword = found.medical_history?.alternate_password;
 
         // If candidate has a set password, verify it (case-insensitive & whitespace tolerant)
+        // Also supports DOB (e.g. YYYY-MM-DD or birth year like 2005) as emergency fallback!
         if (savedPassword) {
           const inputClean = password.trim().toLowerCase();
           const savedClean = savedPassword.trim().toLowerCase();
@@ -118,16 +119,24 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
           const savedNoSpace = savedClean.replace(/\s+/g, '');
           const altNoSpace = altClean.replace(/\s+/g, '');
 
+          const dob = (found.dob || '').trim();
+          const birthYear = dob.slice(0, 4);
+          const dobMatches = (
+            (dob && inputNoSpace === dob.replace(/\D/g, '')) ||
+            (birthYear && inputNoSpace === birthYear)
+          );
+
           const isMatch = (
             password.trim() === savedPassword.trim() ||
             inputClean === savedClean ||
             inputNoSpace === savedNoSpace ||
-            (altClean && (inputClean === altClean || inputNoSpace === altNoSpace))
+            (altClean && (inputClean === altClean || inputNoSpace === altNoSpace)) ||
+            dobMatches
           );
 
           if (!isMatch) {
             setLoading(false);
-            setErrorMsg('Incorrect password. Please verify your password or contact NPVL administration.');
+            setErrorMsg('Incorrect password. (Tip: You can use your Birth Year e.g. 2005 as password, or use the Quick Pass Download button below).');
             return;
           }
         }
@@ -159,6 +168,73 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
     } catch (err) {
       console.error('Login error:', err);
       setErrorMsg(err.message || 'Error logging in. Please check your details.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // -------------------------------------------------------------
+  // QUICK PASS DOWNLOAD (NO PASSWORD REQUIRED FOR PLAYERS)
+  // -------------------------------------------------------------
+  const handleQuickPassDownload = async (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    setErrorMsg('');
+
+    if (!identifier.trim()) {
+      setErrorMsg('Please enter your Mobile Number or Registration ID in the box above.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const cleanInput = identifier.trim();
+      const digitsOnly = cleanInput.replace(/\D/g, '');
+      const last10 = digitsOnly.length >= 10 ? digitsOnly.slice(-10) : digitsOnly;
+      const cleanRegId = cleanInput.replace(/[^a-zA-Z0-9-]/g, '');
+
+      const queryParts = [
+        `email.ilike.${cleanInput}`,
+      ];
+
+      if (cleanRegId.length > 3) {
+        queryParts.push(`registration_id.ilike.%${cleanRegId}%`);
+      }
+
+      if (last10.length === 10) {
+        queryParts.push(`mobile_no.eq.${last10}`);
+        queryParts.push(`mobile_no.eq.+91${last10}`);
+        queryParts.push(`whatsapp_no.eq.${last10}`);
+      } else if (cleanInput.length > 0) {
+        queryParts.push(`mobile_no.eq.${cleanInput}`);
+      }
+
+      const { data, error } = await supabase
+        .from('player_registrations')
+        .select('*')
+        .or(queryParts.join(','))
+        .limit(1);
+
+      if (error) throw error;
+
+      if (data && data.length > 0) {
+        const found = data[0];
+        const photoFromDB = found.medical_history?.photo_data_url || found.photo_data_url || null;
+        const { medical_history, ...cleanRecord } = found;
+        const playerWithPhoto = { ...cleanRecord, photo_data_url: photoFromDB };
+
+        setPlayerRecord(playerWithPhoto);
+        try {
+          const { photo_data_url, ...storageOnly } = playerWithPhoto;
+          sessionStorage.setItem('npvl_player_record', JSON.stringify(storageOnly));
+        } catch (_) {}
+
+        setViewMode('player_dashboard');
+      } else {
+        setErrorMsg('No player record found for this Mobile Number or Registration ID. Please check your details.');
+      }
+    } catch (err) {
+      console.error('Quick pass error:', err);
+      setErrorMsg('Unable to retrieve pass. Please check your details or network connection.');
     } finally {
       setLoading(false);
     }
@@ -372,9 +448,30 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
                 disabled={loading}
                 className="w-full red-sweep-btn bg-[#3854A4] hover:bg-[#2A4080] text-white font-bebas text-xl tracking-wider py-3.5 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span>{loading ? 'AUTHENTICATING...' : 'SIGN IN'}</span>
+                <span>{loading ? 'AUTHENTICATING...' : 'SIGN IN WITH PASSWORD'}</span>
                 <ArrowRight className="w-5 h-5" />
               </button>
+
+              {/* Divider */}
+              <div className="relative flex py-2 items-center">
+                <div className="flex-grow border-t border-gray-200"></div>
+                <span className="flex-shrink mx-3 text-[10px] font-bold uppercase tracking-wider text-gray-400">OR ATHLETE PASS DOWNLOAD</span>
+                <div className="flex-grow border-t border-gray-200"></div>
+              </div>
+
+              {/* Quick ID Pass Download without Password */}
+              <button
+                type="button"
+                onClick={handleQuickPassDownload}
+                disabled={loading}
+                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bebas text-lg tracking-wider py-3.5 rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <Download className="w-5 h-5" />
+                <span>DOWNLOAD ID PASS (NO PASSWORD REQUIRED)</span>
+              </button>
+              <p className="text-[11px] text-gray-400 text-center leading-tight">
+                Forgot password? Just enter your Mobile Number or Registration ID above and click the green button.
+              </p>
 
             </form>
           )}
