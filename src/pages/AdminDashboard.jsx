@@ -52,6 +52,7 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
   // Dashboard Table & Analytics
   const [registrations, setRegistrations] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [downloadingId, setDownloadingId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('ALL');
 
@@ -464,12 +465,20 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
     try {
       const { data, error } = await supabase
         .from('player_registrations')
-        .select('*')
+        .select(`
+          id, created_at, full_name, dob, age, gender, nationality, aadhar_no,
+          mobile_no, whatsapp_no, email, postal_address, city, pincode, state, country,
+          instagram_id, facebook_id, photo_url, employment_status, institution_name,
+          player_category, top_achievement, certificate_url, certificate_year_place,
+          current_team_dept, height_cms, weight_kgs, standing_reach_cms, jump_reach_cms,
+          stamp_paper_url, declaration_agreed, registration_id, payment_status,
+          razorpay_order_id, razorpay_payment_id, razorpay_signature, amount,
+          certificate_generated, id_card_generated, verification_status, tshirt_size
+        `)
         .order('created_at', { ascending: false });
 
       if (error) {
         console.warn('Supabase fetch note:', error.message);
-        setRegistrations([]);
       } else {
         setRegistrations(data || []);
       }
@@ -477,6 +486,34 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
       console.error('Fetch error:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDownloadIdCard = async (player) => {
+    const regId = player.registration_id || player.id;
+    setDownloadingId(regId);
+    try {
+      let playerWithPhoto = { ...player };
+      if (!playerWithPhoto.photo_data_url && !playerWithPhoto.photo_url) {
+        try {
+          const { data } = await supabase
+            .from('player_registrations')
+            .select('medical_history')
+            .eq('id', player.id)
+            .single();
+          if (data?.medical_history?.photo_data_url) {
+            playerWithPhoto.photo_data_url = data.medical_history.photo_data_url;
+          }
+        } catch (e) {
+          console.warn('Photo fetch note:', e);
+        }
+      }
+      await generateIdCardPDF(playerWithPhoto);
+    } catch (err) {
+      console.error('ID card generation error:', err);
+      alert('Could not generate ID card. Please try again.');
+    } finally {
+      setDownloadingId(null);
     }
   };
 
@@ -1291,12 +1328,13 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
                       </td>
                       <td className="p-4 text-right">
                         <button
-                          onClick={() => generateIdCardPDF(player)}
+                          onClick={() => handleDownloadIdCard(player)}
+                          disabled={downloadingId === (player.registration_id || player.id)}
                           title="Download Player ID Pass"
-                          className="bg-red-50 hover:bg-red-100 text-[#E82024] px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 ml-auto cursor-pointer"
+                          className="bg-red-50 hover:bg-red-100 disabled:opacity-50 text-[#E82024] px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 ml-auto cursor-pointer"
                         >
                           <Download className="w-3.5 h-3.5" />
-                          <span>Player ID Card</span>
+                          <span>{downloadingId === (player.registration_id || player.id) ? 'Generating...' : 'Player ID Card'}</span>
                         </button>
                       </td>
                     </tr>

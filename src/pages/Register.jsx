@@ -106,14 +106,39 @@ export default function Register({ onOpenContact, setCurrentPage }) {
     return () => clearInterval(interval);
   }, []);
 
-  // Handle photo upload and convert to base64 for ID card preview/pdf
+  // Handle photo upload and convert to lightweight optimized base64 for ID card preview/pdf
   const handlePhotoUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
       setPhotoFile(file);
       const reader = new FileReader();
       reader.onload = (event) => {
-        setPhotoDataUrl(event.target.result);
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const maxDim = 500;
+          let w = img.width;
+          let h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) {
+              h = Math.round((h * maxDim) / w);
+              w = maxDim;
+            } else {
+              w = Math.round((w * maxDim) / h);
+              h = maxDim;
+            }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const compressed = canvas.toDataURL('image/jpeg', 0.82);
+          setPhotoDataUrl(compressed);
+        };
+        img.onerror = () => {
+          setPhotoDataUrl(event.target.result);
+        };
+        img.src = event.target.result;
       };
       reader.readAsDataURL(file);
     }
