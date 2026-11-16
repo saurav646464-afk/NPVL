@@ -84,16 +84,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
     return () => clearInterval(interval);
   }, [targetDate]);
 
-  // When timer expires → auto-open registration in Supabase
-  useEffect(() => {
-    if (isLive) {
-      supabase.from('site_settings')
-        .upsert({ key: 'registration_open', value: 'true' })
-        .then(() => setAdminOverride(true));
-    }
-  }, [isLive]);
-
-  // Poll Supabase every 30s for admin toggle changes
+  // Fetch admin registration toggle from Supabase
   useEffect(() => {
     const checkRegStatus = async () => {
       try {
@@ -235,16 +226,8 @@ export default function Register({ onOpenContact, setCurrentPage }) {
           email: formData.email || '',
           city: formData.city || '',
           state: formData.state || '',
-          pincode: formData.pincode || '',
           player_category: formData.player_category || 'Player',
-          gender: formData.gender || 'Male',
-          dob: formData.dob || '',
-          age: formData.age ? String(formData.age) : '',
-          height_cms: formData.height_cms ? String(formData.height_cms) : '',
-          weight_kgs: formData.weight_kgs ? String(formData.weight_kgs) : '',
           tshirt_size: formData.tshirt_size || 'M',
-          top_achievement: formData.top_achievement || '',
-          current_team_dept: formData.current_team_dept || '',
         },
         theme: {
           color: '#3854A4',
