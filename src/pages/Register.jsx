@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { 
   User, Calendar, Phone, Mail, MapPin, Award, 
   Upload, FileCheck, CheckCircle2, AlertTriangle, 
-  Download, ArrowRight, ShieldCheck, Clock, Sparkles
+  Download, ArrowRight, ShieldCheck, Clock, Sparkles,
+  Eye, EyeOff
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { generateIdCardPDF } from '../lib/pdfGenerator';
@@ -19,6 +20,9 @@ export default function Register({ onOpenContact, setCurrentPage }) {
   const [previewMode, setPreviewMode] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [completedData, setCompletedData] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   // Form State
   const [formData, setFormData] = useState({
@@ -178,6 +182,11 @@ export default function Register({ onOpenContact, setCurrentPage }) {
 
     if (!formData.account_password || formData.account_password.length < 6) {
       alert('Please create an account password of at least 6 characters.');
+      return;
+    }
+
+    if (formData.account_password !== confirmPassword) {
+      alert('Passwords do not match! Please verify your password and confirm password.');
       return;
     }
 
@@ -905,22 +914,64 @@ export default function Register({ onOpenContact, setCurrentPage }) {
               </div>
 
               {/* Set Account Password for Login */}
-              <div className="sm:col-span-2 bg-gradient-to-r from-blue-50/70 to-red-50/40 border border-blue-200 p-4 rounded-2xl">
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#3854A4] mb-1">
-                  Create Account Password (For Candidate Login & ID Card Retrieval) *
-                </label>
-                <p className="text-[11px] text-gray-500 mb-2">
-                  Create a password so you can log in later via the website to access your profile and re-download your Player ID Card anytime.
-                </p>
-                <input
-                  type="password"
-                  required
-                  name="account_password"
-                  value={formData.account_password}
-                  onChange={handleInputChange}
-                  placeholder="Create your login password (min 6 characters)..."
-                  className="w-full bg-white border border-gray-300 focus:border-[#3854A4] focus:ring-1 focus:ring-[#3854A4] rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none"
-                />
+              <div className="sm:col-span-2 bg-gradient-to-r from-blue-50/70 to-red-50/40 border border-blue-200 p-4 sm:p-5 rounded-2xl space-y-4">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#3854A4] mb-1">
+                    Create Account Password (For Candidate Login & ID Card Retrieval) *
+                  </label>
+                  <p className="text-[11px] text-gray-500 mb-2">
+                    Create a password so you can log in later via the website to access your profile and re-download your Player ID Card anytime.
+                  </p>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      required
+                      name="account_password"
+                      value={formData.account_password}
+                      onChange={handleInputChange}
+                      placeholder="Create your login password (min 6 characters)..."
+                      className="w-full bg-white border border-gray-300 focus:border-[#3854A4] focus:ring-1 focus:ring-[#3854A4] rounded-xl pl-4 pr-11 py-3 text-sm text-gray-900 focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3.5 top-3.5 text-gray-400 hover:text-gray-700 transition-colors p-0.5 cursor-pointer"
+                      title={showPassword ? 'Hide Password' : 'Show Password'}
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Confirm Password */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
+                    Confirm Password *
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      required
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="Re-enter your password to confirm..."
+                      className="w-full bg-white border border-gray-300 focus:border-[#3854A4] focus:ring-1 focus:ring-[#3854A4] rounded-xl pl-4 pr-11 py-3 text-sm text-gray-900 focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-3.5 top-3.5 text-gray-400 hover:text-gray-700 transition-colors p-0.5 cursor-pointer"
+                      title={showConfirmPassword ? 'Hide Password' : 'Show Password'}
+                    >
+                      {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                  {confirmPassword && formData.account_password && (
+                    <p className={`text-[11px] font-bold mt-1.5 ${formData.account_password === confirmPassword ? 'text-green-600' : 'text-red-600'}`}>
+                      {formData.account_password === confirmPassword ? '✓ Passwords match' : '✕ Passwords do not match'}
+                    </p>
+                  )}
+                </div>
               </div>
 
               {/* Photo Upload */}
