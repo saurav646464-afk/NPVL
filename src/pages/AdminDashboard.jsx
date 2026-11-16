@@ -1303,6 +1303,7 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
             <table className="w-full text-left text-xs">
               <thead className="bg-gray-50 border-b border-gray-200 text-gray-600 font-bold uppercase tracking-wider">
                 <tr>
+                  <th className="p-4">Reg Time (IST)</th>
                   <th className="p-4">Reg ID</th>
                   <th className="p-4">Candidate Name</th>
                   <th className="p-4">Category</th>
@@ -1316,13 +1317,28 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
               <tbody className="divide-y divide-gray-100">
                 {filteredList.length === 0 ? (
                   <tr>
-                    <td colSpan={8} className="p-8 text-center text-gray-400">
+                    <td colSpan={9} className="p-8 text-center text-gray-400">
                       No candidate registrations found. Once users register on `/register`, they will appear here in real-time.
                     </td>
                   </tr>
                 ) : (
-                  filteredList.map((player) => (
+                  filteredList.map((player, index) => (
                     <tr key={player.id || player.registration_id} className="hover:bg-gray-50/80 transition-colors">
+                      <td className="p-4 whitespace-nowrap">
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-mono font-bold text-gray-900 text-xs">
+                            {player.created_at ? new Date(player.created_at).toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', hour12: true }).toUpperCase() : '-'}
+                          </span>
+                          {index === 0 && (
+                            <span className="bg-emerald-100 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-emerald-300 animate-pulse">
+                              LATEST
+                            </span>
+                          )}
+                        </div>
+                        <span className="text-[10px] text-gray-400 block font-medium">
+                          {player.created_at ? new Date(player.created_at).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', day: '2-digit', month: 'short' }) : ''}
+                        </span>
+                      </td>
                       <td className="p-4 font-mono font-bold text-[#3854A4]">
                         {player.registration_id}
                       </td>
