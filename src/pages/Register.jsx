@@ -228,6 +228,24 @@ export default function Register({ onOpenContact, setCurrentPage }) {
           email: formData.email,
           contact: formData.mobile_no,
         },
+        notes: {
+          registration_id: regId,
+          full_name: formData.full_name || '',
+          mobile_no: formData.mobile_no || '',
+          email: formData.email || '',
+          city: formData.city || '',
+          state: formData.state || '',
+          pincode: formData.pincode || '',
+          player_category: formData.player_category || 'Player',
+          gender: formData.gender || 'Male',
+          dob: formData.dob || '',
+          age: formData.age ? String(formData.age) : '',
+          height_cms: formData.height_cms ? String(formData.height_cms) : '',
+          weight_kgs: formData.weight_kgs ? String(formData.weight_kgs) : '',
+          tshirt_size: formData.tshirt_size || 'M',
+          top_achievement: formData.top_achievement || '',
+          current_team_dept: formData.current_team_dept || '',
+        },
         theme: {
           color: '#3854A4',
         },
@@ -301,12 +319,11 @@ export default function Register({ onOpenContact, setCurrentPage }) {
         id_card_generated: true,
       };
 
-      const { data: insertedData, error } = await supabase.from('player_registrations').insert([payload]).select();
+      const { error } = await supabase.from('player_registrations').insert([payload]);
       if (error) {
         console.error('Supabase insert error details:', error);
-        alert(`Database notice: ${error.message}`);
       } else {
-        console.log('Successfully saved to Supabase:', insertedData);
+        console.log('Successfully saved to Supabase payload');
       }
 
       setCompletedData({
