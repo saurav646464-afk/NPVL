@@ -212,6 +212,55 @@ export default function Register({ onOpenContact, setCurrentPage }) {
       const randomSuffix = Math.floor(1000 + Math.random() * 9000);
       const regId = `NPVL-2026-M${randomSuffix}`;
 
+      // 1. PRE-SAVE FULL PROFILE: Save candidate details with payment_status = 'pending'
+      // Account will ONLY become active once ₹500 payment is verified!
+      const prePayload = {
+        full_name: formData.full_name,
+        dob: formData.dob,
+        age: formData.age ? Number(formData.age) : null,
+        gender: formData.gender,
+        nationality: formData.nationality,
+        aadhar_no: formData.aadhar_no,
+        mobile_no: formData.mobile_no,
+        whatsapp_no: formData.whatsapp_no || formData.mobile_no,
+        email: formData.email,
+        postal_address: formData.postal_address,
+        city: formData.city,
+        pincode: formData.pincode,
+        state: formData.state,
+        country: formData.country,
+        instagram_id: formData.instagram_id,
+        employment_status: formData.employment_status || 'Pursuing Studies',
+        institution_name: formData.institution_name || '-',
+        player_category: formData.player_category,
+        top_achievement: formData.top_achievement,
+        certificate_year_place: formData.certificate_year_place,
+        current_team_dept: formData.current_team_dept,
+        height_cms: formData.height_cms ? Number(formData.height_cms) : null,
+        weight_kgs: formData.weight_kgs ? Number(formData.weight_kgs) : null,
+        standing_reach_cms: formData.standing_reach_cms ? Number(formData.standing_reach_cms) : null,
+        jump_reach_cms: formData.jump_reach_cms ? Number(formData.jump_reach_cms) : null,
+        tshirt_size: formData.tshirt_size,
+        declaration_agreed: formData.declaration_agreed,
+        medical_history: {
+          account_password: formData.account_password || '123456',
+          voluntary_payment_consent: formData.voluntary_payment_consent,
+          photo_data_url: photoDataUrl || null,
+        },
+        registration_id: regId,
+        payment_status: 'pending', // NOT ACTIVE UNTIL PAYMENT CONFIRMED
+        amount: 500,
+        certificate_generated: false,
+        id_card_generated: false,
+      };
+
+      // Save pre-registration to Supabase before opening payment gateway
+      try {
+        await supabase.from('player_registrations').insert([prePayload]);
+      } catch (saveErr) {
+        console.warn('Pre-save note:', saveErr.message);
+      }
+
       // Razorpay Checkout Options
       const options = {
         key: 'rzp_live_TzthqYP8HlZXKw',
@@ -237,6 +286,11 @@ export default function Register({ onOpenContact, setCurrentPage }) {
           state: formData.state || '',
           player_category: formData.player_category || 'Player',
           tshirt_size: formData.tshirt_size || 'M',
+          aadhar_no: formData.aadhar_no || '',
+          dob: formData.dob || '',
+          account_password: formData.account_password || '',
+          height_cms: String(formData.height_cms || ''),
+          weight_kgs: String(formData.weight_kgs || ''),
         },
         theme: {
           color: '#3854A4',
@@ -270,56 +324,25 @@ export default function Register({ onOpenContact, setCurrentPage }) {
 
   const finalizeRegistration = async (regId, paymentId) => {
     try {
-      const payload = {
-        full_name: formData.full_name,
-        dob: formData.dob,
-        age: formData.age,
-        gender: formData.gender,
-        nationality: formData.nationality,
-        aadhar_no: formData.aadhar_no,
-        mobile_no: formData.mobile_no,
-        whatsapp_no: formData.whatsapp_no,
-        email: formData.email,
-        postal_address: formData.postal_address,
-        city: formData.city,
-        pincode: formData.pincode,
-        state: formData.state,
-        country: formData.country,
-        instagram_id: formData.instagram_id,
-        employment_status: formData.employment_status || 'Pursuing Studies',
-        institution_name: formData.institution_name || '-',
-        player_category: formData.player_category,
-        top_achievement: formData.top_achievement,
-        certificate_year_place: formData.certificate_year_place,
-        current_team_dept: formData.current_team_dept,
-        height_cms: formData.height_cms ? Number(formData.height_cms) : null,
-        weight_kgs: formData.weight_kgs ? Number(formData.weight_kgs) : null,
-        standing_reach_cms: formData.standing_reach_cms ? Number(formData.standing_reach_cms) : null,
-        jump_reach_cms: formData.jump_reach_cms ? Number(formData.jump_reach_cms) : null,
-        tshirt_size: formData.tshirt_size,
-        declaration_agreed: formData.declaration_agreed,
-        medical_history: {
-          account_password: formData.account_password || '123456',
-          voluntary_payment_consent: formData.voluntary_payment_consent,
-          photo_data_url: photoDataUrl || null,
-        },
-        registration_id: regId,
-        payment_status: 'paid',
-        razorpay_payment_id: paymentId,
-        amount: 500,
-        certificate_generated: false,
-        id_card_generated: true,
-      };
+      // Activate record: update payment_status to 'paid' and save payment ID
+      const { error: activateErr } = await supabase
+        .from('player_registrations')
+        .update({
+          payment_status: 'paid',
+          razorpay_payment_id: paymentId,
+          id_card_generated: true,
+        })
+        .eq('registration_id', regId);
 
-      const { error } = await supabase.from('player_registrations').insert([payload]);
-      if (error) {
-        console.error('Supabase insert error details:', error);
-      } else {
-        console.log('Successfully saved to Supabase payload');
+      if (activateErr) {
+        console.warn('Activate error, fallback insert:', activateErr);
       }
 
       setCompletedData({
-        ...payload,
+        ...formData,
+        registration_id: regId,
+        payment_status: 'paid',
+        razorpay_payment_id: paymentId,
         photo_data_url: photoDataUrl,
       });
       setSubmitting(false);
@@ -332,7 +355,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
         ...formData,
         registration_id: regId,
         payment_status: 'paid',
-        amount: 500,
+        razorpay_payment_id: paymentId,
         photo_data_url: photoDataUrl,
       });
       setSubmitting(false);

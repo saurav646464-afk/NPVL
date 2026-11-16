@@ -57,19 +57,20 @@ export default async function handler(req, res) {
       }
 
       if (existingRecord) {
-        // Record already exists, ensure payment_status is 'paid'
+        // Record pre-saved by client: Activate account with payment_status = 'paid'
         await supabase
           .from('player_registrations')
           .update({
             payment_status: 'paid',
             razorpay_payment_id: paymentId,
             amount: amount,
+            id_card_generated: true,
           })
           .eq('id', existingRecord.id);
 
-        console.log(`[Razorpay Webhook] Updated existing record: ${existingRecord.registration_id}`);
+        console.log(`[Razorpay Webhook] Successfully activated pre-saved record: ${existingRecord.registration_id}`);
       } else {
-        // Player closed browser before redirect! Auto-create registration from notes!
+        // Fallback: If pre-save had failed, recover from notes with candidate's actual password
         const finalRegId = regId || `NPVL-2026-M${Math.floor(1000 + Math.random() * 9000)}`;
 
         const newPlayerPayload = {
@@ -107,7 +108,7 @@ export default async function handler(req, res) {
           id_card_generated: true,
           verification_status: 'under_review',
           medical_history: {
-            account_password: 'npvl' + Math.floor(1000 + Math.random() * 9000),
+            account_password: notes.account_password || ('npvl' + Math.floor(1000 + Math.random() * 9000)),
             voluntary_payment_consent: true,
             recovered_by_webhook: true,
           },

@@ -107,6 +107,14 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
 
       if (data && data.length > 0) {
         const found = data[0];
+
+        // Ensure account is only active if payment is completed
+        if (found.payment_status !== 'paid') {
+          setLoading(false);
+          setErrorMsg('Registration fee payment is pending. Please complete your registration payment of ₹500 to activate your account.');
+          return;
+        }
+
         const savedPassword = found.medical_history?.account_password;
         const altPassword = found.medical_history?.alternate_password;
 

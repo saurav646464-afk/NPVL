@@ -36,22 +36,15 @@ export default function VerifyAccreditation({ setCurrentPage }) {
       if (dbError) throw dbError;
 
       if (data && data.length > 0) {
-        setCandidate(data[0]);
-      } else {
-        // Fallback for valid demo format if not yet in db
-        if (idToVerify.startsWith('NPVL-2026-')) {
-          setCandidate({
-            registration_id: idToVerify,
-            full_name: 'OFFICIAL ACCREDITED CANDIDATE',
-            player_category: idToVerify.includes('-C') ? 'Coach' : 'National Player',
-            city: 'North India',
-            state: 'Official Circuit',
-            payment_status: 'paid',
-            created_at: new Date().toISOString(),
-          });
+        if (data[0].payment_status === 'paid') {
+          setCandidate(data[0]);
         } else {
+          // Payment is pending/unpaid - do not activate or verify
+          setCandidate(null);
           setError(true);
         }
+      } else {
+        setError(true);
       }
     } catch (err) {
       console.error('Verification error:', err);

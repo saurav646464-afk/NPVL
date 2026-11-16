@@ -77,7 +77,11 @@ export default function PlayerLogin({ setCurrentPage }) {
       }
 
       if (data && data.length > 0) {
-        savePlayerRecord(data[0]);
+        if (data[0].payment_status !== 'paid') {
+          setErrorMessage('Payment pending. Your player registration will be activated once payment of ₹500 is verified.');
+        } else {
+          savePlayerRecord(data[0]);
+        }
       } else {
         setErrorMessage('No registration record found matching this Mobile Number or Registration ID. Please verify your details.');
       }
