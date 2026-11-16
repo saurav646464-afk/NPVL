@@ -31,6 +31,9 @@ export default async function handler(req, res) {
 
       console.log(`[Razorpay Webhook] Processing payment.captured: ${paymentId} for ${fullName} (${contact})`);
 
+      // Wait 5 seconds to allow the user's browser to complete normal registration insert first
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+
       // 1. Check if record already exists by payment ID or registration ID
       let existingRecord = null;
 

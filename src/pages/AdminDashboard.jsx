@@ -480,7 +480,30 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
       if (error) {
         console.warn('Supabase fetch note:', error.message);
       } else {
-        setRegistrations(data || []);
+        // Filter out duplicates and keep only 1 entry per payment
+        const seenPayments = new Map();
+        const validList = [];
+        (data || []).forEach(item => {
+          if (item.payment_status === 'duplicate') return;
+          const payId = item.razorpay_payment_id;
+          if (!payId) {
+            validList.push(item);
+            return;
+          }
+          if (!seenPayments.has(payId)) {
+            seenPayments.set(payId, item);
+            validList.push(item);
+          } else {
+            // If already seen, ensure we keep the real named record instead of placeholder
+            const existing = seenPayments.get(payId);
+            if (existing.full_name === 'REGISTERED PLAYER' && item.full_name !== 'REGISTERED PLAYER') {
+              const idx = validList.indexOf(existing);
+              if (idx !== -1) validList[idx] = item;
+              seenPayments.set(payId, item);
+            }
+          }
+        });
+        setRegistrations(validList);
       }
     } catch (err) {
       console.error('Fetch error:', err);
