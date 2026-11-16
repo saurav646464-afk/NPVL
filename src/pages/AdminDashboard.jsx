@@ -484,7 +484,7 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
         const seenPayments = new Map();
         const validList = [];
         (data || []).forEach(item => {
-          if (item.payment_status === 'duplicate') return;
+          if (item.payment_status === 'duplicate' || item.full_name === 'REGISTERED PLAYER') return;
           const payId = item.razorpay_payment_id;
           if (!payId) {
             validList.push(item);
