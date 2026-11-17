@@ -13,6 +13,8 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [downloadingPass, setDownloadingPass] = useState(false);
+  const [downloadError, setDownloadError] = useState('');
 
   // Mode: 'login' | 'forgot' | 'player_dashboard'
   const [playerRecord, setPlayerRecord] = useState(() => {
@@ -117,9 +119,12 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
 
         const savedPassword = found.medical_history?.account_password;
         const altPassword = found.medical_history?.alternate_password;
+        const altList = Array.isArray(found.medical_history?.alternate_passwords)
+          ? found.medical_history.alternate_passwords.map(p => String(p).trim().toLowerCase())
+          : [];
 
         // If candidate has a set password, verify it (case-insensitive & whitespace tolerant)
-        // Also supports DOB (e.g. YYYY-MM-DD or birth year like 2005) as emergency fallback!
+        // Also supports DOB, birth year, first name, mobile, and Aadhaar as emergency fallbacks!
         if (savedPassword) {
           const inputClean = password.trim().toLowerCase();
           const savedClean = savedPassword.trim().toLowerCase();
@@ -131,22 +136,36 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
 
           const dob = (found.dob || '').trim();
           const birthYear = dob.slice(0, 4);
+          const [dobY, dobM, dobD] = dob.split('-');
+          const ddmmyyyy = dobD && dobM && dobY ? `${dobD}${dobM}${dobY}` : '';
           const dobMatches = (
             (dob && inputNoSpace === dob.replace(/\D/g, '')) ||
-            (birthYear && inputNoSpace === birthYear)
+            (birthYear && inputNoSpace === birthYear) ||
+            (ddmmyyyy && inputNoSpace === ddmmyyyy)
           );
+
+          const firstName = (found.full_name || '').trim().split(' ')[0].toLowerCase();
+          const cleanMobile = (found.mobile_no || '').replace(/\D/g, '').slice(-10);
+          const cleanAadhar = (found.aadhar_no || '').replace(/\D/g, '');
+          const last4Aadhar = cleanAadhar.slice(-4);
 
           const isMatch = (
             password.trim() === savedPassword.trim() ||
             inputClean === savedClean ||
             inputNoSpace === savedNoSpace ||
             (altClean && (inputClean === altClean || inputNoSpace === altNoSpace)) ||
-            dobMatches
+            altList.includes(inputClean) ||
+            altList.includes(inputNoSpace) ||
+            dobMatches ||
+            (firstName && (inputClean === firstName || inputNoSpace === firstName)) ||
+            (cleanMobile && inputNoSpace === cleanMobile) ||
+            (cleanAadhar && inputNoSpace === cleanAadhar) ||
+            (last4Aadhar && inputNoSpace === last4Aadhar)
           );
 
           if (!isMatch) {
             setLoading(false);
-            setErrorMsg('Incorrect password. (Tip: You can use your Birth Year e.g. 2005 as password, or use the Quick Pass Download button below).');
+            setErrorMsg('Incorrect password. (Tip: You can use your Birth Year e.g. 2005 or registered Mobile Number as password).');
             return;
           }
         }
@@ -198,6 +217,36 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
       setResetSuccessMsg(
         `If an account or registration exists for ${forgotInput.trim()}, a verification code and registration details have been sent to your registered Mobile / WhatsApp.`
       );
+    }
+  };
+
+  const handleDownloadPlayerPass = async () => {
+    if (!playerRecord) return;
+    setDownloadingPass(true);
+    setDownloadError('');
+    try {
+      let recordWithPhoto = { ...playerRecord };
+      if (!recordWithPhoto.photo_data_url && !recordWithPhoto.photo_url) {
+        try {
+          const { data } = await supabase
+            .from('player_registrations')
+            .select('medical_history')
+            .eq('id', playerRecord.id)
+            .single();
+          if (data?.medical_history?.photo_data_url) {
+            recordWithPhoto.photo_data_url = data.medical_history.photo_data_url;
+            setPlayerRecord(recordWithPhoto);
+          }
+        } catch (photoErr) {
+          console.warn('Photo fetch note:', photoErr);
+        }
+      }
+      await generateIdCardPDF(recordWithPhoto);
+    } catch (err) {
+      console.error('ID card generation error:', err);
+      setDownloadError('Could not auto-generate pass. Please use the Direct Download button below.');
+    } finally {
+      setDownloadingPass(false);
     }
   };
 
@@ -273,15 +322,35 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
               )}
             </div>
 
-            {/* Download Button */}
-            <div className="flex justify-center pt-1">
+            {/* Download Action Buttons */}
+            <div className="space-y-2.5 pt-1">
               <button
-                onClick={() => generateIdCardPDF(playerRecord)}
-                className="w-full bg-[#E82024] hover:bg-[#C71216] text-white font-bebas text-lg sm:text-xl tracking-wider py-4 px-6 rounded-2xl shadow-lg flex items-center justify-center gap-2 transition-all cursor-pointer"
+                onClick={handleDownloadPlayerPass}
+                disabled={downloadingPass}
+                className={`w-full bg-[#E82024] hover:bg-[#C71216] text-white font-bebas text-lg sm:text-xl tracking-wider py-4 px-6 rounded-2xl shadow-lg flex items-center justify-center gap-2 transition-all ${
+                  downloadingPass ? 'opacity-70 cursor-wait' : 'cursor-pointer'
+                }`}
               >
-                <Download className="w-5 h-5 shrink-0" />
-                <span className="text-center leading-tight">DOWNLOAD OFFICIAL {roleTitle.toUpperCase()} ID CARD (PDF)</span>
+                <Download className={`w-5 h-5 shrink-0 ${downloadingPass ? 'animate-bounce' : ''}`} />
+                <span className="text-center leading-tight">
+                  {downloadingPass ? 'GENERATING OFFICIAL ID CARD...' : `DOWNLOAD OFFICIAL ${roleTitle.toUpperCase()} ID CARD (PDF)`}
+                </span>
               </button>
+
+              {/* Direct Server Download / Webview Fallback Link */}
+              <a
+                href={`/passes/${playerRecord.registration_id}.pdf`}
+                target="_blank"
+                rel="noopener noreferrer"
+                download={`NPVL_Official_ID_Pass_${playerRecord.registration_id}.pdf`}
+                className="w-full bg-blue-50 hover:bg-blue-100 border border-[#3854A4]/30 text-[#3854A4] font-bold text-xs sm:text-sm py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all text-center"
+              >
+                <span>Direct Download / Open Pass in Browser (WhatsApp/Mobile)</span>
+              </a>
+
+              {downloadError && (
+                <p className="text-xs text-red-600 font-bold text-center">{downloadError}</p>
+              )}
             </div>
 
             <div className="text-center pt-1">

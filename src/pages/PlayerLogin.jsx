@@ -207,23 +207,35 @@ export default function PlayerLogin({ setCurrentPage }) {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
-                <button
-                  onClick={() => generateIdCardPDF(playerRecord)}
-                  className="flex-1 w-full bg-[#E82024] hover:bg-[#C71216] text-white font-bebas text-lg tracking-wider py-3.5 px-6 rounded-xl shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
+              <div className="flex flex-col gap-3 pt-2">
+                <div className="flex flex-col sm:flex-row items-center gap-3">
+                  <button
+                    onClick={() => generateIdCardPDF(playerRecord)}
+                    className="flex-1 w-full bg-[#E82024] hover:bg-[#C71216] text-white font-bebas text-lg tracking-wider py-3.5 px-6 rounded-xl shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
+                  >
+                    <Download className="w-5 h-5" />
+                    <span>DOWNLOAD PLAYER ID CARD (PDF)</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      savePlayerRecord(null);
+                      setIdentifier('');
+                    }}
+                    className="w-full sm:w-auto px-4 py-3 text-xs font-bold text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all cursor-pointer"
+                  >
+                    Search Another
+                  </button>
+                </div>
+
+                <a
+                  href={`/passes/${playerRecord.registration_id}.pdf`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download={`NPVL_Official_ID_Pass_${playerRecord.registration_id}.pdf`}
+                  className="w-full bg-blue-50 hover:bg-blue-100 border border-[#3854A4]/30 text-[#3854A4] font-bold text-xs sm:text-sm py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all text-center"
                 >
-                  <Download className="w-5 h-5" />
-                  <span>DOWNLOAD PLAYER ID CARD (PDF)</span>
-                </button>
-                <button
-                  onClick={() => {
-                    savePlayerRecord(null);
-                    setIdentifier('');
-                  }}
-                  className="w-full sm:w-auto px-4 py-3 text-xs font-bold text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all cursor-pointer"
-                >
-                  Search Another
-                </button>
+                  <span>Direct Download / Open Pass in Browser (WhatsApp/Mobile)</span>
+                </a>
               </div>
 
             </div>
