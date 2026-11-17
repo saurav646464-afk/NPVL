@@ -248,13 +248,9 @@ export default function Register({ onOpenContact, setCurrentPage }) {
 
       let regId = existingMatch ? existingMatch.registration_id : null;
       if (existingMatch) {
-        const proceedWithPending = window.confirm(
-          `⚠️ Registration Already Initiated!\n\nIs Mobile/Email se aapka registration pehle se saved hai:\n• Registration ID: ${existingMatch.registration_id}\n• Candidate Name: ${existingMatch.full_name}\n• Fee Status: ₹500 Payment Pending\n\nNaya duplicate account create karne ke bajaye, kya aap isi registration ke liye ₹500 payment complete karna chahte hain?`
+        alert(
+          `⚠️ Registration Already Initiated!\n\nIs Mobile/Email se aapka registration pehle se saved hai:\n• Registration ID: ${existingMatch.registration_id}\n• Candidate Name: ${existingMatch.full_name}\n• Status: ₹500 Payment Pending\n\nClick OK to proceed with your ₹500 pending payment and get your official Player ID Card!`
         );
-        if (!proceedWithPending) {
-          setSubmitting(false);
-          return;
-        }
       } else {
         const randomSuffix = Math.floor(1000 + Math.random() * 9000);
         regId = `NPVL-2026-M${randomSuffix}`;
