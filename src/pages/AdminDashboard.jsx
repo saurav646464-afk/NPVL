@@ -1248,7 +1248,7 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
               <DollarSign className="w-5 h-5 text-green-600" />
             </div>
             <div className="font-bebas text-4xl text-green-600">₹{netRevenue.toLocaleString('en-IN')}</div>
-            <p className="text-[11px] text-gray-500">Verified Razorpay Net (₹500 refund adjusted)</p>
+            <p className="text-[11px] text-gray-500">Verified Razorpay Net (₹1,000 refunds adjusted)</p>
           </div>
 
           <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm space-y-1">
@@ -1259,7 +1259,7 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
             <div className="font-bebas text-4xl text-[#3854A4]">
               {netPaidCount}
             </div>
-            <p className="text-[11px] text-gray-500">100% Net confirmed ({totalPaidCount} gross - 1 refund)</p>
+            <p className="text-[11px] text-gray-500">100% Net confirmed ({netPaidCount} active players)</p>
           </div>
 
           <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm space-y-1">
