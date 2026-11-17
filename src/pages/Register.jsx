@@ -209,9 +209,56 @@ export default function Register({ onOpenContact, setCurrentPage }) {
     setSubmitting(true);
 
     try {
-      // Generate unique registration id e.g. NPVL-2026-M1042
-      const randomSuffix = Math.floor(1000 + Math.random() * 9000);
-      const regId = `NPVL-2026-M${randomSuffix}`;
+      // 0. CHECK DUPLICATE REGISTRATION (By Mobile, Email, or Aadhaar)
+      const cleanMob = (formData.mobile_no || '').replace(/\D/g, '').slice(-10);
+      const cleanEmail = (formData.email || '').trim().toLowerCase();
+      const cleanAadhar = (formData.aadhar_no || '').replace(/\D/g, '');
+
+      let existingMatch = null;
+      try {
+        const orClauses = [];
+        if (cleanMob && cleanMob.length >= 10) orClauses.push(`mobile_no.ilike.%${cleanMob}%`);
+        if (cleanEmail) orClauses.push(`email.ilike.${cleanEmail}`);
+        if (cleanAadhar && cleanAadhar.length === 12) orClauses.push(`aadhar_no.eq.${cleanAadhar}`);
+
+        if (orClauses.length > 0) {
+          const { data: matchedRows } = await supabase
+            .from('player_registrations')
+            .select('id, registration_id, full_name, mobile_no, email, aadhar_no, payment_status')
+            .or(orClauses.join(','));
+
+          if (matchedRows && matchedRows.length > 0) {
+            // Check if any is already PAID
+            const paidMatch = matchedRows.find(r => r.payment_status === 'paid');
+            if (paidMatch) {
+              alert(
+                `⚠️ Registration Already Exists & Confirmed!\n\nIs Mobile/Email/Aadhaar se candidate "${paidMatch.full_name}" (ID: ${paidMatch.registration_id}) already register ho chuka hai aur payment verified hai!\n\nAapko dubara register karne ki zaroorat nahi hai. Kripya website par Candidate Login karein ya apna Player ID Pass download karein.`
+              );
+              setSubmitting(false);
+              return;
+            }
+
+            // Otherwise, there's a PENDING pre-save attempt
+            existingMatch = matchedRows.find(r => r.payment_status === 'pending') || matchedRows[0];
+          }
+        }
+      } catch (checkErr) {
+        console.warn('Duplicate check note:', checkErr);
+      }
+
+      let regId = existingMatch ? existingMatch.registration_id : null;
+      if (existingMatch) {
+        const proceedWithPending = window.confirm(
+          `⚠️ Registration Already Initiated!\n\nIs Mobile/Email se aapka registration pehle se saved hai:\n• Registration ID: ${existingMatch.registration_id}\n• Candidate Name: ${existingMatch.full_name}\n• Fee Status: ₹500 Payment Pending\n\nNaya duplicate account create karne ke bajaye, kya aap isi registration ke liye ₹500 payment complete karna chahte hain?`
+        );
+        if (!proceedWithPending) {
+          setSubmitting(false);
+          return;
+        }
+      } else {
+        const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+        regId = `NPVL-2026-M${randomSuffix}`;
+      }
 
       // 1. PRE-SAVE FULL PROFILE: Save candidate details with payment_status = 'pending'
       // Account will ONLY become active once ₹500 payment is verified!
@@ -259,10 +306,21 @@ export default function Register({ onOpenContact, setCurrentPage }) {
       };
 
       // Save pre-registration to Supabase before opening payment gateway
-      try {
-        await supabase.from('player_registrations').insert([prePayload]);
-      } catch (saveErr) {
-        console.warn('Pre-save note:', saveErr.message);
+      if (existingMatch) {
+        try {
+          await supabase
+            .from('player_registrations')
+            .update(prePayload)
+            .eq('id', existingMatch.id);
+        } catch (saveErr) {
+          console.warn('Pre-save update note:', saveErr.message);
+        }
+      } else {
+        try {
+          await supabase.from('player_registrations').insert([prePayload]);
+        } catch (saveErr) {
+          console.warn('Pre-save insert note:', saveErr.message);
+        }
       }
 
       // Razorpay Checkout Options
