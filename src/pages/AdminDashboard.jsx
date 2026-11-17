@@ -763,8 +763,10 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
   // -------------------------------------------------------------
   const totalPaidCount = registrations.filter(r => r.payment_status === 'paid').length;
   // 1 duplicate payment (Deepanshu - pay_U0hJGKDcNcsLhd) was refunded on Razorpay (-₹500)
-  const totalRefundAmount = 500;
-  const netRevenue = Math.max(0, (totalPaidCount * 500) - totalRefundAmount);
+  const totalRefundCount = 1;
+  const totalRefundAmount = totalRefundCount * 500;
+  const netPaidCount = Math.max(0, totalPaidCount - totalRefundCount);
+  const netRevenue = netPaidCount * 500;
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 pt-24 pb-20 px-4 sm:px-6 lg:px-8">
@@ -1236,8 +1238,8 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
               <span className="text-xs font-bold uppercase tracking-wider">TOTAL REGISTRATIONS</span>
               <Users className="w-5 h-5 text-[#3854A4]" />
             </div>
-            <div className="font-bebas text-4xl text-gray-900">{registrations.length}</div>
-            <p className="text-[11px] text-gray-500">Official candidate entries</p>
+            <div className="font-bebas text-4xl text-gray-900">{netPaidCount}</div>
+            <p className="text-[11px] text-gray-500">Official active candidate entries</p>
           </div>
 
           <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm space-y-1">
@@ -1255,9 +1257,9 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
               <CheckCircle2 className="w-5 h-5 text-blue-600" />
             </div>
             <div className="font-bebas text-4xl text-[#3854A4]">
-              {registrations.filter(r => r.payment_status === 'paid').length}
+              {netPaidCount}
             </div>
-            <p className="text-[11px] text-gray-500">100% Digital receipts confirmed</p>
+            <p className="text-[11px] text-gray-500">100% Net confirmed ({totalPaidCount} gross - 1 refund)</p>
           </div>
 
           <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm space-y-1">
