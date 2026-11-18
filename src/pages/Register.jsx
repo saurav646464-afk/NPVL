@@ -248,7 +248,8 @@ export default function Register({ onOpenContact, setCurrentPage }) {
 
       let regId = existingMatch ? existingMatch.registration_id : null;
       if (!regId) {
-        const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+        // High-entropy 5-digit suffix to prevent ID collisions (e.g. NPVL-2026-M84291)
+        const randomSuffix = Math.floor(10000 + Math.random() * 90000);
         regId = `NPVL-2026-M${randomSuffix}`;
       }
 

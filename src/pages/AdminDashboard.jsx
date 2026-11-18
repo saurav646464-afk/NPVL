@@ -762,10 +762,7 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
   // AUTHENTICATED DASHBOARD VIEW
   // -------------------------------------------------------------
   const totalPaidCount = registrations.filter(r => r.payment_status === 'paid').length;
-  // 1 duplicate payment (Deepanshu - pay_U0hJGKDcNcsLhd) was refunded on Razorpay (-₹500)
-  const totalRefundCount = 1;
-  const totalRefundAmount = totalRefundCount * 500;
-  const netPaidCount = Math.max(0, totalPaidCount - totalRefundCount);
+  const netPaidCount = totalPaidCount;
   const netRevenue = netPaidCount * 500;
 
   return (
