@@ -19,6 +19,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
   // STRICT LOCK MODE: Form submission is strictly off until 16 Nov 2026
   const [previewMode, setPreviewMode] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [ageError, setAgeError] = useState('');
   const [completedData, setCompletedData] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -153,6 +154,14 @@ export default function Register({ onOpenContact, setCurrentPage }) {
         age--;
       }
       calculatedAge = age > 0 ? age : 0;
+      // Age validation - must be 18+
+      if (calculatedAge < 18) {
+        setAgeError('⚠️ You must be at least 18 years old to register for NPVL Season 1.');
+      } else {
+        setAgeError('');
+      }
+    } else {
+      setAgeError('');
     }
     setFormData((prev) => ({
       ...prev,
@@ -178,6 +187,13 @@ export default function Register({ onOpenContact, setCurrentPage }) {
 
     if (!formData.full_name || !formData.dob || !formData.mobile_no || !formData.email || !formData.aadhar_no) {
       alert('Please fill out all personal details (Full Name, DOB, Mobile, Email, Aadhaar Number).');
+      return;
+    }
+
+    // Age validation - block under 18
+    if (!formData.age || Number(formData.age) < 18) {
+      alert('❌ Sorry! You must be at least 18 years old to register for NPVL Season 1. Candidates below 18 years of age are not eligible.');
+      setSubmitting(false);
       return;
     }
 
@@ -735,8 +751,13 @@ export default function Register({ onOpenContact, setCurrentPage }) {
                   name="dob"
                   value={formData.dob}
                   onChange={handleDobChange}
-                  className="w-full bg-gray-50 border border-gray-300 focus:border-[#3854A4] focus:ring-1 focus:ring-[#3854A4] rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none"
+                  className={`w-full bg-gray-50 border ${ageError ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-[#3854A4] focus:ring-[#3854A4]'} focus:ring-1 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none`}
                 />
+                {ageError && (
+                  <p className="text-red-600 text-xs mt-1.5 font-semibold flex items-center gap-1">
+                    {ageError}
+                  </p>
+                )}
               </div>
 
               {/* Auto Calculated Age */}
@@ -748,7 +769,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
                   type="text"
                   readOnly
                   value={formData.age ? `${formData.age} Years Old` : 'Select DOB above'}
-                  className="w-full bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 text-sm font-bold text-[#3854A4] focus:outline-none cursor-not-allowed"
+                  className={`w-full border rounded-xl px-4 py-3 text-sm font-bold focus:outline-none cursor-not-allowed ${ageError ? 'bg-red-50 border-red-400 text-red-600' : 'bg-blue-50 border-blue-200 text-[#3854A4]'}`}
                 />
               </div>
 
