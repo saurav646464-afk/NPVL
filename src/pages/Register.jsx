@@ -247,11 +247,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
       }
 
       let regId = existingMatch ? existingMatch.registration_id : null;
-      if (existingMatch) {
-        alert(
-          `⚠️ Registration Already Initiated!\n\nIs Mobile/Email se aapka registration pehle se saved hai:\n• Registration ID: ${existingMatch.registration_id}\n• Candidate Name: ${existingMatch.full_name}\n• Status: ₹500 Payment Pending\n\nClick OK to proceed with your ₹500 pending payment and get your official Player ID Card!`
-        );
-      } else {
+      if (!regId) {
         const randomSuffix = Math.floor(1000 + Math.random() * 9000);
         regId = `NPVL-2026-M${randomSuffix}`;
       }
@@ -333,7 +329,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
         prefill: {
           name: formData.full_name,
           email: formData.email,
-          contact: formData.mobile_no,
+          contact: (formData.mobile_no || '').replace(/\D/g, '').slice(-10),
         },
         notes: {
           registration_id: regId,
@@ -361,19 +357,41 @@ export default function Register({ onOpenContact, setCurrentPage }) {
         },
       };
 
-      if (window.Razorpay) {
-        const rzp1 = new window.Razorpay(options);
-        rzp1.open();
-      } else {
-        const confirmSim = window.confirm(
-          `[NPVL Razorpay Payment Gateway]\n\nRegistration Fee: ₹500\nCandidate: ${formData.full_name}\n\nClick OK to simulate successful ₹500 payment and generate your official Player ID Card!`
-        );
-        if (confirmSim) {
-          await finalizeRegistration(regId, `PAY_TEST_${Date.now()}`);
-        } else {
+      const launchRazorpayModal = () => {
+        try {
+          if (window.Razorpay) {
+            const rzp1 = new window.Razorpay(options);
+            rzp1.on('payment.failed', function (resp) {
+              console.warn('Payment failed/cancelled:', resp?.error);
+              setSubmitting(false);
+            });
+            rzp1.open();
+            // Automatically release submission lock after 4s so user can re-trigger if modal closed
+            setTimeout(() => setSubmitting(false), 4000);
+          } else {
+            // If checkout.js hasn't loaded yet on slow 4G, load it on the fly
+            const script = document.createElement('script');
+            script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+            script.onload = () => {
+              const rzp2 = new window.Razorpay(options);
+              rzp2.on('payment.failed', () => setSubmitting(false));
+              rzp2.open();
+              setTimeout(() => setSubmitting(false), 4000);
+            };
+            script.onerror = () => {
+              alert('Payment gateway could not load. Please check your internet connection.');
+              setSubmitting(false);
+            };
+            document.body.appendChild(script);
+          }
+        } catch (openErr) {
+          console.error('Error opening Razorpay:', openErr);
           setSubmitting(false);
+          alert('Could not open payment window. Please try again.');
         }
-      }
+      };
+
+      launchRazorpayModal();
     } catch (err) {
       console.error('Submission error:', err);
       alert('An error occurred during submission. Please try again.');

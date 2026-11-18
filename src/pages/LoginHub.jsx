@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { 
   Lock, Mail, KeyRound, AlertCircle, CheckCircle2, 
   ArrowRight, Download, Search, ShieldCheck, User,
-  Eye, EyeOff
+  Eye, EyeOff, CreditCard
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { generateIdCardPDF } from '../lib/pdfGenerator';
@@ -15,6 +15,7 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
   const [errorMsg, setErrorMsg] = useState('');
   const [downloadingPass, setDownloadingPass] = useState(false);
   const [downloadError, setDownloadError] = useState('');
+  const [pendingCandidate, setPendingCandidate] = useState(null);
 
   // Mode: 'login' | 'forgot' | 'player_dashboard'
   const [playerRecord, setPlayerRecord] = useState(() => {
@@ -113,7 +114,8 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
         // Ensure account is only active if payment is completed
         if (found.payment_status !== 'paid') {
           setLoading(false);
-          setErrorMsg('Registration fee payment is pending. Please complete your registration payment of ₹500 to activate your account.');
+          setPendingCandidate(found);
+          setErrorMsg(`Registration fee payment is pending for ${found.full_name} (${found.registration_id}). Click the button below to complete your ₹500 fee via Razorpay and get your official ID Pass.`);
           return;
         }
 
@@ -217,6 +219,74 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
       setResetSuccessMsg(
         `If an account or registration exists for ${forgotInput.trim()}, a verification code and registration details have been sent to your registered Mobile / WhatsApp.`
       );
+    }
+  };
+
+  const handlePayPendingFee = (candidate) => {
+    if (!candidate) return;
+    const regId = candidate.registration_id;
+
+    const options = {
+      key: 'rzp_live_TzthqYP8HlZXKw',
+      amount: 500 * 100,
+      currency: 'INR',
+      name: 'North Premier Volleyball League',
+      description: `Complete Registration Fee (${regId})`,
+      image: '/logo.png',
+      handler: async function (response) {
+        try {
+          const payId = response.razorpay_payment_id || `PAY_PENDING_${Date.now()}`;
+          await supabase
+            .from('player_registrations')
+            .update({
+              payment_status: 'paid',
+              razorpay_payment_id: payId,
+              id_card_generated: true,
+            })
+            .eq('id', candidate.id);
+
+          const photoFromDB = candidate.medical_history?.photo_data_url || candidate.photo_data_url || null;
+          const { medical_history, ...cleanRecord } = candidate;
+          const activeRecord = {
+            ...cleanRecord,
+            payment_status: 'paid',
+            razorpay_payment_id: payId,
+            photo_data_url: photoFromDB,
+          };
+
+          setPlayerRecord(activeRecord);
+          setPendingCandidate(null);
+          setErrorMsg('');
+          setViewMode('player_dashboard');
+        } catch (actErr) {
+          console.error('Activation error:', actErr);
+          alert('Payment received! Please refresh and login to download your pass.');
+        }
+      },
+      prefill: {
+        name: candidate.full_name,
+        email: candidate.email,
+        contact: (candidate.mobile_no || '').replace(/\D/g, '').slice(-10),
+      },
+      notes: {
+        registration_id: regId,
+        full_name: candidate.full_name || '',
+        mobile_no: candidate.mobile_no || '',
+      },
+      theme: { color: '#3854A4' },
+    };
+
+    if (window.Razorpay) {
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } else {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => {
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+      };
+      document.body.appendChild(script);
     }
   };
 
@@ -456,9 +526,21 @@ export default function UniversalLogin({ setCurrentPage, setAdminLoggedIn }) {
 
               {/* Error Box */}
               {errorMsg && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
-                  <span>{errorMsg}</span>
+                <div className="p-3.5 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 flex flex-col gap-2.5">
+                  <div className="flex items-start gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0 text-red-600 mt-0.5" />
+                    <span className="leading-relaxed">{errorMsg}</span>
+                  </div>
+                  {pendingCandidate && (
+                    <button
+                      type="button"
+                      onClick={() => handlePayPendingFee(pendingCandidate)}
+                      className="w-full bg-[#E82024] hover:bg-[#C71216] text-white text-xs font-bold uppercase tracking-wider py-3 px-4 rounded-xl shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer mt-1"
+                    >
+                      <CreditCard className="w-4 h-4" />
+                      <span>Complete ₹500 Payment via Razorpay & Activate ID Pass</span>
+                    </button>
+                  )}
                 </div>
               )}
 
