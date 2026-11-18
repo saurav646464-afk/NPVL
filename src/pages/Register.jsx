@@ -340,6 +340,7 @@ export default function Register({ onOpenContact, setCurrentPage }) {
         name: 'North Premier Volleyball League',
         description: 'Season 1 Player Trial & Registration Fee',
         image: '/logo.png',
+        payment_capture: 1, // Auto-capture payment immediately — prevents "Authorized but not Captured" issue
         handler: async function (response) {
           await finalizeRegistration(regId, response.razorpay_payment_id || `PAY_MOCK_${Date.now()}`);
         },
