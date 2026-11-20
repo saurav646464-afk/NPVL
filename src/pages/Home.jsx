@@ -87,9 +87,12 @@ export default function Home({ setCurrentPage, onSelectTeam, onOpenContact }) {
             <span className="text-xs md:text-sm font-bold tracking-[0.2em] text-[#3854A4] uppercase bg-[#3854A4]/10 border border-[#3854A4]/30 px-3.5 py-1 rounded-full">
               NORTH PREMIER VOLLEYBALL LEAGUE
             </span>
-            <span className="text-xs md:text-sm font-bold tracking-[0.2em] text-[#E82024] uppercase bg-[#E82024]/10 border border-[#E82024]/30 px-3.5 py-1 rounded-full flex items-center gap-1.5 shadow-xs">
-              <Zap className="w-3.5 h-3.5 text-[#E82024] animate-pulse" />
-              COMING SOON — SEASON 1
+            <span className="text-xs md:text-sm font-bold tracking-[0.2em] text-green-400 uppercase bg-green-400/10 border border-green-400/30 px-3.5 py-1 rounded-full flex items-center gap-1.5 shadow-xs">
+              <span className="relative flex h-2.5 w-2.5 shrink-0">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-400"></span>
+              </span>
+              REGISTRATIONS LIVE — SEASON 1
             </span>
           </div>
 
