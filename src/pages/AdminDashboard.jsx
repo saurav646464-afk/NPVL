@@ -51,6 +51,8 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
 
   // Dashboard Table & Analytics
   const [registrations, setRegistrations] = useState([]);
+  const [refundedRegistrations, setRefundedRegistrations] = useState([]);
+  const [activeTab, setActiveTab] = useState('active'); // 'active' or 'refunded'
   const [loading, setLoading] = useState(false);
   const [downloadingId, setDownloadingId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -463,6 +465,7 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
   const fetchRegistrations = async () => {
     setLoading(true);
     try {
+      // 1. Fetch Paid registrations
       const { data, error } = await supabase
         .from('player_registrations')
         .select(`
@@ -473,7 +476,7 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
           current_team_dept, height_cms, weight_kgs, standing_reach_cms, jump_reach_cms,
           stamp_paper_url, declaration_agreed, registration_id, payment_status,
           razorpay_order_id, razorpay_payment_id, razorpay_signature, amount,
-          certificate_generated, id_card_generated, verification_status, tshirt_size
+          certificate_generated, id_card_generated, verification_status, tshirt_size, medical_history
         `)
         .eq('payment_status', 'paid')
         .order('created_at', { ascending: false });
@@ -505,6 +508,30 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
           }
         });
         setRegistrations(validList);
+      }
+
+      // 2. Fetch Refunded registrations
+      try {
+        const { data: refData } = await supabase
+          .from('player_registrations')
+          .select(`
+            id, created_at, full_name, dob, age, gender, nationality, aadhar_no,
+            mobile_no, whatsapp_no, email, postal_address, city, pincode, state, country,
+            instagram_id, facebook_id, photo_url, employment_status, institution_name,
+            player_category, top_achievement, certificate_url, certificate_year_place,
+            current_team_dept, height_cms, weight_kgs, standing_reach_cms, jump_reach_cms,
+            stamp_paper_url, declaration_agreed, registration_id, payment_status,
+            razorpay_order_id, razorpay_payment_id, razorpay_signature, amount,
+            certificate_generated, id_card_generated, verification_status, tshirt_size, medical_history
+          `)
+          .eq('payment_status', 'refunded')
+          .order('created_at', { ascending: false });
+
+        if (refData) {
+          setRefundedRegistrations(refData);
+        }
+      } catch (refErr) {
+        console.warn('Refunded fetch note:', refErr);
       }
     } catch (err) {
       console.error('Fetch error:', err);
@@ -541,8 +568,10 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
     }
   };
 
-  // Filtered List
-  const filteredList = registrations.filter((p) => {
+  // Filtered List based on active tab
+  const currentSourceList = activeTab === 'refunded' ? refundedRegistrations : registrations;
+
+  const filteredList = currentSourceList.filter((p) => {
     const matchesSearch = 
       (p.full_name && p.full_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (p.registration_id && p.registration_id.toLowerCase().includes(searchTerm.toLowerCase())) ||
@@ -1245,7 +1274,15 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
               <DollarSign className="w-5 h-5 text-green-600" />
             </div>
             <div className="font-bebas text-4xl text-green-600">₹{netRevenue.toLocaleString('en-IN')}</div>
-            <p className="text-[11px] text-gray-500">Verified Razorpay Net (₹1,000 refunds adjusted)</p>
+            <p className="text-[11px] text-gray-500 flex items-center justify-between">
+              <span>Verified Razorpay Net (₹1,500 refunds adjusted)</span>
+              <button
+                onClick={() => setActiveTab(activeTab === 'refunded' ? 'active' : 'refunded')}
+                className="text-[#3854A4] font-bold hover:underline cursor-pointer ml-1"
+              >
+                {activeTab === 'refunded' ? 'Show Active' : `View 3 Refunded`}
+              </button>
+            </p>
           </div>
 
           <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm space-y-1">
@@ -1271,33 +1308,58 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
           </div>
         </div>
 
-        {/* Filter & Search Bar */}
+        {/* Filter & Search Bar with Tab Toggle */}
         <div className="bg-white p-4 rounded-3xl border border-gray-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="relative w-full sm:w-96">
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search by Name, Reg ID, Mobile, or City..."
-              className="w-full bg-gray-50 border border-gray-300 rounded-xl pl-10 pr-4 py-2.5 text-xs text-gray-900 focus:outline-none focus:border-[#3854A4]"
-            />
-            <Search className="w-4 h-4 text-gray-400 absolute left-3 top-3" />
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setActiveTab('active')}
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                activeTab === 'active'
+                  ? 'bg-[#3854A4] text-white shadow-sm'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              Active Registrations ({registrations.length})
+            </button>
+            <button
+              onClick={() => setActiveTab('refunded')}
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                activeTab === 'refunded'
+                  ? 'bg-[#E82024] text-white shadow-sm'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              Refunded ({refundedRegistrations.length})
+            </button>
           </div>
 
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <Filter className="w-4 h-4 text-gray-400" />
-            <select
-              value={filterCategory}
-              onChange={(e) => setFilterCategory(e.target.value)}
-              className="bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs text-gray-700 focus:outline-none"
-            >
-              <option value="ALL">All Categories</option>
-              <option value="International Player">International Player</option>
-              <option value="National Player">National Player</option>
-              <option value="State/ University Level Player">State / University</option>
-              <option value="Under -19 Player">Under -19</option>
-              <option value="New Player">New Player</option>
-            </select>
+          <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+            <div className="relative w-full sm:w-80">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search by Name, Reg ID, Mobile, or City..."
+                className="w-full bg-gray-50 border border-gray-300 rounded-xl pl-10 pr-4 py-2 text-xs text-gray-900 focus:outline-none focus:border-[#3854A4]"
+              />
+              <Search className="w-4 h-4 text-gray-400 absolute left-3 top-2.5" />
+            </div>
+
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <Filter className="w-4 h-4 text-gray-400" />
+              <select
+                value={filterCategory}
+                onChange={(e) => setFilterCategory(e.target.value)}
+                className="bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs text-gray-700 focus:outline-none"
+              >
+                <option value="ALL">All Categories</option>
+                <option value="International Player">International Player</option>
+                <option value="National Player">National Player</option>
+                <option value="State/ University Level Player">State / University</option>
+                <option value="Under -19 Player">Under -19</option>
+                <option value="New Player">New Player</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -1376,9 +1438,15 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
                         {player.height_cms ? `${player.height_cms} cm` : '-'} / {player.jump_reach_cms ? `${player.jump_reach_cms} cm` : '-'}
                       </td>
                       <td className="p-4">
-                        <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold text-[10px]">
-                          PAID ₹500
-                        </span>
+                        {player.payment_status === 'refunded' ? (
+                          <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-bold text-[10px]">
+                            REFUNDED ₹500
+                          </span>
+                        ) : (
+                          <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold text-[10px]">
+                            PAID ₹500
+                          </span>
+                        )}
                       </td>
                       <td className="p-4 text-right">
                         <button
