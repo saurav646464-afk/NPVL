@@ -19,9 +19,14 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
     if (isAuthed) {
       setIsAuthenticated(true);
       setViewMode('dashboard');
-      fetchRegistrations();
     }
   }, [initialAuthenticated]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchRegistrations();
+    }
+  }, [isAuthenticated]);
   
   // Login State
   const [emailInput, setEmailInput] = useState('');
