@@ -470,7 +470,7 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
   const fetchRegistrations = async () => {
     setLoading(true);
     try {
-      // 1. Fetch Paid registrations
+      // 1. Fetch Paid registrations (Lean query: extract playing_position from medical_history without fetching massive photo_data_url blobs)
       const { data, error } = await supabase
         .from('player_registrations')
         .select(`
@@ -481,7 +481,8 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
           current_team_dept, height_cms, weight_kgs, standing_reach_cms, jump_reach_cms,
           stamp_paper_url, declaration_agreed, registration_id, payment_status,
           razorpay_order_id, razorpay_payment_id, razorpay_signature, amount,
-          certificate_generated, id_card_generated, verification_status, tshirt_size, medical_history
+          certificate_generated, id_card_generated, verification_status, tshirt_size,
+          medical_history->playing_position
         `)
         .eq('payment_status', 'paid')
         .order('created_at', { ascending: false });
@@ -527,7 +528,8 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
             current_team_dept, height_cms, weight_kgs, standing_reach_cms, jump_reach_cms,
             stamp_paper_url, declaration_agreed, registration_id, payment_status,
             razorpay_order_id, razorpay_payment_id, razorpay_signature, amount,
-            certificate_generated, id_card_generated, verification_status, tshirt_size, medical_history
+            certificate_generated, id_card_generated, verification_status, tshirt_size,
+            medical_history->playing_position
           `)
           .eq('payment_status', 'refunded')
           .order('created_at', { ascending: false });
@@ -554,11 +556,11 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
         try {
           const { data } = await supabase
             .from('player_registrations')
-            .select('medical_history')
+            .select('medical_history->photo_data_url')
             .eq('id', player.id)
             .single();
-          if (data?.medical_history?.photo_data_url) {
-            playerWithPhoto.photo_data_url = data.medical_history.photo_data_url;
+          if (data?.photo_data_url) {
+            playerWithPhoto.photo_data_url = data.photo_data_url;
           }
         } catch (e) {
           console.warn('Photo fetch note:', e);
