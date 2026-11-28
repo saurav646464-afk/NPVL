@@ -34,12 +34,20 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
   const [loginError, setLoginError] = useState('');
 
   // Password Management State
-  // Persistent local storage for customized admin password
+  // Persistent local storage for customized admin password (stored as SHA-256 hash)
   const DEFAULT_EMAIL = 'hello@npvlofficial.com';
-  const DEFAULT_PASSWORD = 'Npvl@Official#2026';
+  const DEFAULT_PASSWORD_HASH = '6786088c5cbfb81f8a849e37a710700784644948f641ce69ee0f93aa5bd7c22e';
 
-  const [currentAdminPassword, setCurrentAdminPassword] = useState(() => {
-    return localStorage.getItem('npvl_admin_pwd') || DEFAULT_PASSWORD;
+  const hashPassword = async (text) => {
+    const encoded = new TextEncoder().encode(text);
+    const digest = await window.crypto.subtle.digest('SHA-256', encoded);
+    return Array.from(new Uint8Array(digest))
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('');
+  };
+
+  const [currentAdminPasswordHash, setCurrentAdminPasswordHash] = useState(() => {
+    return localStorage.getItem('npvl_admin_pwd_hash') || DEFAULT_PASSWORD_HASH;
   });
 
   // Forgot password form
@@ -408,12 +416,18 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
     }
   };
 
-  const handleAdminLogin = (e) => {
+  const handleAdminLogin = async (e) => {
     e.preventDefault();
     setLoginError('');
 
     const cleanEmail = emailInput.trim().toLowerCase();
-    if (cleanEmail === DEFAULT_EMAIL && passwordInput === currentAdminPassword) {
+    const enteredHash = await hashPassword(passwordInput);
+    const legacyPwd = localStorage.getItem('npvl_admin_pwd');
+    const expectedHash = legacyPwd && !localStorage.getItem('npvl_admin_pwd_hash')
+      ? await hashPassword(legacyPwd)
+      : currentAdminPasswordHash;
+
+    if (cleanEmail === DEFAULT_EMAIL && enteredHash === expectedHash) {
       setIsAuthenticated(true);
       setViewMode('dashboard');
       if (setAdminLoggedIn) setAdminLoggedIn(true);
@@ -429,21 +443,26 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
     setResetSuccessMsg('');
 
     if (forgotEmail.trim().toLowerCase() === DEFAULT_EMAIL) {
-      // Generate secure reset OTP / instruction
       setResetSuccessMsg(
-        `A recovery verification code and secure reset link have been dispatched to ${DEFAULT_EMAIL}. (Temporary recovery password restored to: ${currentAdminPassword})`
+        `A recovery verification code and secure reset instructions have been dispatched to ${DEFAULT_EMAIL}.`
       );
     } else {
       setForgotError('This email is not registered as an authorized NPVL administrator.');
     }
   };
 
-  const handleChangePassword = (e) => {
+  const handleChangePassword = async (e) => {
     e.preventDefault();
     setChangeError('');
     setChangeSuccess('');
 
-    if (oldPassword !== currentAdminPassword) {
+    const oldHash = await hashPassword(oldPassword);
+    const legacyPwd = localStorage.getItem('npvl_admin_pwd');
+    const expectedHash = legacyPwd && !localStorage.getItem('npvl_admin_pwd_hash')
+      ? await hashPassword(legacyPwd)
+      : currentAdminPasswordHash;
+
+    if (oldHash !== expectedHash) {
       setChangeError('Current password is incorrect.');
       return;
     }
@@ -458,9 +477,11 @@ export default function AdminDashboard({ setCurrentPage, initialAuthenticated = 
       return;
     }
 
-    // Save new password
-    localStorage.setItem('npvl_admin_pwd', newPassword);
-    setCurrentAdminPassword(newPassword);
+    // Save new password hash
+    const newHash = await hashPassword(newPassword);
+    localStorage.setItem('npvl_admin_pwd_hash', newHash);
+    localStorage.removeItem('npvl_admin_pwd');
+    setCurrentAdminPasswordHash(newHash);
     setChangeSuccess('Password updated successfully! Please remember your new password.');
     setOldPassword('');
     setNewPassword('');
